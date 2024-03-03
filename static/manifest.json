@@ -3,7 +3,7 @@
     "theme_color": "#333333",
     "name": "tariki-code",
     "short_name": "tariki-code",
-    "display": "tariki-code",
+    "display": "standalone",
     "start_url": "/",
     "icons": [
         {
