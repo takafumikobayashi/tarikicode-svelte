@@ -3,13 +3,10 @@
     import ThemeButton from '$lib/ThemeButton.svelte';
     import Menu from '@smui/menu';
     import List, { Item, Text } from '@smui/list';
+    import { homeLink, mailLink, twitterLink, githubLink, linkedinLink, facebookLink, aboutLink } from './CommonFunction';
 
     let menu: Menu;
-    let clicked = 'nothing yet';
-
-    function handleClick() {
-        window.location.href = 'https://tariki-coe.tokyo'; // リンク先に遷移
-    }
+    
 </script>
 
 <style>
@@ -29,14 +26,11 @@
     <div class="mdc-typography--headline5"><strong>他力code</strong></div>
     <div class="nav-container">
         <div class="nav-item">
-            <Button color="primary" on:click={handleClick}>
+            <Button color="primary" on:click={homeLink}>
                 <Label>Home</Label>
             </Button>
-            <Button color="secondary" on:click={handleClick}>
+            <Button color="secondary" on:click={aboutLink}>
                 <Label>About</Label>
-            </Button>
-            <Button color="secondary" on:click={handleClick}>
-                <Label>Service</Label>
             </Button>
             <div style="min-width: 100px;">
                 <Button color="secondary" on:click={() => menu.setOpen(true)}>
@@ -44,16 +38,19 @@
                 </Button>
                 <Menu bind:this={menu}>
                     <List>
-                        <Item on:SMUI:action={() => (clicked = 'Cut')}>
+                        <Item on:SMUI:action={() => mailLink()}>
                             <Text>Mail</Text>
                         </Item>
-                        <Item on:SMUI:action={() => (clicked = 'Copy')}>
+                        <Item on:SMUI:action={() => twitterLink()}>
                             <Text>X</Text>
                         </Item>
-                        <Item on:SMUI:action={() => (clicked = 'Paste')}>
+                        <Item on:SMUI:action={() => githubLink()}>
+                            <Text>Github</Text>
+                        </Item>
+                        <Item on:SMUI:action={() => linkedinLink()}>
                             <Text>LinkedIn</Text>
                         </Item>
-                        <Item on:SMUI:action={() => (clicked = 'Delete')}>
+                        <Item on:SMUI:action={() => facebookLink()}>
                             <Text>Facebook</Text>
                         </Item>
                     </List>

@@ -1,9 +1,9 @@
 {
     "background_color": "#ffffff",
     "theme_color": "#333333",
-    "name": "sveltekit-smui",
-    "short_name": "sveltekit-smui",
-    "display": "minimal-ui",
+    "name": "tariki-code",
+    "short_name": "tariki-code",
+    "display": "tariki-code",
     "start_url": "/",
     "icons": [
         {

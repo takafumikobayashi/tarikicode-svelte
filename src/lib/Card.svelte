@@ -13,6 +13,25 @@
         <Card>
             <div style="padding: 1rem;">
             <h2 class="mdc-typography--headline6" style="margin: 0;">
+                ThanksCard
+            </h2>
+            <h3 class="mdc-typography--subtitle2" style="margin: 0; color: #888;">
+                MicrosoftTeamsとAdaptiveCardを活用したワークエンゲージメント向上.
+            </h3>
+            </div>
+            <PrimaryAction on:click={() => clicked++}>
+            <Media class="card-media-16x9" aspectRatio="16x9" />
+            <Content class="mdc-typography--body2">
+                このプロジェクトは、MicrosoftTeamsとAdaptiveCardを活用したワークエンゲージメント向上を目指しています。
+            </Content>
+            </PrimaryAction>
+        </Card>
+    </div>
+
+    <div class="card-container">
+        <Card>
+            <div style="padding: 1rem;">
+            <h2 class="mdc-typography--headline6" style="margin: 0;">
                 A card with media.
             </h2>
             <h3 class="mdc-typography--subtitle2" style="margin: 0; color: #888;">
@@ -20,7 +39,7 @@
             </h3>
             </div>
             <PrimaryAction on:click={() => clicked++}>
-            <Media class="card-media-16x9" aspectRatio="16x9" />
+            <Media class="card-media-16x9-2" aspectRatio="16x9" />
             <Content class="mdc-typography--body2">
                 And some info text. And the media and info text are a primary action
                 for the card.
@@ -40,27 +59,7 @@
             </h3>
             </div>
             <PrimaryAction on:click={() => clicked++}>
-            <Media class="card-media-16x9" aspectRatio="16x9" />
-            <Content class="mdc-typography--body2">
-                And some info text. And the media and info text are a primary action
-                for the card.
-            </Content>
-            </PrimaryAction>
-        </Card>
-    </div>
-
-    <div class="card-container">
-        <Card>
-            <div style="padding: 1rem;">
-            <h2 class="mdc-typography--headline6" style="margin: 0;">
-                A card with media.
-            </h2>
-            <h3 class="mdc-typography--subtitle2" style="margin: 0; color: #888;">
-                And a subtitle.
-            </h3>
-            </div>
-            <PrimaryAction on:click={() => clicked++}>
-            <Media class="card-media-16x9" aspectRatio="16x9" />
+            <Media class="card-media-16x9-3" aspectRatio="16x9" />
             <Content class="mdc-typography--body2">
                 And some info text. And the media and info text are a primary action
                 for the card.
@@ -88,12 +87,18 @@
     }
     
     :global(.card-media-16x9) {
+        background-image: url(/public/thankscard.png);
+        height: 180px;
+    }
+
+    :global(.card-media-16x9-2) {
         background-image: url(https://placehold.co/320x180?text=16x9);
         height: 180px;
     }
 
-    :global(.card-media-square) {
-        background-image: url(https://placehold.co/320x320?text=square);
+    :global(.card-media-16x9-3) {
+        background-image: url(https://placehold.co/320x180?text=16x9);
+        height: 180px;
     }
 
     @media (max-width: 480px) {

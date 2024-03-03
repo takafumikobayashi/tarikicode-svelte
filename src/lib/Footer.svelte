@@ -1,5 +1,5 @@
 <script>
-    // JavaScript領域。必要に応じてスクリプトをここに追加できます。
+    import { AppConfig } from "./AppConfig";
 </script>
 
 <style>
@@ -22,5 +22,5 @@
 </style>
 
 <div class="footer">
-    <p>Copyright &copy; 2023 tariki-code</p>
+    <p>{AppConfig.copyright}</p>
 </div>
