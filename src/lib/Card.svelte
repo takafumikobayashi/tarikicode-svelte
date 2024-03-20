@@ -1,11 +1,8 @@
 <script>
-    import Card, {
-        Content,
-        PrimaryAction,
-        Media,
-        MediaContent,
-    } from '@smui/card';
+    import Card, { Content, PrimaryAction, Media } from '@smui/card';
+    import { thanksCardLink, kintoneLink, svelteLink, snsPromotionLink, aiLink, projectManagementLink } from './CommonFunction';
     let clicked = 0;
+
 </script>
 
 <div class="card-display">
@@ -16,13 +13,13 @@
                 ThanksCard
             </h2>
             <h3 class="mdc-typography--subtitle2" style="margin: 0; color: #888;">
-                MicrosoftTeamsとAdaptiveCardを活用したワークエンゲージメント向上.
+                組織のコミュニケーションとワークエンゲージメントを高めるためのデジタル活用
             </h3>
             </div>
-            <PrimaryAction on:click={() => clicked++}>
+            <PrimaryAction on:click={() => thanksCardLink()}>
             <Media class="card-media-16x9" aspectRatio="16x9" />
             <Content class="mdc-typography--body2">
-                このプロジェクトは、MicrosoftTeamsとAdaptiveCardを活用したワークエンゲージメント向上を目指しています。
+                MicrosoftTeamsとPowerAutomate、AdaptiveCardを活用しシンプルなソリューションとアイデアを提供しています。
             </Content>
             </PrimaryAction>
         </Card>
@@ -32,17 +29,16 @@
         <Card>
             <div style="padding: 1rem;">
             <h2 class="mdc-typography--headline6" style="margin: 0;">
-                A card with media.
+                kintone
             </h2>
             <h3 class="mdc-typography--subtitle2" style="margin: 0; color: #888;">
-                And a subtitle.
+                プラグイン開発者として、効率的なQRコードリーディングソリューションを提供
             </h3>
             </div>
-            <PrimaryAction on:click={() => clicked++}>
+            <PrimaryAction on:click={() => kintoneLink()}>
             <Media class="card-media-16x9-2" aspectRatio="16x9" />
             <Content class="mdc-typography--body2">
-                And some info text. And the media and info text are a primary action
-                for the card.
+                子どもの第三の居場所提供を行う事業にて、kintoneを活用したデータ管理と入退室の管理をデジタル化しています。
             </Content>
             </PrimaryAction>
         </Card>
@@ -52,21 +48,78 @@
         <Card>
             <div style="padding: 1rem;">
             <h2 class="mdc-typography--headline6" style="margin: 0;">
-                A card with media.
+                Svelte
             </h2>
             <h3 class="mdc-typography--subtitle2" style="margin: 0; color: #888;">
-                And a subtitle.
+                軽量でモダンなフレームワークを使ったWebアプリケーション開発
             </h3>
             </div>
-            <PrimaryAction on:click={() => clicked++}>
+            <PrimaryAction on:click={() => svelteLink()}>
             <Media class="card-media-16x9-3" aspectRatio="16x9" />
             <Content class="mdc-typography--body2">
-                And some info text. And the media and info text are a primary action
-                for the card.
+                Node.jsエンジニアとしてフロントエンドの開発を行っています。このサイトはsveltekitを使って構築しています。
             </Content>
             </PrimaryAction>
         </Card>
     </div>
+
+    <div class="card-container">
+        <Card>
+            <div style="padding: 1rem;">
+            <h2 class="mdc-typography--headline6" style="margin: 0;">
+                SNS Promotion
+            </h2>
+            <h3 class="mdc-typography--subtitle2" style="margin: 0; color: #888;">
+                京都・奈良の日本美を発信するフォロワー1万人超インスタグラマー
+            </h3>
+            </div>
+            <PrimaryAction on:click={() => snsPromotionLink()}>
+            <Media class="card-media-16x9-4" aspectRatio="16x9" />
+            <Content class="mdc-typography--body2">
+                SNS発信を行う上でのターゲット戦略やアカウントテーマ、フォロワーコミュニケーションのノウハウを提供します。
+            </Content>
+            </PrimaryAction>
+        </Card>
+    </div>
+
+    <div class="card-container">
+        <Card>
+            <div style="padding: 1rem;">
+            <h2 class="mdc-typography--headline6" style="margin: 0;">
+                AI
+            </h2>
+            <h3 class="mdc-typography--subtitle2" style="margin: 0; color: #888;">
+                ChatGPTやClaudeの業務利活用、MidjournyやDALL-Eを使ったクリエイティブ活用
+            </h3>
+            </div>
+            <PrimaryAction on:click={() => aiLink()}>
+            <Media class="card-media-16x9-5" aspectRatio="16x9" />
+            <Content class="mdc-typography--body2">
+                開発シーンにおけるAIを活用した問題解決ノウハウを提供します。このサイトではMidjourny生成画像を活用しています。
+            </Content>
+            </PrimaryAction>
+        </Card>
+    </div>
+
+    <div class="card-container">
+        <Card>
+            <div style="padding: 1rem;">
+            <h2 class="mdc-typography--headline6" style="margin: 0;">
+                Project Management
+            </h2>
+            <h3 class="mdc-typography--subtitle2" style="margin: 0; color: #888;">
+                組織課題を適応性と再現性で解決するプロジェクトマネジメント
+            </h3>
+            </div>
+            <PrimaryAction on:click={() => projectManagementLink()}>
+            <Media class="card-media-16x9-6" aspectRatio="16x9" />
+            <Content class="mdc-typography--body2">
+                暗号資産トレードアプリやモバイル業界の大規模PMなど豊富な経験を踏まえた知見とノウハウを提供します。
+            </Content>
+            </PrimaryAction>
+        </Card>
+    </div>
+
 </div>
 
 <style>
@@ -92,12 +145,27 @@
     }
 
     :global(.card-media-16x9-2) {
-        background-image: url(https://placehold.co/320x180?text=16x9);
+        background-image: url(/public/kintone.png);
         height: 180px;
     }
 
     :global(.card-media-16x9-3) {
-        background-image: url(https://placehold.co/320x180?text=16x9);
+        background-image: url(/public/sveltegirl.png);
+        height: 180px;
+    }
+
+    :global(.card-media-16x9-4) {
+        background-image: url(/public/snspromotion.png);
+        height: 180px;
+    }
+
+    :global(.card-media-16x9-5) {
+        background-image: url(/public/ai.png);
+        height: 180px;
+    }
+
+    :global(.card-media-16x9-6) {
+        background-image: url(/public/projectmanagement.png);
         height: 180px;
     }
 

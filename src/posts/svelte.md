@@ -1,3 +1,43 @@
+## Svelte
+
+軽量でモダンなフレームワークを使ったWebアプリケーション開発
+
+#### 背景と課題
+
+#### ソリューション
+
+#### 今後の展望
+
+##### 作成したコード
+
+```javascript
+// src/routes/blog/[slug]/+page.server.ts
+import fs from 'fs';
+import path from 'path';
+import { marked } from 'marked';
+import { error } from '@sveltejs/kit';
+
+export async function load({ params }) {
+    const { slug } = params;
+    const filePath = path.resolve('src/posts', `${slug}.md`);
+    try {
+        const fileContent = fs.readFileSync(filePath, { encoding: 'utf-8' });
+        const htmlContent = marked(fileContent);
+
+        // JSONオブジェクトを返す
+        return {
+            status: 200,
+            body: htmlContent
+        };
+    } catch (e) {
+        return error(404, `Post not found: ${slug}`);
+    }
+}
+```
+
+##### 作成したコンポーネント
+
+```typescript
 <script lang="ts">
     import IconButton, { Icon } from '@smui/icon-button';
     import LayoutGrid, { Cell } from '@smui/layout-grid';
@@ -73,3 +113,4 @@
         color: var(--mdc-theme-on-primary, #fff);
     }
 </style>
+```

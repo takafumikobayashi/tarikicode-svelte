@@ -25,3 +25,11 @@ a {
 a:visited {
   color: color.scale(#40b3ff, $lightness: -35%);
 }
+
+code:not(pre > code) {
+  background-color: #e7edf3;
+  color: #444;
+  padding: 0.1em 0.2em;
+  border-radius: 3px;
+  font-style: italic;
+}

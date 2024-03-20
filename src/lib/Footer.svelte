@@ -6,7 +6,7 @@
     .footer {
         padding: 20px;
         text-align: center;
-        position: absolute;
+        position: static;
         bottom: 0;
         left: 0; /* ビューポートの左端から */
         right: 0; /* ビューポートの右端まで */

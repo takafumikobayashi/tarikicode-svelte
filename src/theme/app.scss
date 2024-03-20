@@ -8,7 +8,11 @@
 @use '@material/typography/mixins' as typography;
 @use '@smui/paper/mixins' as paper;
 @use '@material/theme/theme-color';
-
+@use '@material/tab-bar/mdc-tab-bar';
+@use '@smui/tab-scroller/style' as tab-scroller-style;
+@use '@material/tab/mdc-tab';
+@use '@smui/tab-indicator/style' as tab-indicator-style;
+@use '@material/data-table/mdc-data-table';
 
 html {
   @include typography.typography('body1');
@@ -66,9 +70,25 @@ h6 {
   @include typography.typography('headline6');
 }
 
-code,
 pre {
   font-family: 'Roboto Mono', monospace;
+  max-width: 80%; /* 最大幅を設定 */
+  margin: 0 auto; /* 上下のマージンを0に、左右のマージンを自動でセンタリング */
+  padding: 1em; /* 内側の余白 */
+}
+
+/* スクロールバーのスタイル */
+::-webkit-scrollbar {
+  height: 10px; /* スクロールバーの高さ */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888; /* スクロールバーのハンドルの背景色 */
+  border-radius: 5px; /* スクロールバーのハンドルの角を丸くする */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* スクロールバーのハンドルの背景色（ホバー時） */
 }
 
 small {
@@ -84,11 +104,14 @@ strong {
   font-weight: bold;
 }
 
-code {
+pre > code {
+  font-family: 'Roboto Mono', monospace;
   font-size: calc(1em - 2px);
-  background-color: theme.$secondary;
-  padding: 0.2em 0.4em;
-  border-radius: 2px;
+  background-color: transparent; /* 背景色を透明に */
+  display: block; /* ブロックレベル要素として表示 */
+  white-space: pre; /* スペースや改行をそのまま表示、必要に応じて折り返し */
+  overflow-x: initial; /* code要素にスクロールバーを適用しない */
+  -webkit-overflow-scrolling: touch; /* ⭐ */
 }
 
 .material-icons {
@@ -157,8 +180,8 @@ code {
 }
 
 .main-header {
-  max-width: 80em;
   background-color: theme.$background;
+  max-width: 80em;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -178,4 +201,17 @@ code {
 
 .custom-green {
   color: color-palette.$green-600;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 1s ease-out forwards;
 }

@@ -1,6 +1,9 @@
 <script lang="ts">
     import LayoutGrid, { Cell } from '@smui/layout-grid';
     import { AppConfig } from './AppConfig';
+    
+    // @ts-ignore
+    export let linkon;
 </script>
 
 <LayoutGrid>
@@ -13,7 +16,7 @@
     </Cell>
     <Cell span={6}>
         <div class="demo-cell-left">
-            <div class="mdc-typography--headline4">
+            <div class="mdc-typography--headline5">
                 <p>{AppConfig.author}</p>
             </div>
             <div class="mdc-typography--body1">
@@ -22,7 +25,9 @@
                 以前は暗号資産業界にてプロジェクトマネージャーをしておりました。<br>
                 さらにその前は大手通信業（携帯電話会社）でエンジニアリングマネージャーをしておりました。<br>
             </div>
-            <p><a href=/about>プロフィールをもっと見る</a></p>
+            {#if linkon}
+                <p><a href=/about>プロフィールをもっと見る</a></p>
+            {/if}
         </div>
     </Cell>
 </LayoutGrid>
