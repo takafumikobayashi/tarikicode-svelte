@@ -5,6 +5,7 @@
     import ContentImage from '$lib/ContentImage.svelte';
     import { page } from '$app/stores';
     import { onDestroy } from 'svelte';
+    import { AppConfig } from '$lib/AppConfig';
 
     // ハイライトのスタイルを読み込む
     import hljs from 'highlight.js';
@@ -14,6 +15,7 @@
     onMount(() => {
         // コンテンツがDOMにレンダリングされた後にハイライトを適用
         document.querySelectorAll('pre code').forEach((block) => {
+            //@ts-ignore
             hljs.highlightBlock(block);
         });
     });
@@ -32,6 +34,20 @@
 
 <svelte:head>
     <title>tariki-code</title>
+    <!-- Open Graph メタタグ -->
+	<meta property="og:title" content={post_string} />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content={`https://tariki-code.tokyo/blog/${post_string}`} />
+	<meta property="og:image" content={`https://tariki-code.tokyo/${AppConfig.post_string[post_string]}`} />
+	<meta property="og:description" content="一緒に創る、明日のためのcode" />
+	<meta property="og:site_name" content="他力code(tariki-code)" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@kobatch_tk" />
+    <meta name="twitter:title" content="他力code(tariki-code)" />
+    <meta name="twitter:description" content="一緒に創る、明日のためのcode" />
+    <meta name="twitter:image" content={`https://tariki-code.tokyo/${AppConfig.post_string[post_string]}`} />
 </svelte:head>
 
 <div class="mdc-typography--body1">
