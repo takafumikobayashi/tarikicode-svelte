@@ -35,7 +35,7 @@
 <svelte:head>
     <title>tariki-code</title>
     <!-- Open Graph メタタグ -->
-	<meta property="og:title" content={post_string} />
+	<meta property="og:title" content={`${post_string} - 他力code(tariki-code)`} />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content={`https://tariki-code.tokyo/blog/${post_string}`} />
 	<meta property="og:image" content={`https://tariki-code.tokyo/${AppConfig.post_string[post_string]}`} />

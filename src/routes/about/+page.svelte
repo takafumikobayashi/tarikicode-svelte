@@ -31,7 +31,7 @@
 <svelte:head>
     <title>tariki-code</title>
     <!-- Open Graph メタタグ -->
-	<meta property="og:title" content="ABOUT" />
+	<meta property="og:title" content="ABOUT - 他力code(tariki-code)" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://tariki-code.tokyo/about" />
 	<meta property="og:image" content="https://tariki-code.tokyo/imgs/heroimage1.png" />
