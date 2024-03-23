@@ -8,24 +8,24 @@
   import Sns from '$lib/Sns.svelte';
   import AboutMe from '$lib/AboutMe.svelte';
   import Articles from '$lib/Articles .svelte';
+  import { AppConfig } from '$lib/AppConfig';
 </script>
 
 <svelte:head>
-  <title>tariki-code</title>
   <!-- Open Graph メタタグ -->
   <meta property="og:title" content="HOME" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://tariki-code.tokyo/" />
-  <meta property="og:image" content="https://tariki-code.tokyo/logo-192.png" />
-  <meta property="og:description" content="一緒に創る、明日のためのcode" />
-  <meta property="og:site_name" content="他力code(tariki-code)" />
+  <meta property="og:url" content={AppConfig.url} />
+  <meta property="og:image" content={`${AppConfig.url}/logo-192.png`} />
+  <meta property="og:description" content={AppConfig.description} />
+  <meta property="og:site_name" content={AppConfig.title}/>
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:site" content="@kobatch_tk" />
-  <meta name="twitter:title" content="他力code(tariki-code)" />
-  <meta name="twitter:description" content="一緒に創る、明日のためのcode" />
-  <meta name="twitter:image" content="https://tariki-code.tokyo/logo-192.png" />
+  <meta name="twitter:site" content={AppConfig.xaccuont} />
+  <meta name="twitter:title" content={AppConfig.title} />
+  <meta name="twitter:description" content={AppConfig.description} />
+  <meta name="twitter:image" content={`${AppConfig.url}/logo-192.png`} />
 </svelte:head>
 
 <div class="mdc-typography--body1">

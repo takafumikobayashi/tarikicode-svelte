@@ -33,21 +33,20 @@
 </script>
 
 <svelte:head>
-    <title>tariki-code</title>
     <!-- Open Graph メタタグ -->
-	<meta property="og:title" content={`${post_string} - 他力code(tariki-code)`} />
+	<meta property="og:title" content={`${post_string} - ${AppConfig.title}`} />
 	<meta property="og:type" content="website" />
-	<meta property="og:url" content={`https://tariki-code.tokyo/blog/${post_string}`} />
-	<meta property="og:image" content={`https://tariki-code.tokyo/${AppConfig.post_string[post_string]}`} />
-	<meta property="og:description" content="一緒に創る、明日のためのcode" />
-	<meta property="og:site_name" content="他力code(tariki-code)" />
+	<meta property="og:url" content={`${AppConfig.url}/blog/${post_string}`} />
+	<meta property="og:image" content={`${AppConfig.url}${AppConfig.post_string[post_string]}`} />
+	<meta property="og:description" content={AppConfig.description} />
+	<meta property="og:site_name" content={AppConfig.title} />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@kobatch_tk" />
-    <meta name="twitter:title" content="他力code(tariki-code)" />
-    <meta name="twitter:description" content="一緒に創る、明日のためのcode" />
-    <meta name="twitter:image" content={`https://tariki-code.tokyo/${AppConfig.post_string[post_string]}`} />
+    <meta name="twitter:site" content={AppConfig.xaccuont} />
+    <meta name="twitter:title" content={AppConfig.title} />
+    <meta name="twitter:description" content={AppConfig.description} />
+    <meta name="twitter:image" content={`${AppConfig.url}${AppConfig.post_string[post_string]}`} />
 </svelte:head>
 
 <div class="mdc-typography--body1">

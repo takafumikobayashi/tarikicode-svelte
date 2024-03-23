@@ -10,6 +10,7 @@
     import Works from '$lib/Works.svelte';
     import Favorites from '$lib/Favorites.svelte';
     import Profile from '$lib/Profile.svelte';
+    import { AppConfig } from '$lib/AppConfig';
 
     let tabs = [
         {
@@ -29,21 +30,20 @@
 </script>
 
 <svelte:head>
-    <title>tariki-code</title>
     <!-- Open Graph メタタグ -->
-	<meta property="og:title" content="ABOUT - 他力code(tariki-code)" />
+	<meta property="og:title" content={`ABOUT - ${AppConfig.title}`} />
 	<meta property="og:type" content="website" />
-	<meta property="og:url" content="https://tariki-code.tokyo/about" />
-	<meta property="og:image" content="https://tariki-code.tokyo/imgs/heroimage1.png" />
-	<meta property="og:description" content="一緒に創る、明日のためのcode" />
-	<meta property="og:site_name" content="他力code(tariki-code)" />
+	<meta property="og:url" content={`${AppConfig.url}/about`} />
+	<meta property="og:image" content={`${AppConfig.url}/imgs/heroimage1.png`} />
+	<meta property="og:description" content={AppConfig.description} />
+	<meta property="og:site_name" content={AppConfig.title} />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@kobatch_tk" />
-    <meta name="twitter:title" content="他力code(tariki-code)" />
-    <meta name="twitter:description" content="一緒に創る、明日のためのcode" />
-    <meta name="twitter:image" content="https://tariki-code.tokyo/imgs/heroimage1.png" />
+    <meta name="twitter:site" content={AppConfig.xaccuont} />
+    <meta name="twitter:title" content={AppConfig.title} />
+    <meta name="twitter:description" content={AppConfig.description} />
+    <meta name="twitter:image" content={`${AppConfig.url}/imgs/heroimage1.png`} />
 </svelte:head>
 
 <div class="mdc-typography--body1">

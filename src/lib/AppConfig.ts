@@ -1,10 +1,12 @@
 export const AppConfig = {
 	site_name: 'tariki-code.tokyo',
-	title: '他力Code',
-	url: 'https://tariki-code.tokyo/',
+	title: '他力code(tariki-code)',
+	description: '一緒に創る、明日のためのcode。',
+	url: 'https://tariki-code.tokyo',
 	locale: 'ja',
 	author: 'Takafumi Kobayashi',
 	copyright: '©tariki-code All Rights Reserved',
+	xaccuont: '@kobatch_tk',
 	contacts: {
 		email: 'mailto:takabumi.k@gmail.com',
 		facebook: 'https://www.facebook.com/takafumi.kobayashi.75',
