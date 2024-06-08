@@ -26,6 +26,11 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
     if (event.request.method !== 'GET') return;
 
+    // `chrome-extension://` スキームのリクエストを無視する
+    if (event.request.url.startsWith('chrome-extension://')) {
+        return;
+    }
+
     async function respond() {
         const url = new URL(event.request.url);
         const cache = await caches.open(CACHE);
