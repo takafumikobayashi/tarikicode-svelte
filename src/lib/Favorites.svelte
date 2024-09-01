@@ -49,7 +49,7 @@
             </Row>
             <Row>
                 <Cell>ペット</Cell>
-                <Cell>苦手</Cell>
+                <Cell>ネコ</Cell>
             </Row>
             <Row>
                 <Cell>マイブーム</Cell>
@@ -65,11 +65,11 @@
             </Row>
             <Row>
                 <Cell>ゲーム</Cell>
-                <Cell>ログレス</Cell>
+                <Cell>ファミコンで終了</Cell>
             </Row>
             <Row>
                 <Cell>ストレス発散</Cell>
-                <Cell>完全無視</Cell>
+                <Cell>掃除機かけ</Cell>
             </Row>
             <Row>
                 <Cell>スマホ</Cell>
@@ -80,12 +80,12 @@
                 <Cell>ダーク系</Cell>
             </Row>
             <Row>
-                <Cell>集めているもの</Cell>
-                <Cell>ミニマリスト</Cell>
+                <Cell>物欲</Cell>
+                <Cell>なし（ミニマリスト）</Cell>
             </Row>
             <Row>
                 <Cell>料理</Cell>
-                <Cell>ブタキムチ</Cell>
+                <Cell>天津飯</Cell>
             </Row>
             <Row>
                 <Cell>TV番組</Cell>
@@ -105,7 +105,7 @@
             </Row>
             <Row>
                 <Cell>資格</Cell>
-                <Cell>プロジェクトマネージャー</Cell>
+                <Cell>ITストラテジスト</Cell>
             </Row>
             <Row>
                 <Cell>場所</Cell>
@@ -153,7 +153,7 @@
             </Row>
             <Row>
                 <Cell>コメディ</Cell>
-                <Cell>Three Amigos!</Cell>
+                <Cell>サボテンブラザーズ</Cell>
             </Row>
             <Row>
                 <Cell>漫才師</Cell>
@@ -165,11 +165,11 @@
             </Row>
             <Row>
                 <Cell>言語</Cell>
-                <Cell>Node.js</Cell>
+                <Cell>TypeScript</Cell>
             </Row>
             <Row>
                 <Cell>ディスニーリゾート</Cell>
-                <Cell>Sea</Cell>
+                <Cell>シー派</Cell>
             </Row>
             <Row>
                 <Cell>Hate</Cell>
@@ -190,6 +190,18 @@
             <Row>
                 <Cell>キック</Cell>
                 <Cell>Left</Cell>
+            </Row>
+            <Row>
+                <Cell>中本</Cell>
+                <Cell>北極10倍</Cell>
+            </Row>
+            <Row>
+                <Cell>カレー</Cell>
+                <Cell>エチオピア</Cell>
+            </Row>
+            <Row>
+                <Cell>靴</Cell>
+                <Cell>amoji</Cell>
             </Row>
         </Body>
     </DataTable>

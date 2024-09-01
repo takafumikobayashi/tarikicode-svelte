@@ -7,8 +7,10 @@
   import LayoutGrid, { Cell } from '@smui/layout-grid';
   import Sns from '$lib/Sns.svelte';
   import AboutMe from '$lib/AboutMe.svelte';
-  import Articles from '$lib/Articles .svelte';
+  import Articles from '$lib/Articles.svelte';
+  import RecentPost from '$lib/RecentPost.svelte';
   import { AppConfig } from '$lib/AppConfig';
+  import Contacts from '$lib/Contacts.svelte';
 </script>
 
 <svelte:head>
@@ -75,28 +77,36 @@
       </div>
     </Cell>
 
-    <Cell span={6}>
+    <Cell span={12}>
       <div class="demo-cell">
         <div class="paper-container">
           <Paper variant="unelevated">
             <Title>RecentPost</Title>
             <Subtitle>最近の投稿</Subtitle>
             <Content>
-              <center>
-              <blockquote class="twitter-tweet"><p lang="ja" dir="ltr">お友達の理事の方からのご紹介でコミュニティ参加申し込んでみましたー <a href="https://t.co/fZfiGtO9g0">https://t.co/fZfiGtO9g0</a></p>&mdash; 他力code | kobatch.eth (@kobatch_tk) <a href="https://twitter.com/kobatch_tk/status/1763732648479047747?ref_src=twsrc%5Etfw">March 2, 2024</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-              </center>
+              <RecentPost />
             </Content>
           </Paper>
         </div>
       </div>
     </Cell>
-
     <Cell span={6}>
       <div class="demo-cell">
         <div class="paper-container">
           <Paper variant="unelevated">
-            <Title>MySNS</Title>
-            <Subtitle>各種SNSアカウントのご紹介</Subtitle>
+            <Title>Contacts</Title>
+            <Subtitle>お仕事、講演、その他お問合せ等ございましたら下記よりご連絡ください。</Subtitle>
+            <Content>
+              <center><Contacts /></center>
+            </Content>
+          </Paper>
+        </div>
+      </div>
+    </Cell>
+    <Cell span={6}>
+      <div class="demo-cell">
+        <div class="paper-container">
+          <Paper variant="unelevated">
             <Content>
               <center><Sns /></center>
             </Content>

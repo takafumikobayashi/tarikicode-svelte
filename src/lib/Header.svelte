@@ -32,30 +32,6 @@
             <Button color="secondary" on:click={aboutLink}>
                 <Label>About</Label>
             </Button>
-            <div style="min-width: 100px;">
-                <Button color="secondary" on:click={() => menu.setOpen(true)}>
-                    <Label>Contact</Label>
-                </Button>
-                <Menu bind:this={menu}>
-                    <List>
-                        <Item on:SMUI:action={() => mailLink()}>
-                            <Text>Mail</Text>
-                        </Item>
-                        <Item on:SMUI:action={() => twitterLink()}>
-                            <Text>X</Text>
-                        </Item>
-                        <Item on:SMUI:action={() => githubLink()}>
-                            <Text>Github</Text>
-                        </Item>
-                        <Item on:SMUI:action={() => linkedinLink()}>
-                            <Text>LinkedIn</Text>
-                        </Item>
-                        <Item on:SMUI:action={() => facebookLink()}>
-                            <Text>Facebook</Text>
-                        </Item>
-                    </List>
-                </Menu>
-            </div>
             <ThemeButton />
         </div>
     </div>

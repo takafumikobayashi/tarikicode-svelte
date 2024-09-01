@@ -13,6 +13,10 @@
 @use '@material/tab/mdc-tab';
 @use '@smui/tab-indicator/style' as tab-indicator-style;
 @use '@material/data-table/mdc-data-table';
+@use '@material/textfield/index' as textfield;
+@use '@material/textfield/icon/variables' as icon-variables;
+@use '@material/textfield/mdc-text-field';
+@use '@material/dialog/mdc-dialog';
 
 html {
   @include typography.typography('body1');
@@ -27,15 +31,13 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 5px;
+  height: 5px; /* スクロールバーの高さ */
 }
-::-webkit-scrollbar-track {
-  background: theme.$background;
-}
+
 ::-webkit-scrollbar-thumb {
-  background-color: theme.$surface;
+  background: #888; /* スクロールバーのハンドルの背景色 */
   border-radius: 6px;
-  border: 3px solid theme.$background;
 }
 
 a {
@@ -70,22 +72,51 @@ h6 {
   @include typography.typography('headline6');
 }
 
+.table-wrapper {
+  display: flex;
+  justify-content: center; /* 水平方向の中央揃え */
+  align-items: center;      /* 垂直方向の中央揃え */
+  width: 100%;
+  height: 100%; /* 必要に応じて高さを指定 */
+  box-sizing: border-box;
+  padding: 20px; /* 必要に応じて余白を調整 */
+}
+
+table {
+  @extend .mdc-data-table__table;
+  
+  thead {
+    @extend .mdc-data-table__header-row;
+  }
+
+  tbody {
+    @extend .mdc-data-table__content;
+  }
+
+  tr {
+    @extend .mdc-data-table__row;
+  }
+
+  th {
+    @extend .mdc-data-table__header-cell;
+  }
+
+  td {
+    @extend .mdc-data-table__cell;
+  }
+}
+
 pre {
-  font-family: 'Roboto Mono', monospace;
-  max-width: 80%; /* 最大幅を設定 */
+  max-width: 90%; /* 最大幅を設定 */
   margin: 0 auto; /* 上下のマージンを0に、左右のマージンを自動でセンタリング */
-  padding: 1em; /* 内側の余白 */
+
+}
+
+pre code {
+  border-radius: 10px; /* 角を丸める */
 }
 
 /* スクロールバーのスタイル */
-::-webkit-scrollbar {
-  height: 10px; /* スクロールバーの高さ */
-}
-
-::-webkit-scrollbar-thumb {
-  background: #888; /* スクロールバーのハンドルの背景色 */
-  border-radius: 5px; /* スクロールバーのハンドルの角を丸くする */
-}
 
 ::-webkit-scrollbar-thumb:hover {
   background: #555; /* スクロールバーのハンドルの背景色（ホバー時） */
@@ -102,16 +133,6 @@ big {
 b,
 strong {
   font-weight: bold;
-}
-
-pre > code {
-  font-family: 'Roboto Mono', monospace;
-  font-size: calc(1em - 2px);
-  background-color: transparent; /* 背景色を透明に */
-  display: block; /* ブロックレベル要素として表示 */
-  white-space: pre; /* スペースや改行をそのまま表示、必要に応じて折り返し */
-  overflow-x: initial; /* code要素にスクロールバーを適用しない */
-  -webkit-overflow-scrolling: touch; /* ⭐ */
 }
 
 .material-icons {
@@ -190,7 +211,7 @@ pre > code {
   position: fixed; /* 固定配置 */
   width: 100%;
   box-sizing: border-box; /* パディングを含めた幅で100%になるように */
-  z-index: 1000; /* 他の要素より上に表示されるように */
+  z-index: 7; /* 他の要素より上に表示されるように */
 }
 
 @include paper.paper-color(

@@ -54,6 +54,6 @@ export function facebookLink() {
     window.location.href = AppConfig.contacts.facebook; // リンク先に遷移
 }
 
-export function InstagramLink() {
+export function instagramLink() {
     window.location.href = AppConfig.contacts.instagram; // リンク先に遷移
 }

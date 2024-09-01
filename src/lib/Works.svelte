@@ -12,6 +12,10 @@
             </Head>
         <Body>
             <Row>
+                <Cell>ITストラテジスト（IPA）</Cell>
+                <Cell>2024</Cell>
+            </Row>
+            <Row>
                 <Cell>プロジェクトマネージャー（IPA）</Cell>
                 <Cell>2023</Cell>
             </Row>
@@ -56,6 +60,10 @@
             </Row>
             </Head>
         <Body>
+            <Row>
+                <Cell>JBUG#23(Bucklogコミュニティ)</Cell>
+                <Cell><a href="https://ascii.jp/elem/000/004/215/4215922/" target="_blank">https://ascii.jp/elem/000/004/215/4215922/</a></Cell>
+            </Row>
             <Row>
                 <Cell>G0vのランディングページ翻訳</Cell>
                 <Cell><a href="https://github.com/g0v/landing-page" target="_blank">https://github.com/g0v/landing-page</a></Cell>

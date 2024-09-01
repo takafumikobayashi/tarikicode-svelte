@@ -6,6 +6,7 @@
     import { page } from '$app/stores';
     import { onDestroy } from 'svelte';
     import { AppConfig } from '$lib/AppConfig';
+    import PostFooter from '$lib/PostFooter.svelte';
 
     // ハイライトのスタイルを読み込む
     import hljs from 'highlight.js';

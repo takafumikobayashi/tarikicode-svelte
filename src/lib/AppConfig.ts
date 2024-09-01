@@ -3,6 +3,7 @@ export const AppConfig = {
 	title: '他力code(tariki-code)',
 	description: '一緒に創る、明日のためのcode。',
 	url: 'https://tariki-code.tokyo',
+	likeserverurl: 'https://ixi6wkk3j3zg7mswbrzly6in7e0erwme.lambda-url.us-east-1.on.aws',
 	locale: 'ja',
 	author: 'Takafumi Kobayashi',
 	copyright: '©tariki-code All Rights Reserved',

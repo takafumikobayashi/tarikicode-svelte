@@ -10,7 +10,7 @@
     <Cell span={6}>
         <div class="demo-cell">
             <div class="profile-image">
-                <img src="/icon/icon-512x512.png" alt="プロフィール画像">
+                <img src="/icon/1681593350707.jpeg" alt="プロフィール画像">
             </div>
         </div>
     </Cell>
@@ -20,10 +20,13 @@
                 <p>{AppConfig.author}</p>
             </div>
             <div class="mdc-typography--body1">
-                「他力code」の屋号でDXやITコミュニティに関する活動をしております。<br>
-                経済産業省にて行政DXのサポート、およびNPO法人の事業とデジタル化推進の伴走支援をしております。<br>
-                以前は暗号資産業界にてプロジェクトマネージャーをしておりました。<br>
-                さらにその前は大手通信業（携帯電話会社）でエンジニアリングマネージャーをしておりました。<br>
+                他力code代表<br>
+                ITストラテジスト / プロジェクトマネージャー<br>
+                経済産業省 大臣官房デジタルトランスフォーメーション室<br>
+                Social Technology Officer（北海道のNPO事業とデジタル化伴走支援）<br>
+                客員講師（地方国立高専）<br>
+                Microsoft, Node.js関連等、技術コミュニティでの発信活動<br>
+                SNS発信活動（京都・奈良などの日本美 / 地域情報発信）
             </div>
             {#if linkon}
                 <p><a href=/about>プロフィールをもっと見る</a></p>
@@ -52,14 +55,18 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        height: 100%; /* セルの高さを設定（必要に応じて調整） */
     }
 
     .demo-cell-left {
         width: 100%; 
         margin-top: 2em;
         margin-bottom: 2em;
-        justify-content: left;
-        align-items: center;
+        display: flex;
+        flex-direction: column; /* コンテンツを縦方向に並べる */
+        justify-content: center;
+        align-items: flex-start; /* 左寄せでセンタリング */
+        height: 100%; /* セルの高さを設定（必要に応じて調整） */
     }
 </style>
 
