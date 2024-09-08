@@ -57,6 +57,7 @@
         <article>
             {@html data.body}
         </article>
+        <PostFooter />
         <Footer />
     </div>
 </div>

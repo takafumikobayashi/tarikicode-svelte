@@ -8,58 +8,122 @@
     import Dialog, { Title, Content, Actions } from '@smui/dialog';
     import { onMount } from "svelte";
     import { writable } from "svelte/store";
-
     let valueA = '';
     let valueB = '';
     let valueC = '';
     let checked = false;
     let isButtonDisabled = writable(true);
     let open = false;
+    let openDialog = writable(false);  // 送信後のダイアログを開く状態管理
+    let dialogTitle = writable('');  // ダイアログのメッセージ
+    let dialogMessage = writable('');  // ダイアログのメッセージ
+    let honeyfield = '';  // Honeypotフィールド用の変数
+    let formLoadTime: number;  // フォームが表示された時刻（ミリ秒）
 
     // フォームの入力を監視し、ボタンの活性/非活性を切り替える関数
     function validateForm() {
-        isButtonDisabled.set(!(valueA && valueB && valueC && checked));
+        // Honeypotフィールドが空で、他の必須フィールドが入力されているかをチェック
+        isButtonDisabled.set(!(valueA && valueB && valueC && checked && !honeyfield));
+    }
+
+    // フォームの値をリセットする関数
+    function resetForm() {
+        valueA = '';
+        valueB = '';
+        valueC = '';
+        checked = false;
+        validateForm();  // ボタンを再度無効化
+        formLoadTime = Date.now();  // フォームが表示されたタイミングでタイムスタンプを取得
     }
 
     // ボタンをクリックしたときにメールを送信する関数
     async function sendEmail() {
+        const currentTime = Date.now();
+        const elapsedTime = currentTime - formLoadTime;  // 経過時間を計算
+
+        // ここでは30秒未満の場合にスパムと判断
+        if (elapsedTime < 30000) {
+            dialogTitle.set('送信に失敗しました。');
+            dialogMessage.set('再度お試しください。');
+            openDialog.set(true);
+            resetForm();
+            formLoadTime = Date.now();  // フォームが表示されたタイミングでタイムスタンプを取得
+            return;
+        }
+
+        // Honeypotフィールドが入力されていれば、スパムと判断し送信を中止
+        if (honeyfield) {
+            dialogTitle.set('送信に失敗しました。');
+            dialogMessage.set('再度お試しください。');
+            openDialog.set(true);
+            resetForm();
+            return;
+        }
+
+        // reCAPTCHAのトークンを取得
+        const recaptchaToken = await new Promise((resolve, reject) => {
+            grecaptcha.ready(() => {
+                grecaptcha.execute(import.meta.env.VITE_RECAPTCHA_V3_SITE_KEY, { action: 'submit' }).then((token) => {
+                    resolve(token);
+                }).catch((error) => {
+                    reject(error);
+                });
+            });
+        });
+
+        if (!recaptchaToken) {
+            alert('reCAPTCHAの検証に失敗しました。');
+            return;
+        }
+
         const userAgent = navigator.userAgent;
         const emailContent = `
-            件名: ${valueA}\n
-            メールアドレス: ${valueB}\n
-            内容: ${valueC}\n
-            ユーザーエージェント: ${userAgent}
+            ${valueC}\n\n${userAgent}
         `;
 
         try {
-            const response = await fetch('https://your-email-api-endpoint', {
+            const response = await fetch(import.meta.env.VITE_LAMBDA_SERVER_URL, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    to: 'takabumi.k@gmail.com',
+                    type: 'sendEmail',
                     subject: valueA,
-                    body: emailContent,
+                    email: valueB,
+                    content: emailContent,
+                    token: recaptchaToken
                 }),
             });
 
             if (response.ok) {
-                alert('メールが送信されました。');
+                dialogTitle.set('送信されました。');
+                dialogMessage.set('お問合せありがとうございました。連絡があるまで今しばらくお待ちください。');
+                resetForm();  // フォームをリセット
+                // window.location.reload(); // ページをリロードしたい場合
             } else {
-                alert('メールの送信に失敗しました。');
+                dialogTitle.set('送信に失敗しました。');
+                dialogMessage.set('お手数ですがしばらく待ってから再度お試しください。');
             }
         } catch (error) {
             console.error('Error sending email:', error);
-            alert('メールの送信中にエラーが発生しました。');
+            dialogTitle.set('送信に失敗しました。');
+            dialogMessage.set('お手数ですがしばらく待ってから再度お試しください。');
         }
+
+        openDialog.set(true);  // ダイアログを開く
     }
 
     // 初期化
     onMount(() => {
+        formLoadTime = Date.now();  // フォームが表示されたタイミングでタイムスタンプを取得
         validateForm(); // 初回ロード時にボタンを無効化
     });
 </script>
+
+<svelte:head>
+    <script src="https://www.google.com/recaptcha/api.js?render={import.meta.env.VITE_RECAPTCHA_V3_SITE_KEY}"></script>
+</svelte:head>
 
 <LayoutGrid>
     <Cell span={12}>
@@ -70,11 +134,11 @@
                 style="width: 100%;"
                 helperLine$style="width: 100%;"
                 bind:value={valueA}
-                label="お問合せ件名"
+                label="お名前／件名"
                 required
                 on:input={validateForm}
                 >
-                <HelperText slot="helper">お問合せに関する件名をご入力ください（必須）</HelperText>
+                <HelperText slot="helper">お問合せされた方のお名前、もしくはお問合せの件名をご入力ください（必須）</HelperText>
                 </Textfield>
             </div>
         </Cell>
@@ -104,8 +168,15 @@
                 required
                 on:input={validateForm}
                 >
-                <HelperText slot="helper">お問合せの詳細についてご入力ください（必須）</HelperText>
+                <HelperText slot="helper">お問合せ内容の詳細についてご入力ください（必須）</HelperText>
                 </Textfield>
+                <!-- Honeypot field -->
+                <Textfield
+                    style="width: 100%; display:none;"
+                    bind:value={honeyfield}
+                    label="Honeyfield"
+                    on:input={validateForm}
+                />
             </div>
         </Cell>
         <Cell span={12}>
@@ -116,7 +187,9 @@
                 </FormField>
             </div>
         </Cell>
-        <Cell span={12}>
+        <Cell span={6}>
+        </Cell>
+        <Cell span={6}>
             <div class="demo-cell-right">
                 <Button on:click={() => (open = true)} variant="raised" disabled={$isButtonDisabled}>
                     <Label>この内容で送信する</Label>
@@ -133,13 +206,32 @@
 >
     <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
     <Title id="simple-title">お問合せの送信</Title>
-    <Content id="simple-content">すみませんがまだ準備中のため送信することができません。</Content>
+    <Content id="simple-content">この内容でお問合せを送信します、よろしいでしょうか？</Content>
     <Actions>
         <Button on:click={sendEmail}>
+            <Label>はい</Label>
+        </Button>
+        <Button>
+        <Label>いいえ</Label>
+        </Button>
+    </Actions>
+</Dialog>
+
+<Dialog
+    bind:open={$openDialog}
+    aria-labelledby="simple-title"
+    aria-describedby="simple-content"
+>
+    <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
+    <Title id="simple-title">{$dialogTitle}</Title>
+    <Content id="simple-content">{$dialogMessage}</Content>
+    <Actions>
+        <Button on:click={() => openDialog.set(false)}>
         <Label>閉じる</Label>
         </Button>
     </Actions>
 </Dialog>
+
 
 <style>
     .demo-cell {

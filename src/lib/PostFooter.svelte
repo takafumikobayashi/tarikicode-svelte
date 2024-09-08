@@ -1,66 +1,60 @@
-<style>
-  .post-footer {
-        margin-top: 100px;
-        text-align: center;
-        position: static;
-        bottom: 0;
-        left: 0; /* ビューポートの左端から */
-        right: 0; /* ビューポートの右端まで */
-        width: 100%;
-        box-sizing: border-box; /* パディングを含めて幅を計算 */
-    }
-
-  .flexy {
-    display: flex;
-    justify-content: center; /* 水平方向に中央寄せ */
-    align-items: center;     /* 垂直方向に中央寄せ */
-  }
-
-  .margins {
-    margin: 10px; /* 必要に応じてマージンを調整 */
-  }
-
-  .centered-fab {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center; /* テキストを中央揃え */
-    width: 100%;        /* ボタンを中央に配置するために幅を100%に設定 */
-  }
-</style>
-
 <script lang="ts">
   import Fab, { Label, Icon } from '@smui/fab';
-  import LayoutGrid, { Cell } from '@smui/layout-grid';
+  import { Cell } from '@smui/layout-grid';
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
-  import { AppConfig } from './AppConfig';
 
   let likes = writable(0);
   let pageUrl = "";
+  let isLiked = writable(false); // ユーザーが「いいね」したかどうかを管理
+  const cacheDuration = 3600000; // キャッシュの有効期間: 1時間（ミリ秒単位）
 
+  // ページのロード時に実行
   onMount(async () => {
-    // サーバーから現在の「いいね」数を取得する
+    pageUrl = window.location.pathname.split('/').filter(Boolean).pop();
+
+    // 1. キャッシュされた「いいね」の数を確認
+    const cachedLikes = localStorage.getItem(`likes_${pageUrl}`);
+    const cachedTimestamp = localStorage.getItem(`likes_timestamp_${pageUrl}`);
+    
+    if (cachedLikes && cachedTimestamp && Date.now() - parseInt(cachedTimestamp) < cacheDuration) {
+      // キャッシュが有効ならローカルデータを使う
+      likes.set(parseInt(cachedLikes));
+    } else {
+      // 2. サーバーから「いいね」数を取得
+      await fetchLikesFromServer();
+    }
+
+    // 3. ユーザーが「いいね」済みかを確認（クッキーで保存）
+    const liked = getCookie(`liked_${pageUrl}`);
+    if (liked) {
+      isLiked.set(true);
+    }
+  });
+
+  // サーバーから「いいね」数を取得し、ローカルにキャッシュ
+  async function fetchLikesFromServer() {
     try {
-      pageUrl = window.location.pathname.split('/').filter(Boolean).pop();
-      const response = await fetch(`${AppConfig.likeserverurl}?${encodeURIComponent(pageUrl)}`);
+      const response = await fetch(`${import.meta.env.VITE_LAMBDA_SERVER_URL}?${encodeURIComponent(pageUrl)}`);
       const data = await response.json();
       if (data && data.last_updated !== null) {
         likes.set(data.likes);
+        // ローカルに「いいね」数とタイムスタンプを保存
+        localStorage.setItem(`likes_${pageUrl}`, data.likes);
+        localStorage.setItem(`likes_timestamp_${pageUrl}`, Date.now().toString());
       } else {
-        // データがなければ新規に初期値を設定
         await addNewPageLikes();
         likes.set(0);
       }
     } catch (error) {
       console.error("Error fetching likes:", error);
     }
-  });
+  }
 
+  // ページが新規の場合、サーバーに初期化リクエスト
   async function addNewPageLikes() {
     try {
-      // 新規ページの「いいね」数を0で初期化
-      await fetch(AppConfig.likeserverurl, {
+      await fetch(import.meta.env.VITE_LAMBDA_SERVER_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -75,16 +69,23 @@
     }
   }
 
+  // 「いいね」ボタンをクリック
   async function incrementLikes() {
-    // 現在の「いいね」数を取得してインクリメント
+    const liked = getCookie(`liked_${pageUrl}`);
+    if (liked) {
+      // 既に「いいね」している場合、ボタンを無効化
+      return;
+    }
+
+    // 現在の「いいね」数をインクリメント
     const newLikes = $likes + 1;
 
     // サーバーに更新をリクエスト
     try {
-      await fetch(AppConfig.likeserverurl, {
+      await fetch(import.meta.env.VITE_LAMBDA_SERVER_URL, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           type: "update",
@@ -93,18 +94,48 @@
         }),
       });
       likes.set(newLikes);  // クリック後に新しい値をセット
+
+      // クッキーに「いいね」済みの情報を保存
+      setCookie(`liked_${pageUrl}`, "true", 365); // クッキーの有効期限は365日
+
+      // ユーザーが「いいね」した状態にする
+      isLiked.set(true);
+
+      // ローカルに「いいね」数を更新
+      localStorage.setItem(`likes_${pageUrl}`, newLikes.toString());
+      localStorage.setItem(`likes_timestamp_${pageUrl}`, Date.now().toString());
     } catch (error) {
       console.error("Error incrementing likes:", error);
     }
   }
+
+  // クッキーを設定する関数
+  function setCookie(name: string, value: string, days: number) {
+    const date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/`;
+  }
+
+  // クッキーを取得する関数
+  function getCookie(name: string) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
 </script>
 
+<!-- レイアウト部分 -->
 <div class="mdc-typography--body1 post-footer">
   <div class="content fade-in">
     <Cell span={12}>
       <div class="flexy">
         <div class="margins">
-          <Fab color="primary" on:click={incrementLikes} extended class="centered-fab">
+          <Fab
+            color={$isLiked ? "primary" : "secondary"}
+            on:click={incrementLikes}
+            extended
+            class="centered-fab"
+            disabled={$isLiked}>
             <Icon class="material-icons" on>favorite</Icon>
             <Label>Likes: {$likes}</Label>
           </Fab>
@@ -114,3 +145,27 @@
   </div>
 </div>
 
+<style>
+  .post-footer {
+    margin-top: 100px;
+    text-align: center;
+  }
+
+  .flexy {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .margins {
+    margin: 10px;
+  }
+
+  .centered-fab {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+</style>

@@ -1,6 +1,8 @@
 <script lang="ts">
     import LayoutGrid, { Cell } from '@smui/layout-grid';
     import { AppConfig } from './AppConfig';
+    import Button, { Label } from '@smui/button';
+    import { aboutLink } from './CommonFunction';
     
     // @ts-ignore
     export let linkon;
@@ -29,7 +31,11 @@
                 SNS発信活動（京都・奈良などの日本美 / 地域情報発信）
             </div>
             {#if linkon}
-                <p><a href=/about>プロフィールをもっと見る</a></p>
+                <div class="demo-cell-left">
+                    <Button on:click={() => aboutLink()} variant="raised">
+                        <Label>プロフィールをもっと見る</Label>
+                    </Button>
+                </div>
             {/if}
         </div>
     </Cell>
