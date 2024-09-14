@@ -1,4 +1,4 @@
-## Kintone
+## kintone
 
 北海道の某NPO法人における子どもの居場所事業で、Kintoneを活用したデジタル化プロジェクトに携わっています。
 当初は事業に関する情報が紙ベースで管理されていましたが、利用者増加や事業規模の拡大に伴い、子どもの緊急連絡先や居場所の入退室状況などを適切に管理するシステム化の必要性が高まりました。
@@ -6,6 +6,10 @@
 ***
 
 ### 背景
+
+<div class="center-container">
+    <img src="/imgs/kintone-plugin/2024-09-14-17-37-04.png" class="center-image">
+</div>
 
 #### 2021年に子ども食堂事業を開始し、事業規模が拡大してきました。
 
@@ -17,19 +21,21 @@
 子どもに十分な目を配れず、事故などに気づきにくくなるリスクがあります。
 業務負荷が増加し、スタッフのワークエンゲージメントが低下するリスクがあります。
 
-**ワークエンゲージメント：仕事に対するメンタル面での健康度を表す概念で、仕事に対する「熱意・没頭・活力」の3要素が満たされている状態を指します。**
-
-***
+---
 
 ### 解決したい課題
 
-##### リスクの低減・解消
+<div class="center-container">
+    <img src="/imgs/kintone-plugin/2024-09-14-17-45-09.png" class="center-image">
+</div>
+
+#### リスクの低減・解消
 
 参加する子ども・保護者に関する情報をデジタルで一元管理します。
 過去および現在の参加者情報を一つの場所に集め、スタッフ全員がそれを把握できるようにします。
 今後の参加者の追加・削除時にも情報が適切にアップデートされる仕組みを作ります。
 
-##### 効率化・自走補助
+#### 効率化・自走補助
 
 スタッフの業務をデジタルで簡単かつシンプルにします。
 子どもの入退室管理や参加者リストの作成などの業務を可能な限り自動化します。
@@ -38,6 +44,10 @@
 ***
 
 ### ソリューション
+
+<div class="center-container">
+    <img src="/imgs/kintone-plugin/2024-09-14-17-37-47.png" class="center-image">
+</div>
 
 #### 業務内容
 
@@ -74,8 +84,8 @@
 </div>
 </div>
 
-##### タイマーアプリ
+#### タイマーアプリ
 
-`Kintone`上にタイマーを表示させ、時間が来たらアラートを出すアプリ。（イベントの時間管理などに活用）
+Kintone上にタイマーを表示させ、時間が来たらアラートを出すアプリ。（イベントやゲームなどでの時間管理などに活用）
 
 <blockquote class="twitter-tweet" data-media-max-width="560"><p lang="ja" dir="ltr">チラッとニーズがあったのでkintoneでゴリ押しタイマーアプリ作ってみた。。笑<br><br>DBの情報と連動して例えば時間きたら次のターンの情報を表示させて再開始が出来たりするのが普通のタイマーアプリと違うところか。<a href="https://twitter.com/hashtag/kintone?src=hash&amp;ref_src=twsrc%5Etfw">#kintone</a> <a href="https://twitter.com/hashtag/%E3%82%AD%E3%83%B3%E3%83%88%E3%83%BC%E3%83%B3?src=hash&amp;ref_src=twsrc%5Etfw">#キントーン</a> <a href="https://t.co/UgkrDd9798">pic.twitter.com/UgkrDd9798</a></p>&mdash; 他力code | コバッチ (@kobatch_tk) <a href="https://twitter.com/kobatch_tk/status/1792079390614122733?ref_src=twsrc%5Etfw">May 19, 2024</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
