@@ -2,12 +2,13 @@
   {lightTheme ? 'dark_mode' : 'light_mode'}
 </IconButton>
 
-<script>
+<script lang="ts">
   import { onMount } from 'svelte';
   import IconButton from '@smui/icon-button';
+  import { setMermaidTheme } from './Mermaid'; // Mermaidテーマを管理する関数をインポート
 
   let lightTheme = typeof window === 'undefined'
-    || window.matchMedia ('(prefers-color-scheme: light)').matches;
+    || window.matchMedia('(prefers-color-scheme: light)').matches;
 
   onMount(() => {
     // ローカルストレージからテーマ設定を読み込む
@@ -36,6 +37,9 @@
     document.head
       .querySelector('link[href="/smui-dark.css"]')
       .insertAdjacentElement('afterend', themeLink);
+
+    // Mermaidテーマを即座に反映させる
+    setMermaidTheme(!lightTheme); // テーマ切り替え時にMermaidテーマを即時に変更
   }
 
   function updateTheme() {
@@ -51,5 +55,9 @@
 
     // @ts-ignore
     themeLink.href = `/smui${lightTheme ? '' : '-dark'}.css`;
+
+    // Mermaidテーマを即座に反映させる
+    setMermaidTheme(!lightTheme); // 初回ロード時にもMermaidテーマを設定
   }
 </script>
+

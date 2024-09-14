@@ -10,7 +10,8 @@
 
     // ハイライトのスタイルを読み込む
     import hljs from 'highlight.js';
-    import 'highlight.js/styles/atom-one-dark.css'; // お好みのスタイルを選択
+    import 'highlight.js/styles/atom-one-dark.css';
+
     export let data;
 
     onMount(() => {
@@ -30,17 +31,16 @@
 
     // コンポーネントが破棄されたときに購読を解除
     onDestroy(unsubscribe);
-
 </script>
 
 <svelte:head>
     <!-- Open Graph メタタグ -->
-	<meta property="og:title" content={`${post_string} - ${AppConfig.title}`} />
-	<meta property="og:type" content="website" />
-	<meta property="og:url" content={`${AppConfig.url}/blog/${post_string}`} />
-	<meta property="og:image" content={`${AppConfig.url}${AppConfig.post_string[post_string]}`} />
-	<meta property="og:description" content={AppConfig.description} />
-	<meta property="og:site_name" content={AppConfig.title} />
+    <meta property="og:title" content={`${post_string} - ${AppConfig.title}`} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={`${AppConfig.url}/blog/${post_string}`} />
+    <meta property="og:image" content={`${AppConfig.url}${AppConfig.post_string[post_string]}`} />
+    <meta property="og:description" content={AppConfig.description} />
+    <meta property="og:site_name" content={AppConfig.title} />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -48,6 +48,9 @@
     <meta name="twitter:title" content={AppConfig.title} />
     <meta name="twitter:description" content={AppConfig.description} />
     <meta name="twitter:image" content={`${AppConfig.url}${AppConfig.post_string[post_string]}`} />
+
+    <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
 </svelte:head>
 
 <div class="mdc-typography--body1">

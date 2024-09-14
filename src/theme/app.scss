@@ -236,3 +236,25 @@ strong {
 .fade-in {
   animation: fadeIn 1s ease-out forwards;
 }
+
+.mermaid {
+  display: flex;
+  justify-content: center; /* 水平方向に中央揃え */
+  align-items: center; /* 垂直方向に中央揃え */
+  padding: 20px;
+}
+
+.center-container {
+  display: flex; /* Flexboxレイアウトを適用 */
+  justify-content: center; /* 水平方向の中央揃え */
+  align-items: center; /* 垂直方向の中央揃え */
+  padding: 20px;
+}
+
+.center-image {
+  max-width: 100%; /* オプション: 親要素に収まるように画像の最大幅を設定 */
+}
+
+figure {
+  text-align: center; /* 画像とキャプションを中央揃え */
+}
