@@ -13,6 +13,8 @@
 		"smui-theme-dark": "smui-theme compile static/smui-dark.css -i src/theme/dark"
 	},
 	"devDependencies": {
+		"@iconify-json/cib": "^1.2.0",
+		"@iconify-json/ic": "^1.2.0",
 		"@iconify-json/logos": "^1.2.0",
 		"@material/theme": "^14.0.0",
 		"@material/typography": "^14.0.0",
