@@ -12,7 +12,7 @@ export const AppConfig = {
 		facebook: 'https://www.facebook.com/takafumi.kobayashi.75',
 		twitter: 'https://www.twitter.com/kobatch_tk',
 		github: 'https://github.com/takafumikobayashi',
-		linkedin: 'https://www.linkedin.com/in/崇文-小林-310111174',
+		linkedin: 'https://www.linkedin.com/in/tariki-code/',
 		instagram: 'https://www.instagram.com/vertrek_kyoto/',
 	},
 	heroimage:[
