@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import IconButton from '@smui/icon-button';
 	import { setMermaidTheme } from './Mermaid'; // Mermaidテーマを管理する関数をインポート
+	import { lightThemeStore } from './themeStore';
 
 	let lightTheme =
 		typeof window === 'undefined' || window.matchMedia('(prefers-color-scheme: light)').matches;
@@ -37,6 +38,7 @@
 
 		// Mermaidテーマを即座に反映させる
 		setMermaidTheme(!lightTheme); // テーマ切り替え時にMermaidテーマを即時に変更
+		lightThemeStore.set(lightTheme);
 	}
 
 	function updateTheme() {
@@ -55,6 +57,7 @@
 
 		// Mermaidテーマを即座に反映させる
 		setMermaidTheme(!lightTheme); // 初回ロード時にもMermaidテーマを設定
+		lightThemeStore.set(lightTheme);
 	}
 </script>
 
