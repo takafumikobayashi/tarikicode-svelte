@@ -1,4 +1,5 @@
 @use 'sass:color';
+@use '@material/theme/styles';
 @use '@material/theme/index' as theme;
 @use '@material/checkbox/mixins' as checkbox;
 @use '@material/theme/color-palette';
@@ -12,6 +13,8 @@
 @use '@material/tab/mdc-tab';
 @use '@smui/tab-indicator/style' as tab-indicator-style;
 @use '@material/data-table/mdc-data-table';
+@use '@material/textfield/index' as textfield;
+@use '@material/textfield/icon/variables' as icon-variables;
 @use '@material/textfield/mdc-text-field';
 @use '@material/dialog/mdc-dialog';
 
