@@ -103,9 +103,11 @@ describe('CommonFunction', () => {
 	});
 
 	describe('New Release Link Functions', () => {
-		it('nr20241026Link should navigate to kintone-plugin blog post', () => {
+		it('nr20241026Link should navigate to SpeakerDeck talk', () => {
 			nr20241026Link();
-			expect(window.location.href).toBe('/blog/kintone-plugin');
+			expect(window.location.href).toBe(
+				'https://speakerdeck.com/takafumikobayashi/2024-dot-10-dot-26-power-platform-administratormian-qiang-hui-number-2'
+			);
 		});
 	});
 });
