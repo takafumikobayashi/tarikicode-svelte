@@ -39,6 +39,7 @@
 		// Mermaidテーマを即座に反映させる
 		setMermaidTheme(!lightTheme); // テーマ切り替え時にMermaidテーマを即時に変更
 		lightThemeStore.set(lightTheme);
+		applyThemeSideEffects(lightTheme);
 	}
 
 	function updateTheme() {
@@ -58,6 +59,20 @@
 		// Mermaidテーマを即座に反映させる
 		setMermaidTheme(!lightTheme); // 初回ロード時にもMermaidテーマを設定
 		lightThemeStore.set(lightTheme);
+		applyThemeSideEffects(lightTheme);
+	}
+
+	function applyThemeSideEffects(isLight: boolean) {
+		if (typeof document === 'undefined') return;
+		document.body.dataset.theme = isLight ? 'light' : 'dark';
+		let link = document.getElementById('hljs-theme') as HTMLLinkElement | null;
+		if (!link) {
+			link = document.createElement('link');
+			link.id = 'hljs-theme';
+			link.rel = 'stylesheet';
+			document.head.appendChild(link);
+		}
+		link.href = isLight ? '/hljs-light.css' : '/hljs-dark.css';
 	}
 </script>
 

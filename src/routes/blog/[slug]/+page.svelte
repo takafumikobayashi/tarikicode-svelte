@@ -10,7 +10,6 @@
 
 	// ハイライトのスタイルを読み込む
 	import hljs from 'highlight.js';
-	import 'highlight.js/styles/atom-one-dark.css';
 
 	export let data;
 
