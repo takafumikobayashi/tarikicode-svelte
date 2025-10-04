@@ -11,7 +11,7 @@
 
 	// ページのロード時に実行
 	onMount(async () => {
-		pageUrl = window.location.pathname.split('/').filter(Boolean).pop();
+		pageUrl = normalisePath(window.location.pathname);
 
 		// 1. キャッシュされた「いいね」の数を確認
 		const cachedLikes = localStorage.getItem(`likes_${pageUrl}`);
@@ -40,7 +40,7 @@
 	async function fetchLikesFromServer() {
 		try {
 			const response = await fetch(
-				`${import.meta.env.VITE_LAMBDA_SERVER_URL}?${encodeURIComponent(pageUrl)}`
+				`${import.meta.env.VITE_LAMBDA_SERVER_URL}?url=${encodeURIComponent(pageUrl)}`
 			);
 			const data = await response.json();
 			if (data && data.last_updated !== null) {
@@ -51,6 +51,8 @@
 			} else {
 				await addNewPageLikes();
 				likes.set(0);
+				localStorage.setItem(`likes_${pageUrl}`, '0');
+				localStorage.setItem(`likes_timestamp_${pageUrl}`, Date.now().toString());
 			}
 		} catch (error) {
 			console.error('Error fetching likes:', error);
@@ -112,6 +114,9 @@
 			localStorage.setItem(`likes_timestamp_${pageUrl}`, Date.now().toString());
 		} catch (error) {
 			console.error('Error incrementing likes:', error);
+			// エラー時はローカル更新を巻き戻す
+			likes.set(newLikes - 1);
+			isLiked.set(false);
 		}
 	}
 
@@ -127,6 +132,13 @@
 		const value = `; ${document.cookie}`;
 		const parts = value.split(`; ${name}=`);
 		if (parts.length === 2) return parts.pop().split(';').shift();
+	}
+
+	function normalisePath(pathname: string) {
+		if (!pathname || pathname === '/') {
+			return 'home';
+		}
+		return pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
 	}
 </script>
 
