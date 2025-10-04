@@ -101,16 +101,16 @@ architecture-beta
 <div class="mdc-data-table" style="max-width: 90%">
 <div class="mdc-data-table__table-container">
 
-| サービス | 説明 |
-| ---- | ---- |
-| [OpenAI](https://openai.com/) | 自然言語処理を得意とする生成AIプラットフォーム。文章生成、データ解析、コード補助など幅広い用途で活用されています。 |
-| [Claude(Anthropic)](https://claude.ai/) | 高度な倫理的判断を組み込んだAI。会話型AIであり、データセキュリティや倫理面を強化した設計が特徴です。 |
-| [Github Copilot](https://github.com/features/copilot) | GitHubのAIアシスタントで、コード補完や自動生成を行います。開発者の作業効率を向上させ、コーディングの時間を短縮します。 |
-| [Gemini](https://gemini.google.com/) | Googleの最新AIプラットフォームで、検索、画像認識、文章生成など多分野で活用可能な強力なAIツールです。 |
-| [Midjourny](https://www.midjourney.com/) | 高品質な画像生成に特化したAIツールで、デザインやクリエイティブなコンテンツ制作に最適です。 |
-| [Perplexity](https://www.perplexity.ai/) | 高速かつ効率的な検索AI。ユーザーの質問に応じて、複数の情報源から答えを集約し提供します。 |
-| [v0](https://v0.dev/chat) | Vercelが提供するAIツールで、プロンプトを入力することでUIデザインやフロントエンドのコードを自動生成するツール |
-| [AI Builder(PowerAutomate)](https://learn.microsoft.com/ja-jp/ai-builder/overview) | MicrosoftのPower Platformで使えるAI。プロセスの自動化やAIモデルの簡単な構築を可能にします。 |
+| サービス                                                                           | 説明                                                                                                                   |
+| ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| [OpenAI](https://openai.com/)                                                      | 自然言語処理を得意とする生成AIプラットフォーム。文章生成、データ解析、コード補助など幅広い用途で活用されています。     |
+| [Claude(Anthropic)](https://claude.ai/)                                            | 高度な倫理的判断を組み込んだAI。会話型AIであり、データセキュリティや倫理面を強化した設計が特徴です。                   |
+| [Github Copilot](https://github.com/features/copilot)                              | GitHubのAIアシスタントで、コード補完や自動生成を行います。開発者の作業効率を向上させ、コーディングの時間を短縮します。 |
+| [Gemini](https://gemini.google.com/)                                               | Googleの最新AIプラットフォームで、検索、画像認識、文章生成など多分野で活用可能な強力なAIツールです。                   |
+| [Midjourny](https://www.midjourney.com/)                                           | 高品質な画像生成に特化したAIツールで、デザインやクリエイティブなコンテンツ制作に最適です。                             |
+| [Perplexity](https://www.perplexity.ai/)                                           | 高速かつ効率的な検索AI。ユーザーの質問に応じて、複数の情報源から答えを集約し提供します。                               |
+| [v0](https://v0.dev/chat)                                                          | Vercelが提供するAIツールで、プロンプトを入力することでUIデザインやフロントエンドのコードを自動生成するツール           |
+| [AI Builder(PowerAutomate)](https://learn.microsoft.com/ja-jp/ai-builder/overview) | MicrosoftのPower Platformで使えるAI。プロセスの自動化やAIモデルの簡単な構築を可能にします。                            |
 
 </div>
 </div>
@@ -216,9 +216,9 @@ Midjourneyを利用し、`/imagine`プロンプトを使って効率的に画像
 
 ##### プロンプト例
 
-* Japanese Anime: 日本のアニメ調
-* Real: より写真に近いスタイル
-* Cool and Stylish: 現代的でスタイリッシュなテイスト
+- Japanese Anime: 日本のアニメ調
+- Real: より写真に近いスタイル
+- Cool and Stylish: 現代的でスタイリッシュなテイスト
 
 など
 
@@ -254,7 +254,8 @@ ReactやSvelteなどのオープンソースプロジェクトから、kintone�
 1. 技術的な実装に関する質問
 
 ```javascript
-prompt6= 'Svelteでフォームを実装したいのですが、入力内容に基づいてボタンを活性化/非活性にする方法を教えてください。'
+prompt6 =
+	'Svelteでフォームを実装したいのですが、入力内容に基づいてボタンを活性化/非活性にする方法を教えてください。';
 answer6 = `
 <script>
   let value = "";
@@ -267,25 +268,26 @@ answer6 = `
 
 <input bind:value={value} on:input={validateForm} />
 <button disabled={isButtonDisabled}>Submit</button>
-`
+`;
 ```
 
 2. コードのリファクタリングや最適化に関する質問
 
 ```javascript
-prompt7 = '現在のコードを最適化したいです。特に非同期処理の部分をPromise.allを使って効率化する方法を教えてください。'
+prompt7 =
+	'現在のコードを最適化したいです。特に非同期処理の部分をPromise.allを使って効率化する方法を教えてください。';
 answer7 = `
 async function fetchData() {
   const [data1, data2] = await Promise.all([fetch(url1), fetch(url2)]);
   return { data1, data2 };
 }
-`
+`;
 ```
 
 3. 外部サービスとの連携に関する質問
 
 ```javascript
-prompt8 `AWS SESを使ってLambdaからメールを送信したいです。具体的な実装方法を教えてください。`
+prompt8`AWS SESを使ってLambdaからメールを送信したいです。具体的な実装方法を教えてください。`;
 answer8 = `
 import AWS from 'aws-sdk';
 const ses = new AWS.SES();
@@ -298,14 +300,15 @@ const sendEmail = async (subject, email, content) => {
   };
   await ses.sendEmail(params).promise();
 };
-`
+`;
 ```
 
 4. エラー解決とデバッグに関する質問
 
 ```javascript
-prompt9 = 'ReferenceError: window is not defined というエラーが出ました。解決方法を教えてください。'
-answer9 =  `
+prompt9 =
+	'ReferenceError: window is not defined というエラーが出ました。解決方法を教えてください。';
+answer9 = `
 このエラーは、サーバーサイドレンダリング（SSR）環境で window オブジェクトを使おうとした際に発生します。onMount フックを使って、クライアントサイドでのみ window を使用するように修正します。
 
 import { onMount } from 'svelte';
@@ -313,13 +316,13 @@ import { onMount } from 'svelte';
 onMount(() => {
   const width = window.innerWidth;
 });
-`
+`;
 ```
 
 5. セキュリティやパフォーマンスの向上に関する質問
 
 ```javascript
-prompt10 = 'ambdaのリクエストを特定のドメインからのみ受け付けるようにする方法を教えてください。'
+prompt10 = 'ambdaのリクエストを特定のドメインからのみ受け付けるようにする方法を教えてください。';
 answer10 = `
 export const handler = async (event) => {
   const allowedDomains = ['https://yourdomain.com'];
@@ -331,7 +334,7 @@ export const handler = async (event) => {
 
   // 処理を続ける
 };
-`
+`;
 ```
 
 ##
@@ -352,13 +355,12 @@ export const handler = async (event) => {
 
 https://chatgpt.com/g/g-AYvtgiDTI-emodetect
 
-
-* 感謝表現の頻度
-* ポジティブ表現の頻度
-* 感謝の対象（直接的）
-* 態度・行動に対する感謝
-* 感謝の強度
-* 総合感謝スコア
+- 感謝表現の頻度
+- ポジティブ表現の頻度
+- 感謝の対象（直接的）
+- 態度・行動に対する感謝
+- 感謝の強度
+- 総合感謝スコア
 
 ```JSON
 {
@@ -380,7 +382,7 @@ OpenAI APIを使ってシステムに組み込む例です。以下は、メッ�
 const OpenAI = require('openai').OpenAI
 
 const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY 
+    apiKey: process.env.OPENAI_API_KEY
 })
 
 async function generateText(message) {
@@ -535,7 +537,7 @@ AIを活用して、データ解析の自動化と業務プロセスの最適化
 
 AIシステムが最大限の効果を発揮するように、導入後も運用状況をモニタリングし、改善提案を行います。
 
-## 
+##
 
 ---
 

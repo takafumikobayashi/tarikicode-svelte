@@ -1,0 +1,30 @@
+# Build outputs
+.svelte-kit/
+build/
+dist/
+package/
+
+# Dependencies
+node_modules/
+
+# Static files
+static/
+
+# Coverage
+coverage/
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Lock files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Cache
+.vite/

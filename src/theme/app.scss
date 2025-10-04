@@ -19,242 +19,241 @@
 @use '@material/dialog/mdc-dialog';
 
 html {
-  @include typography.typography('body1');
+	@include typography.typography('body1');
 }
 
 body {
-  margin: 0;
-  background-color: theme.$background;
-  color: theme.$on-surface;
-  font-size: calc(16px + (17 - 16) * ((100vw - 300px) / (1600 - 300)));
-  line-height: calc(1.7em + (1.5 - 1.2) * ((100vw - 300px)/(1600 - 300)));
+	margin: 0;
+	background-color: theme.$background;
+	color: theme.$on-surface;
+	font-size: calc(16px + (17 - 16) * ((100vw - 300px) / (1600 - 300)));
+	line-height: calc(1.7em + (1.5 - 1.2) * ((100vw - 300px) / (1600 - 300)));
 }
 
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px; /* スクロールバーの高さ */
+	width: 5px;
+	height: 5px; /* スクロールバーの高さ */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888; /* スクロールバーのハンドルの背景色 */
-  border-radius: 6px;
+	background: #888; /* スクロールバーのハンドルの背景色 */
+	border-radius: 6px;
 }
 
 a {
-  color: theme.$secondary;
+	color: theme.$secondary;
 }
 
 caption {
-  @include typography.typography('caption');
+	@include typography.typography('caption');
 }
 
 h1 {
-  @include typography.typography('headline1');
+	@include typography.typography('headline1');
 }
 
 h2 {
-  @include typography.typography('headline2');
+	@include typography.typography('headline2');
 }
 
 h3 {
-  @include typography.typography('headline3');
+	@include typography.typography('headline3');
 }
 
 h4 {
-  @include typography.typography('headline4');
+	@include typography.typography('headline4');
 }
 
 h5 {
-  @include typography.typography('headline5');
+	@include typography.typography('headline5');
 }
 
 h6 {
-  @include typography.typography('headline6');
+	@include typography.typography('headline6');
 }
 
 .table-wrapper {
-  display: flex;
-  justify-content: center; /* 水平方向の中央揃え */
-  align-items: center;      /* 垂直方向の中央揃え */
-  width: 100%;
-  height: 100%; /* 必要に応じて高さを指定 */
-  box-sizing: border-box;
-  padding: 20px; /* 必要に応じて余白を調整 */
+	display: flex;
+	justify-content: center; /* 水平方向の中央揃え */
+	align-items: center; /* 垂直方向の中央揃え */
+	width: 100%;
+	height: 100%; /* 必要に応じて高さを指定 */
+	box-sizing: border-box;
+	padding: 20px; /* 必要に応じて余白を調整 */
 }
 
 table {
-  @extend .mdc-data-table__table;
-  
-  thead {
-    @extend .mdc-data-table__header-row;
-  }
+	@extend .mdc-data-table__table;
 
-  tbody {
-    @extend .mdc-data-table__content;
-  }
+	thead {
+		@extend .mdc-data-table__header-row;
+	}
 
-  tr {
-    @extend .mdc-data-table__row;
-  }
+	tbody {
+		@extend .mdc-data-table__content;
+	}
 
-  th {
-    @extend .mdc-data-table__header-cell;
-  }
+	tr {
+		@extend .mdc-data-table__row;
+	}
 
-  td {
-    @extend .mdc-data-table__cell;
-  }
+	th {
+		@extend .mdc-data-table__header-cell;
+	}
+
+	td {
+		@extend .mdc-data-table__cell;
+	}
 }
 
 pre {
-  max-width: 90%; /* 最大幅を設定 */
-  margin: 0 auto; /* 上下のマージンを0に、左右のマージンを自動でセンタリング */
-
+	max-width: 90%; /* 最大幅を設定 */
+	margin: 0 auto; /* 上下のマージンを0に、左右のマージンを自動でセンタリング */
 }
 
 pre code {
-  border-radius: 10px; /* 角を丸める */
+	border-radius: 10px; /* 角を丸める */
 }
 
 /* スクロールバーのスタイル */
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555; /* スクロールバーのハンドルの背景色（ホバー時） */
+	background: #555; /* スクロールバーのハンドルの背景色（ホバー時） */
 }
 
 small {
-  font-size: 0.9em;
+	font-size: 0.9em;
 }
 
 big {
-  font-size: 1.1em;
+	font-size: 1.1em;
 }
 
 b,
 strong {
-  font-weight: bold;
+	font-weight: bold;
 }
 
 .material-icons {
-  vertical-align: text-bottom;
+	vertical-align: text-bottom;
 }
 
 .vertical-center {
-  display: flex;
-  align-items: center;
-  .material-icons {
-    vertical-align: initial!important;
-  }
+	display: flex;
+	align-items: center;
+	.material-icons {
+		vertical-align: initial !important;
+	}
 }
 
 .surface-lighter-bg {
-  background-color: color.scale(theme.$surface, $lightness: +30%);
+	background-color: color.scale(theme.$surface, $lightness: +30%);
 }
 .surface-darker-bg {
-  background-color: color.scale(theme.$surface, $lightness: -30%);
+	background-color: color.scale(theme.$surface, $lightness: -30%);
 }
 
 @media (min-width: 400px) {
-  body {
-    font-size: 16px;
-  }
+	body {
+		font-size: 16px;
+	}
 }
 
 .my-colored-checkbox {
-  --mdc-checkbox-checked-color: #{color-palette.$green-600};
+	--mdc-checkbox-checked-color: #{color-palette.$green-600};
 
-  @include checkbox.container-colors(
-    $marked-stroke-color: color-palette.$green-600,
-    $marked-fill-color: color-palette.$green-600
-  );
-  @include checkbox.disabled-container-colors(
-    $marked-stroke-color: color-palette.$green-900,
-    $marked-fill-color: color-palette.$green-900
-  );
-  @include checkbox.ink-color(color-palette.$green-100);
-  @include checkbox.disabled-ink-color(color-palette.$green-400);
-  @include checkbox.focus-indicator-color(color-palette.$green-100);
+	@include checkbox.container-colors(
+		$marked-stroke-color: color-palette.$green-600,
+		$marked-fill-color: color-palette.$green-600
+	);
+	@include checkbox.disabled-container-colors(
+		$marked-stroke-color: color-palette.$green-900,
+		$marked-fill-color: color-palette.$green-900
+	);
+	@include checkbox.ink-color(color-palette.$green-100);
+	@include checkbox.disabled-ink-color(color-palette.$green-400);
+	@include checkbox.focus-indicator-color(color-palette.$green-100);
 }
 
 .my-fully-colored-checkbox {
-  --mdc-checkbox-checked-color: #{color-palette.$green-600};
+	--mdc-checkbox-checked-color: #{color-palette.$green-600};
 
-  @include checkbox.container-colors(
-    $unmarked-stroke-color: color-palette.$green-600,
-    $unmarked-fill-color: transparent,
-    $marked-stroke-color: color-palette.$green-600,
-    $marked-fill-color: color-palette.$green-600
-  );
-  @include checkbox.disabled-container-colors(
-    $unmarked-stroke-color: color-palette.$green-900,
-    $unmarked-fill-color: transparent,
-    $marked-stroke-color: color-palette.$green-900,
-    $marked-fill-color: color-palette.$green-900
-  );
-  @include checkbox.ink-color(color-palette.$green-100);
-  @include checkbox.disabled-ink-color(color-palette.$green-400);
-  @include checkbox.focus-indicator-color(color-palette.$green-100);
+	@include checkbox.container-colors(
+		$unmarked-stroke-color: color-palette.$green-600,
+		$unmarked-fill-color: transparent,
+		$marked-stroke-color: color-palette.$green-600,
+		$marked-fill-color: color-palette.$green-600
+	);
+	@include checkbox.disabled-container-colors(
+		$unmarked-stroke-color: color-palette.$green-900,
+		$unmarked-fill-color: transparent,
+		$marked-stroke-color: color-palette.$green-900,
+		$marked-fill-color: color-palette.$green-900
+	);
+	@include checkbox.ink-color(color-palette.$green-100);
+	@include checkbox.disabled-ink-color(color-palette.$green-400);
+	@include checkbox.focus-indicator-color(color-palette.$green-100);
 }
 
 .my-colored-fab {
-  @include fab.accessible(color-palette.$green-600);
+	@include fab.accessible(color-palette.$green-600);
 }
 
 .main-header {
-  background-color: theme.$background;
-  max-width: 80em;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 20px;
-  top: 0;
-  position: fixed; /* 固定配置 */
-  width: 100%;
-  box-sizing: border-box; /* パディングを含めた幅で100%になるように */
-  z-index: 7; /* 他の要素より上に表示されるように */
+	background-color: theme.$background;
+	max-width: 80em;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 20px 20px;
+	top: 0;
+	position: fixed; /* 固定配置 */
+	width: 100%;
+	box-sizing: border-box; /* パディングを含めた幅で100%になるように */
+	z-index: 7; /* 他の要素より上に表示されるように */
 }
 
 @include paper.paper-color(
-  custom-green,
-  color-palette.$green-600,
-  theme-color.accessible-ink-color(color-palette.$green-600)
+	custom-green,
+	color-palette.$green-600,
+	theme-color.accessible-ink-color(color-palette.$green-600)
 );
 
 .custom-green {
-  color: color-palette.$green-600;
+	color: color-palette.$green-600;
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
 }
 
 .fade-in {
-  animation: fadeIn 1s ease-out forwards;
+	animation: fadeIn 1s ease-out forwards;
 }
 
 .mermaid {
-  display: flex;
-  justify-content: center; /* 水平方向に中央揃え */
-  align-items: center; /* 垂直方向に中央揃え */
-  padding: 20px;
+	display: flex;
+	justify-content: center; /* 水平方向に中央揃え */
+	align-items: center; /* 垂直方向に中央揃え */
+	padding: 20px;
 }
 
 .center-container {
-  display: flex; /* Flexboxレイアウトを適用 */
-  justify-content: center; /* 水平方向の中央揃え */
-  align-items: center; /* 垂直方向の中央揃え */
-  padding: 20px;
+	display: flex; /* Flexboxレイアウトを適用 */
+	justify-content: center; /* 水平方向の中央揃え */
+	align-items: center; /* 垂直方向の中央揃え */
+	padding: 20px;
 }
 
 .center-image {
-  max-width: 100%; /* オプション: 親要素に収まるように画像の最大幅を設定 */
+	max-width: 100%; /* オプション: 親要素に収まるように画像の最大幅を設定 */
 }
 
 figure {
-  text-align: center; /* 画像とキャプションを中央揃え */
+	text-align: center; /* 画像とキャプションを中央揃え */
 }

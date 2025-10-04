@@ -1,66 +1,68 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-    import Header from '$lib/Header.svelte';
-    import Footer from '$lib/Footer.svelte';
-    import ContentImage from '$lib/ContentImage.svelte';
-    import { page } from '$app/stores';
-    import { onDestroy } from 'svelte';
-    import { AppConfig } from '$lib/AppConfig';
-    import PostFooter from '$lib/PostFooter.svelte';
+	import { onMount } from 'svelte';
+	import Header from '$lib/Header.svelte';
+	import Footer from '$lib/Footer.svelte';
+	import ContentImage from '$lib/ContentImage.svelte';
+	import { page } from '$app/stores';
+	import { onDestroy } from 'svelte';
+	import { AppConfig } from '$lib/AppConfig';
+	import PostFooter from '$lib/PostFooter.svelte';
 
-    // ハイライトのスタイルを読み込む
-    import hljs from 'highlight.js';
-    import 'highlight.js/styles/atom-one-dark.css';
+	// ハイライトのスタイルを読み込む
+	import hljs from 'highlight.js';
+	import 'highlight.js/styles/atom-one-dark.css';
 
-    export let data;
+	export let data;
 
-    onMount(() => {
-        // コンテンツがDOMにレンダリングされた後にハイライトを適用
-        document.querySelectorAll('pre code').forEach((block) => {
-            //@ts-ignore
-            hljs.highlightBlock(block);
-        });
-    });
+	onMount(() => {
+		// コンテンツがDOMにレンダリングされた後にハイライトを適用
+		document.querySelectorAll('pre code').forEach((block) => {
+			//@ts-ignore
+			hljs.highlightBlock(block);
+		});
+	});
 
-    // slugを取得
-    let post_string: string;
-    // page ストアを購読して slug パラメータを取得
-    const unsubscribe = page.subscribe($page => {
-        post_string = $page.params.slug;
-    });
+	// slugを取得
+	let post_string: string;
+	// page ストアを購読して slug パラメータを取得
+	const unsubscribe = page.subscribe(($page) => {
+		post_string = $page.params.slug;
+	});
 
-    // コンポーネントが破棄されたときに購読を解除
-    onDestroy(unsubscribe);
+	// コンポーネントが破棄されたときに購読を解除
+	onDestroy(unsubscribe);
 </script>
 
 <svelte:head>
-    <!-- Open Graph メタタグ -->
-    <meta property="og:title" content={`${post_string} - ${AppConfig.title}`} />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={`${AppConfig.url}/blog/${post_string}`} />
-    <meta property="og:image" content={`${AppConfig.url}${AppConfig.post_string[post_string]}`} />
-    <meta property="og:description" content={AppConfig.description} />
-    <meta property="og:site_name" content={AppConfig.title} />
+	<!-- Open Graph メタタグ -->
+	<meta property="og:title" content={`${post_string} - ${AppConfig.title}`} />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content={`${AppConfig.url}/blog/${post_string}`} />
+	<meta property="og:image" content={`${AppConfig.url}${AppConfig.post_string[post_string]}`} />
+	<meta property="og:description" content={AppConfig.description} />
+	<meta property="og:site_name" content={AppConfig.title} />
 
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content={AppConfig.xaccuont} />
-    <meta name="twitter:title" content={AppConfig.title} />
-    <meta name="twitter:description" content={AppConfig.description} />
-    <meta name="twitter:image" content={`${AppConfig.url}${AppConfig.post_string[post_string]}`} />
+	<!-- Twitter Card -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:site" content={AppConfig.xaccuont} />
+	<meta name="twitter:title" content={AppConfig.title} />
+	<meta name="twitter:description" content={AppConfig.description} />
+	<meta name="twitter:image" content={`${AppConfig.url}${AppConfig.post_string[post_string]}`} />
 
-    <link
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
+	<link
+		href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+		rel="stylesheet"
+	/>
 </svelte:head>
 
 <div class="mdc-typography--body1">
-    <div class="content fade-in">
-        <Header />
-        <ContentImage post_string={post_string}/>
-        <article>
-            {@html data.body}
-        </article>
-        <PostFooter />
-        <Footer />
-    </div>
+	<div class="content fade-in">
+		<Header />
+		<ContentImage {post_string} />
+		<article>
+			{@html data.body}
+		</article>
+		<PostFooter />
+		<Footer />
+	</div>
 </div>

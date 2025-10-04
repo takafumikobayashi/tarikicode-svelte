@@ -67,11 +67,11 @@ architecture-beta
 
 ここでは実際に行ったプロジェクトのほんの一部を紹介させていただければと思います。具体的には以下となります。
 
-* SvelteKitとLambdaを使ったLP開発
-* VueおよびSpringを使った業務システム開発
-* Expressおよびpm２を使ったユーザー向けAPIの開発
-* LINEを活用したソリューション -1
-* LINEを活用したソリューション -2
+- SvelteKitとLambdaを使ったLP開発
+- VueおよびSpringを使った業務システム開発
+- Expressおよびpm２を使ったユーザー向けAPIの開発
+- LINEを活用したソリューション -1
+- LINEを活用したソリューション -2
 
 ---
 
@@ -87,10 +87,10 @@ architecture-beta
 
 ##### アーキテクチャ
 
-* SvelteKitおよび、CSSフレームワークとしてSUMIを採用。
-* markdownをPushすればその内容が記事になるように設計。highlighter.jsおよびmermaid.jsも実装済のため、コード表記も図形描画にも対応。
-* 記事に「いいね」を残すことができるので、サーバーサイド側でLambdaを準備し、その履歴をS3に保管されたJSONにて管理。
-* Svelte側はNetlifyにて、Lmabda側はGithub Actionsにてオートデプロイを実装。
+- SvelteKitおよび、CSSフレームワークとしてSUMIを採用。
+- markdownをPushすればその内容が記事になるように設計。highlighter.jsおよびmermaid.jsも実装済のため、コード表記も図形描画にも対応。
+- 記事に「いいね」を残すことができるので、サーバーサイド側でLambdaを準備し、その履歴をS3に保管されたJSONにて管理。
+- Svelte側はNetlifyにて、Lmabda側はGithub Actionsにてオートデプロイを実装。
 
 ```mermaid
 architecture-beta
@@ -103,11 +103,11 @@ architecture-beta
 
     service svelte(logos:svelte-icon)[Svelte] in nodejs1
     service lambda1(logos:aws-lambda)[Lambda] in aws
-    service gateway(logos:aws-api-gateway)[ApiGateway] in aws 
+    service gateway(logos:aws-api-gateway)[ApiGateway] in aws
     service s3(logos:aws-s3)[s3Backet]  in aws
     service github2(cib:github)[SvelteRepos] in repos1
-    service github3(cib:github)[LambdaRepos] in repos2 
-    service netlify(logos:netlify-icon)[NetlifyCDN] in repos1 
+    service github3(cib:github)[LambdaRepos] in repos2
+    service netlify(logos:netlify-icon)[NetlifyCDN] in repos1
     service actions(logos:github-actions)[Actions] in repos2
     service typescript(logos:typescript-icon)[Code] in nodejs2
 
@@ -128,11 +128,11 @@ architecture-beta
 <div class="mdc-data-table" style="max-width: 90%">
 <div class="mdc-data-table__table-container">
 
-| パッケージ名 | 説明 | URL |
-| ---- | ---- | ---- |
-| Svelte Material UI | Svelte版 Material UIフレームワークパッケージ | https://sveltematerialui.com/ |
-| highlight.js | コードブロックのシンタックスハイライト機能 | https://highlightjs.org/ |
-| mermaid.js | markdownのコードブロック表記による図形やチャート表示機能 | https://mermaid.js.org/ |
+| パッケージ名       | 説明                                                     | URL                           |
+| ------------------ | -------------------------------------------------------- | ----------------------------- |
+| Svelte Material UI | Svelte版 Material UIフレームワークパッケージ             | https://sveltematerialui.com/ |
+| highlight.js       | コードブロックのシンタックスハイライト機能               | https://highlightjs.org/      |
+| mermaid.js         | markdownのコードブロック表記による図形やチャート表示機能 | https://mermaid.js.org/       |
 
 </div>
 </div>
@@ -146,9 +146,9 @@ architecture-beta
 
 ##### アーキテクチャ
 
-* フロントエンドはVue.js、バックエンドはJavaのSpringを使った構成。
-* リポジトリはGitlabを使い、データベースはPostgresを使いました、OR-Mapper(MyBatis)を活用。
-* クラウドはAzure環境を使い、AKSを活用したマイクロサービスアーキテクチャを実現。
+- フロントエンドはVue.js、バックエンドはJavaのSpringを使った構成。
+- リポジトリはGitlabを使い、データベースはPostgresを使いました、OR-Mapper(MyBatis)を活用。
+- クラウドはAzure環境を使い、AKSを活用したマイクロサービスアーキテクチャを実現。
 
 ```mermaid
 architecture-beta
@@ -183,9 +183,9 @@ Node.jsで初めて構築したユーザー向けAPIサービスです。
 
 ##### アーキテクチャ
 
-* シンプルな構成: 業務内での活用を想定し、スケーラビリティは重視せず、IaaS上で構築。一定のスペックを持つものの、複雑さを避けました。
-* Expressの採用: 当時の主流であったExpressを使用し、リバースプロキシの配下で運用。
-* プロセス監視: pm2を用いてNode.jsプロセスを簡単に管理し、デーモン化を実現。
+- シンプルな構成: 業務内での活用を想定し、スケーラビリティは重視せず、IaaS上で構築。一定のスペックを持つものの、複雑さを避けました。
+- Expressの採用: 当時の主流であったExpressを使用し、リバースプロキシの配下で運用。
+- プロセス監視: pm2を用いてNode.jsプロセスを簡単に管理し、デーモン化を実現。
 
 ```mermaid
 architecture-beta
@@ -215,11 +215,11 @@ INE公式アカウントの友だちに、Instagram投稿の都度通知が送�
 
 ##### アーキテクチャ
 
-* LINE Messaging APIを活用
-* heroku環境にTypeScriptベースの「nest.js」でWebhookサーバーを構築
-* Gitへのpushでオートデプロイ
-* facebookAPIでInstagramの投稿やハッシュタグを検索
-* firebaseでユーザー管理
+- LINE Messaging APIを活用
+- heroku環境にTypeScriptベースの「nest.js」でWebhookサーバーを構築
+- Gitへのpushでオートデプロイ
+- facebookAPIでInstagramの投稿やハッシュタグを検索
+- firebaseでユーザー管理
 
 ```mermaid
 architecture-beta
@@ -248,8 +248,8 @@ architecture-beta
 <div class="mdc-data-table" style="max-width: 90%">
 <div class="mdc-data-table__table-container">
 
-| リポジトリ名 | 説明 | Github |
-| ---- | ---- | ---- |
+| リポジトリ名                             | 説明                                     | Github                                                                        |
+| ---------------------------------------- | ---------------------------------------- | ----------------------------------------------------------------------------- |
 | vertrek_kyoto-linebots-webhook-on-heroku | nest.jsにて構築されたWebhook用のサーバー | https://github.com/takafumikobayashi/vertrek_kyoto-linebots-webhook-on-heroku |
 
 </div>
@@ -268,12 +268,12 @@ architecture-beta
 
 ##### アーキテクチャ
 
-* LINE MessagingAPIを使って実現。
-* API GatewayとLambdaでリクエストを受け、SQSに保存。
-* Raspberry PiがSQSをポーリングし、リクエストを検知したら処理を開始。
-* 投稿された文章から、動画が欲しいのか？静止画が欲しいのか？何枚欲しいのか？をOpenAI（GPT-4o-mini）にて分析、その内容にて撮影を実施。
-* 撮影されたデータはS3に保存、かつRekognitionを使って分析。
-* Rekognitionの内容に基づき、ネコの状況を判断し、LINEに画像・動画リンクとともに返信。
+- LINE MessagingAPIを使って実現。
+- API GatewayとLambdaでリクエストを受け、SQSに保存。
+- Raspberry PiがSQSをポーリングし、リクエストを検知したら処理を開始。
+- 投稿された文章から、動画が欲しいのか？静止画が欲しいのか？何枚欲しいのか？をOpenAI（GPT-4o-mini）にて分析、その内容にて撮影を実施。
+- 撮影されたデータはS3に保存、かつRekognitionを使って分析。
+- Rekognitionの内容に基づき、ネコの状況を判断し、LINEに画像・動画リンクとともに返信。
 
 これにより自然な会話の中でユーザーはリクエスト、またその結果として自然な結果を返してくれることを実現、より普段の会話に近い形でのコミュニケーションを実現しています。
 
@@ -317,9 +317,9 @@ architecture-beta
 <div class="mdc-data-table" style="max-width: 90%">
 <div class="mdc-data-table__table-container">
 
-| リポジトリ名 | 説明 | Github |
-| ---- | ---- | ---- |
-| raspi-catcam | RaspberryPi側で実装してるNode.jsサーバー | https://github.com/takafumikobayashi/raspi-catcam |
+| リポジトリ名        | 説明                                                          | Github                                                   |
+| ------------------- | ------------------------------------------------------------- | -------------------------------------------------------- |
+| raspi-catcam        | RaspberryPi側で実装してるNode.jsサーバー                      | https://github.com/takafumikobayashi/raspi-catcam        |
 | raspi-catcam-lambda | AWS側で実装しているLambdaのソースコードとGithub Acrionsの設定 | https://github.com/takafumikobayashi/raspi-catcam-lambda |
 
 </div>
@@ -339,21 +339,21 @@ Node.jsでお困りなことはありませんか？
 
 #### コンサルティング
 
-* フロントエンドフレームワークを使ってWebサイトやWebアプリを構築したい。
-* Node.jsを駆使したモダンなサイトを構築したいが何から始めればよいのかわからない。
-* やりたい目的に沿ったフレームワークや技術の選定をしたい。
-* これらを総合的に勘案し、事業フェーズやコストの観点を盛り込んだWebシステム化戦略策定を支援してほしい。
+- フロントエンドフレームワークを使ってWebサイトやWebアプリを構築したい。
+- Node.jsを駆使したモダンなサイトを構築したいが何から始めればよいのかわからない。
+- やりたい目的に沿ったフレームワークや技術の選定をしたい。
+- これらを総合的に勘案し、事業フェーズやコストの観点を盛り込んだWebシステム化戦略策定を支援してほしい。
 
 #### 講師・ハンズオン
 
-* Node.jsやJavaScriptの基礎研修。
-* ReactやSvelteなどのフレームワークを使ったハンズオン研修。
-* 本格的なSQLの研修（初級から上級者向けまで）。
+- Node.jsやJavaScriptの基礎研修。
+- ReactやSvelteなどのフレームワークを使ったハンズオン研修。
+- 本格的なSQLの研修（初級から上級者向けまで）。
 
 #### AIを活用した開発支援
 
-* Github Copilotを活用したコーディング手法の研修・ハンズオン。
-* OpenAIを活用したペアプログラミング、ゼロベースのコーディング、およびデバック・トラブルシューティングの進め方とテクニック。
+- Github Copilotを活用したコーディング手法の研修・ハンズオン。
+- OpenAIを活用したペアプログラミング、ゼロベースのコーディング、およびデバック・トラブルシューティングの進め方とテクニック。
 
 など
 
