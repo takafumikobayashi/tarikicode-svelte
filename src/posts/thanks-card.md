@@ -10,7 +10,7 @@
 #### 職場に新たな風を—モチベーションとエンゲージメントの向上へ
 
 <div class="center-container">
-    <img src="/imgs/thanks-card/thanks.png" class="center-image" width=40%>
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/thanks-card/thanks.png" class="center-image" width=40%>
 </div>
 
 私は、組織におけるオープンな情報共有とコミュニケーション、および前向きで目的ドリブンな意見をより積極的になものにし、カルチャーとして醸成していきたいという課題感に対し、Microsoft TeamsとAdaptiveCardを活用した「感謝を伝える仕組み」を導入し、いわゆる「ワークエンゲージメント」の向上に取り組んでいます。これによりジョブ・クラフティングの観点からも、社員の自主性や仕事に対するやりがいをより一層高める効果が期待されています。
@@ -20,7 +20,7 @@
 ### Challenge and Hypothesis
 
 <div class="center-container">
-    <img src="/imgs/thanks-card/2024-09-14-12-03-41.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/thanks-card/2024-09-14-12-03-41.png" class="center-image">
 </div>
 
 導入以前、組織内では以下のような課題が見受けられました。
@@ -63,7 +63,7 @@
 ### Work Engagement
 
 <div class="center-container">
-    <img src="/imgs/thanks-card/2024-09-14-11-52-43.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/thanks-card/2024-09-14-11-52-43.png" class="center-image">
 </div>
 
 #### ワークエンゲージメントとは？
@@ -101,7 +101,7 @@ ThankCardは単なるメッセージのやり取りだけでなく、感謝が�
 ### Job Crafting
 
 <div class="center-container">
-    <img src="/imgs/thanks-card/2024-09-14-11-58-28.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/thanks-card/2024-09-14-11-58-28.png" class="center-image">
 </div>
 
 #### ジョブ・クラフティングとは？
@@ -139,7 +139,7 @@ ThankCardを導入することで、社員は感謝のやり取りを通じて�
 
 <div class="center-container">
     <figure>
-        <img src="/imgs/thanks-card/2024-09-14-14-18-46.png" class="center-image" width=80%>
+        <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/thanks-card/2024-09-14-14-18-46.png" class="center-image" width=80%>
         <figcaption><div class="mdc-typography--caption">カードのデザインはフローの中でランダムに設定、何が出るかはお楽しみ</div></figcaption>
     </figure>
 </div>

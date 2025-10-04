@@ -8,7 +8,7 @@
 ### Background and Issues
 
 <div class="center-container">
-    <img src="/imgs/kintone-plugin/2024-09-14-17-37-04.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/kintone-plugin/2024-09-14-17-37-04.png" class="center-image">
 </div>
 
 #### 2021年に子ども食堂事業を開始し、事業規模が拡大
@@ -26,7 +26,7 @@
 ### Challenges
 
 <div class="center-container">
-    <img src="/imgs/kintone-plugin/2024-09-14-17-45-09.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/kintone-plugin/2024-09-14-17-45-09.png" class="center-image">
 </div>
 
 #### リスクの低減・解消
@@ -46,7 +46,7 @@
 ### Solutions
 
 <div class="center-container">
-    <img src="/imgs/kintone-plugin/2024-09-14-17-37-47.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/kintone-plugin/2024-09-14-17-37-47.png" class="center-image">
 </div>
 
 #### 業務内容

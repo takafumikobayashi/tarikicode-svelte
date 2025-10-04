@@ -17,7 +17,9 @@
 		"format": "prettier --write .",
 		"prepare": "npm run smui-theme-light && npm run smui-theme-dark",
 		"smui-theme-light": "smui-theme compile static/smui.css -i src/theme",
-		"smui-theme-dark": "smui-theme compile static/smui-dark.css -i src/theme/dark"
+		"smui-theme-dark": "smui-theme compile static/smui-dark.css -i src/theme/dark",
+		"lint:md": "markdownlint-cli2 **/*.md !node_modules !static",
+		"fix:md": "markdownlint-cli2 --fix **/*.md !node_modules !static"
 	},
 	"devDependencies": {
 		"@iconify-json/cib": "^1.2.0",
@@ -61,6 +63,7 @@
 		"highlight.js": "^11.9.0",
 		"i": "^0.3.7",
 		"jsdom": "^27.0.0",
+		"markdownlint-cli2": "^0.18.1",
 		"marked": "^12.0.1",
 		"mermaid": "^11.2.0",
 		"prettier": "^3.6.2",

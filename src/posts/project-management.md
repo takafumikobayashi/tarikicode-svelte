@@ -7,7 +7,7 @@
 ### Introduction
 
 <div class="center-container">
-    <img src="/imgs/project-management/2024-09-22-21-15-25.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/project-management/2024-09-22-21-15-25.png" class="center-image">
 </div>
 
 #### プロジェクトマネジメントの重要性
@@ -26,7 +26,7 @@ https://www.pmi.org/learning/careers/talent-gap-2021
 ### My Experience
 
 <div class="center-container">
-    <img src="/imgs/project-management/2024-09-22-21-16-32.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/project-management/2024-09-22-21-16-32.png" class="center-image">
 </div>
 
 #### 私の実績
@@ -78,7 +78,7 @@ nulab社のBacklogについても利用経験があり、その活用事例に�
 ### Essential Skills for Effective Project Management
 
 <div class="center-container">
-    <img src="/imgs/project-management/2024-09-22-21-18-20.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/project-management/2024-09-22-21-18-20.png" class="center-image">
 </div>
 
 #### プロジェクトマネジメントに必要な資質とスキル
@@ -117,7 +117,7 @@ nulab社のBacklogについても利用経験があり、その活用事例に�
 ##### 適応性
 
 <div class="center-container">
-    <img src="/imgs/project-management/2024-09-23-09-21-08.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/project-management/2024-09-23-09-21-08.png" class="center-image">
 </div>
 
 - 変化に強く状況判断や洞察に強い人。
@@ -136,7 +136,7 @@ nulab社のBacklogについても利用経験があり、その活用事例に�
 ##### 再現性
 
 <div class="center-container">
-    <img src="/imgs/project-management/2024-09-23-09-21-52.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/project-management/2024-09-23-09-21-52.png" class="center-image">
 </div>
 
 - 安定したパフォーマンスを維持し、どんな状況でも期待される結果を出し続ける能力。
@@ -157,7 +157,7 @@ nulab社のBacklogについても利用経験があり、その活用事例に�
 ### Challenges Faced by Local Governments
 
 <div class="center-container">
-    <img src="/imgs/project-management/2024-09-22-21-19-48.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/project-management/2024-09-22-21-19-48.png" class="center-image">
 </div>
 
 #### 行政における課題や取り組み
@@ -193,7 +193,7 @@ nulab社のBacklogについても利用経験があり、その活用事例に�
 ### Services Offered
 
 <div class="center-container">
-    <img src="/imgs/project-management/2024-09-22-21-20-57.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/project-management/2024-09-22-21-20-57.png" class="center-image">
 </div>
 
 #### 私が提供できる価値
