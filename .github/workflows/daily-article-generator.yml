@@ -1,0 +1,89 @@
+name: Daily Article Generator
+
+# 現在無効化されています。有効化するには下記のコメントを外してください。
+on:
+    # schedule:
+    #     # 毎日午前9時（JST = UTC+9）に実行 = UTC 0時
+    #     - cron: '0 0 * * *'
+    workflow_dispatch: # 手動実行は可能
+
+jobs:
+    generate-article:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            pull-requests: write
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '22'
+                  cache: 'npm'
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Generate daily article
+              env:
+                  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+              run: node scripts/generate-daily-article.js
+
+            - name: Check for changes
+              id: check_changes
+              run: |
+                  if git diff --quiet && git diff --cached --quiet; then
+                    echo "has_changes=false" >> $GITHUB_OUTPUT
+                    echo "本日の記事は既に存在するか、生成に失敗しました。"
+                  else
+                    echo "has_changes=true" >> $GITHUB_OUTPUT
+                    echo "新しい記事が生成されました。"
+                  fi
+
+            - name: Create Pull Request
+              if: steps.check_changes.outputs.has_changes == 'true'
+              uses: peter-evans/create-pull-request@v6
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  commit-message: 'Add daily tech article for ${{ github.event.repository.updated_at }}'
+                  committer: GitHub Actions <actions@github.com>
+                  author: GitHub Actions <actions@github.com>
+                  branch: daily-article/${{ github.run_id }}
+                  delete-branch: true
+                  title: '📝 Daily Tech Article - ${{ github.event.repository.updated_at }}'
+                  body: |
+                      ## 自動生成された記事
+
+                      このPRは、GitHub Actionsによって自動生成された技術記事を含んでいます。
+
+                      ### 確認事項
+                      - [ ] 記事の内容が適切か確認
+                      - [ ] 文法や表現に問題がないか確認
+                      - [ ] リンクや画像が正しく機能するか確認
+                      - [ ] 技術的な情報が正確か確認
+
+                      ### 記事のレビュー後
+                      問題がなければ、このPRをマージしてください。
+                      マージ後、Netlifyで自動的にデプロイされます。
+
+                      ---
+                      🤖 Generated with AI using OpenAI GPT-4
+                  labels: |
+                      automated
+                      content
+                      article
+                  assignees: takafumikobayashi
+                  reviewers: takafumikobayashi
+
+            - name: PR creation result
+              if: steps.check_changes.outputs.has_changes == 'true'
+              run: echo "PRが作成されました。記事を確認してマージしてください。"
+
+            - name: No changes detected
+              if: steps.check_changes.outputs.has_changes == 'false'
+              run: echo "変更がないため、PRは作成されませんでした。"

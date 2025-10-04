@@ -31,6 +31,12 @@
 	});
 </script>
 
+<svelte:head>
+	{#each AppConfig.heroimage as hero}
+		<link rel="preload" as="image" href={hero.image} />
+	{/each}
+</svelte:head>
+
 <div class="fade-in">
 	<div class="swiper-container">
 		<div class="swiper-wrapper">
