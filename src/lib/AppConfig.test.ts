@@ -86,7 +86,7 @@ describe('AppConfig', () => {
 
 		it('should have valid image paths', () => {
 			AppConfig.heroimage.forEach((hero) => {
-				expect(hero.image).toMatch(/^\/imgs\//);
+				expect(hero.image).toMatch(/\/imgs\//);
 				expect(hero.image).toMatch(/\.png$/);
 			});
 		});
@@ -106,7 +106,9 @@ describe('AppConfig', () => {
 		});
 
 		it('should have correct first hero image content', () => {
-			expect(AppConfig.heroimage[0].image).toBe('/imgs/heroimage1.png');
+			expect(AppConfig.heroimage[0].image).toBe(
+				'https://d1mt09hgbl7gpz.cloudfront.net/imgs/heroimage1.png'
+			);
 			expect(AppConfig.heroimage[0].descpiption).toBe('一緒に創る、明日のためのcode');
 		});
 	});
@@ -129,14 +131,26 @@ describe('AppConfig', () => {
 		});
 
 		it('should map correct images to posts', () => {
-			expect(AppConfig.post_string['about']).toBe('/imgs/heroimage1.png');
-			expect(AppConfig.post_string['thanks-card']).toBe('/public/thankscard.png');
-			expect(AppConfig.post_string['kintone-plugin']).toBe('/public/kintone.png');
-			expect(AppConfig.post_string['svelte']).toBe('/public/sveltegirl.png');
-			expect(AppConfig.post_string['sns-promotion']).toBe('/public/snspromotion.png');
-			expect(AppConfig.post_string['ai']).toBe('/public/ai.png');
+			expect(AppConfig.post_string['about']).toBe(
+				'https://d1mt09hgbl7gpz.cloudfront.net/imgs/heroimage1.png'
+			);
+			expect(AppConfig.post_string['thanks-card']).toBe(
+				'https://d1mt09hgbl7gpz.cloudfront.net/public/thankscard.png'
+			);
+			expect(AppConfig.post_string['kintone-plugin']).toBe(
+				'https://d1mt09hgbl7gpz.cloudfront.net/public/kintone.png'
+			);
+			expect(AppConfig.post_string['svelte']).toBe(
+				'https://d1mt09hgbl7gpz.cloudfront.net/public/sveltegirl.png'
+			);
+			expect(AppConfig.post_string['sns-promotion']).toBe(
+				'https://d1mt09hgbl7gpz.cloudfront.net/public/snspromotion.png'
+			);
+			expect(AppConfig.post_string['ai']).toBe(
+				'https://d1mt09hgbl7gpz.cloudfront.net/public/ai.png'
+			);
 			expect(AppConfig.post_string['project-management']).toBe(
-				'/public/projectmanagement.png'
+				'https://d1mt09hgbl7gpz.cloudfront.net/public/projectmanagement.png'
 			);
 		});
 	});
