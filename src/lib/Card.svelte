@@ -8,7 +8,23 @@
 		aiLink,
 		projectManagementLink
 	} from './CommonFunction';
+
+	// カード画像のURLを配列として定義
+	const cardImages = [
+		'https://d1mt09hgbl7gpz.cloudfront.net/public/thankscard.png',
+		'https://d1mt09hgbl7gpz.cloudfront.net/public/kintone.png',
+		'https://d1mt09hgbl7gpz.cloudfront.net/public/sveltegirl.png',
+		'https://d1mt09hgbl7gpz.cloudfront.net/public/snspromotion.png',
+		'https://d1mt09hgbl7gpz.cloudfront.net/public/ai.png',
+		'https://d1mt09hgbl7gpz.cloudfront.net/public/projectmanagement.png'
+	];
 </script>
+
+<svelte:head>
+	{#each cardImages as image}
+		<link rel="preload" as="image" href={image} />
+	{/each}
+</svelte:head>
 
 <div class="card-display">
 	<div class="card-container">
@@ -132,32 +148,32 @@
 	}
 
 	:global(.card-media-16x9) {
-		background-image: url(/public/thankscard.png);
+		background-image: url(https://d1mt09hgbl7gpz.cloudfront.net/public/thankscard.png);
 		height: 180px;
 	}
 
 	:global(.card-media-16x9-2) {
-		background-image: url(/public/kintone.png);
+		background-image: url(https://d1mt09hgbl7gpz.cloudfront.net/public/kintone.png);
 		height: 180px;
 	}
 
 	:global(.card-media-16x9-3) {
-		background-image: url(/public/sveltegirl.png);
+		background-image: url(https://d1mt09hgbl7gpz.cloudfront.net/public/sveltegirl.png);
 		height: 180px;
 	}
 
 	:global(.card-media-16x9-4) {
-		background-image: url(/public/snspromotion.png);
+		background-image: url(https://d1mt09hgbl7gpz.cloudfront.net/public/snspromotion.png);
 		height: 180px;
 	}
 
 	:global(.card-media-16x9-5) {
-		background-image: url(/public/ai.png);
+		background-image: url(https://d1mt09hgbl7gpz.cloudfront.net/public/ai.png);
 		height: 180px;
 	}
 
 	:global(.card-media-16x9-6) {
-		background-image: url(/public/projectmanagement.png);
+		background-image: url(https://d1mt09hgbl7gpz.cloudfront.net/public/projectmanagement.png);
 		height: 180px;
 	}
 

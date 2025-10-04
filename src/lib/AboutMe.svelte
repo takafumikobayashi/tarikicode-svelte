@@ -12,7 +12,10 @@
 	<Cell span={6}>
 		<div class="demo-cell">
 			<div class="profile-image">
-				<img src="/icon/1681593350707.jpeg" alt="プロフィール画像" />
+				<img
+					src="https://d1mt09hgbl7gpz.cloudfront.net/icon/1681593350707.jpeg"
+					alt="プロフィール画像"
+				/>
 			</div>
 		</div>
 	</Cell>

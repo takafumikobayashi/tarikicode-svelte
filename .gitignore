@@ -1,10 +1,42 @@
-.DS_Store
-node_modules
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# SvelteKit generated files
 /build
 /.svelte-kit
 /package
+
+# Environment variables
 .env
 .env.*
 !.env.example
+
+# IDE / Editor specific
+.vscode/
+.idea/
+
+# Test reports
+/coverage/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temporary files
+.DS_Store
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Static assets served from CloudFront
+/static/imgs
+/static/icon
+/static/public
+/static/favicon.png
+/static/logo-192.png
+/static/logo-512.png
+
+# Generated theme files
+/static/smui.css
+/static/smui-dark.css

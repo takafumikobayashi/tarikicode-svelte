@@ -30,7 +30,26 @@ self.addEventListener('fetch', (event) => {
 	async function respond() {
 		const url = new URL(event.request.url);
 		const cache = await caches.open(CACHE);
+
+		// CloudFront画像の場合はネットワーク優先、フォールバックでキャッシュ
+		if (url.hostname === 'd1mt09hgbl7gpz.cloudfront.net') {
+			try {
+				const response = await fetch(event.request);
+				if (response.status === 200) {
+					cache.put(event.request, response.clone());
+				}
+				return response;
+			} catch {
+				const cachedResponse = await cache.match(event.request);
+				if (cachedResponse) return cachedResponse;
+				throw new Error('Network failed and no cache available');
+			}
+		}
+
+		// ビルドアセットの場合はキャッシュ優先
 		if (ASSETS.includes(url.pathname)) return cache.match(event.request);
+
+		// その他のリクエストはネットワーク優先
 		try {
 			const response = await fetch(event.request);
 			if (response.status === 200) cache.put(event.request, response.clone());

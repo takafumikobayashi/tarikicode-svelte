@@ -19,7 +19,10 @@
 	<Cell span={12}>
 		<div class="demo-cell">
 			<div class="profile-image">
-				<img src="/icon/icon-256x256.png" alt="プロフィール画像" />
+				<img
+					src="https://d1mt09hgbl7gpz.cloudfront.net/icon/icon-256x256.png"
+					alt="プロフィール画像"
+				/>
 			</div>
 		</div>
 		<div class="demo-cell">
