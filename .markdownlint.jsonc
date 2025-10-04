@@ -1,0 +1,33 @@
+{
+	"default": true,
+	"MD001": false,
+	"MD007": {
+		"indent": 4
+	},
+	"MD010": false,
+	"MD013": false,
+	"MD018": false,
+	"MD024": false,
+	"MD028": false,
+	"MD029": false,
+	"MD033": {
+		"allowed_elements": [
+			"div",
+			"img",
+			"figure",
+			"figcaption",
+			"blockquote",
+			"script",
+			"iframe",
+			"p",
+			"br",
+			"a",
+			"svg",
+			"g",
+			"path"
+		]
+	},
+	"MD034": false,
+	"MD041": false,
+	"MD045": false
+}

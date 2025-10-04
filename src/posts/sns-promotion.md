@@ -7,7 +7,7 @@
 ### Introduction
 
 <div class="center-container">
-    <img src="/imgs/sns-promotion/2024-09-16-12-38-07.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/sns-promotion/2024-09-16-12-38-07.png" class="center-image">
 </div>
 
 私は2018年頃からInstagramで主に京都・奈良の寺社仏閣などの美しい風景、いわゆる「日本美」を発信するSNS活動を行っています。（※現在諸事情により休止中）
@@ -99,7 +99,7 @@ Google翻訳の画像識別がとても便利です。
 ### Key Point of Instagram
 
 <div class="center-container">
-    <img src="/imgs/sns-promotion/2024-09-16-12-38-40.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/sns-promotion/2024-09-16-12-38-40.png" class="center-image">
 </div>
 
 ここではInstagramを使う上での注意ポイントを書きたいと思います。
@@ -152,7 +152,7 @@ Instagramの運用では、写真の選び方、投稿のタイミング、そ�
 ### How to Develop an Effective SNS Strategy
 
 <div class="center-container">
-    <img src="/imgs/sns-promotion/2024-09-16-12-39-26.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/sns-promotion/2024-09-16-12-39-26.png" class="center-image">
 </div>
 
 ここではSNSを活用するため、どういう戦略を立てるべきなのか？について書きたいと思います。
@@ -188,7 +188,7 @@ SNSは大量の情報が飛び交う場です。その中で目立つために�
 
 <div class="center-container">
     <figure>
-        <img src="/imgs/sns-promotion/2024-09-16-18-08-01.png" class="center-image" width=80%>
+        <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/sns-promotion/2024-09-16-18-08-01.png" class="center-image" width=80%>
         <figcaption><div class="mdc-typography--caption">※写真はイメージです</div></figcaption>
     </figure>
 </div>
@@ -230,7 +230,7 @@ SNS戦略を成功させるには、アカウントと発信のコンセプト�
 ### Services Offered
 
 <div class="center-container">
-    <img src="/imgs/sns-promotion/2024-09-16-12-40-25.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/sns-promotion/2024-09-16-12-40-25.png" class="center-image">
 </div>
 
 中小企業、NPO、地方公共団体等組織の皆さま、私の経験と実績を活かし、一緒にSNSマーケティングを進めませんか？

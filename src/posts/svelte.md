@@ -7,7 +7,7 @@
 ### Introduction
 
 <div class="center-container">
-    <img src="/imgs/svelte/2024-09-15-20-48-25.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/svelte/2024-09-15-20-48-25.png" class="center-image">
 </div>
 
 2017年よりNode.jsエンジニアとして、さまざまなプロジェクトに従事し、フロントエンドとバックエンドの両方で豊富な経験を積んできました。当時はv8とか、その辺りを使っていたかと記憶しています。サーバーサイド側のユーザー向けAPIを開発したり、VueやReactおよびSvelteなどフロントエンドのフレームワークを活用したWebアプリケーション開発経験があります。AWSやAzureなどクラウドベースのマネージドサービスも盛り込んだ構成をデザインすることも可能です。
@@ -62,7 +62,7 @@ architecture-beta
 ### Portfolio & Case Studies
 
 <div class="center-container">
-    <img src="/imgs/svelte/2024-09-15-20-58-05.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/svelte/2024-09-15-20-58-05.png" class="center-image">
 </div>
 
 ここでは実際に行ったプロジェクトのほんの一部を紹介させていただければと思います。具体的には以下となります。
@@ -331,7 +331,7 @@ architecture-beta
 ### Services Offered
 
 <div class="center-container">
-    <img src="/imgs/svelte/2024-09-15-20-55-43.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/svelte/2024-09-15-20-55-43.png" class="center-image">
 </div>
 
 Node.jsでお困りなことはありませんか？

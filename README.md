@@ -56,22 +56,90 @@ tarikicode-svelte/
 
 ## コマンド一覧
 
+### 開発サーバー
+
 - `npm run dev` — ホットリロード付き開発サーバー
 - `npm run build` — 本番ビルド生成
 - `npm run preview` — ビルド成果物のローカル確認
-- `npm run check` / `npm run check:watch` — SvelteKit 同期と型チェック
-- `npm run lint` / `npm run lint:fix` — Prettier + ESLint の検証と自動修正
+
+### 型チェック
+
+- `npm run check` — SvelteKit 同期と型チェック
+- `npm run check:watch` — 監視モードで型チェック
+
+### リントと整形
+
+- `npm run lint` — **全体チェック（コード + Markdown）**
+- `npm run lint:fix` — **全体自動修正（コード + Markdown）**
+- `npm run lint:code` — コードのみチェック（TypeScript/Svelte）
+- `npm run lint:code:fix` — コードのみ自動修正
+- `npm run lint:md` — Markdown のみチェック（記事品質）
+- `npm run fix:md` — Markdown のみ自動修正
 - `npm run format` — Prettier による整形
-- `npm run test` / `npm run test:run` / `npm run test:coverage` — Vitest の実行
-- `npm run prepare` — `src/theme/` から SMUI テーマ CSS を再生成
+
+### テスト
+
+- `npm run test` — Vitest 監視モード
+- `npm run test:run` — Vitest 実行（CI 用）
+- `npm run test:ui` — Vitest UI モード
+- `npm run test:coverage` — カバレッジレポート生成
+
+### テーマ
+
+- `npm run prepare` — SMUI テーマ CSS を再生成（Light + Dark）
+- `npm run smui-theme-light` — Light テーマのみ生成
+- `npm run smui-theme-dark` — Dark テーマのみ生成
 
 ## テストと品質管理
 
-Vitest は JSDOM 環境で動作し、`src/tests/setup.ts` で Testing Library が初期化されています。重要な変更前には `npm run test:coverage` でカバレッジを確認し、`coverage/` ディレクトリの HTML レポートを確認してください。`npm run lint` と `npm run check` を CI 同等の品質ゲートとして利用します。
+### テスト環境
+
+- **Vitest**: JSDOM 環境で動作
+- **Testing Library**: `src/tests/setup.ts` で初期化
+- **カバレッジ**: `npm run test:coverage` で HTML レポート生成（`coverage/` ディレクトリ）
+
+### コード品質チェック
+
+プロジェクトでは以下のツールで品質を管理しています：
+
+1. **TypeScript** - 型安全性
+2. **ESLint** - コード品質（TypeScript/Svelte）
+3. **Prettier** - コード整形
+4. **markdownlint-cli2** - Markdown 記事の品質管理
+5. **Vitest** - ユニットテスト
+
+### 推奨ワークフロー
+
+#### 記事執筆時
+
+```bash
+npm run fix:md      # Markdown自動修正
+npm run lint:md     # 記事品質チェック
+```
+
+#### コミット前
+
+```bash
+npm run lint:fix    # 全体自動修正
+npm run test:run    # テスト実行
+npm run check       # 型チェック
+```
+
+#### CI/CD
+
+`npm run lint` と `npm run check` を CI の品質ゲートとして利用します。
 
 ## テーマとアセット
 
-SMUI トークンは `src/theme/` に配置され、`npm run smui-theme-light` および `npm run smui-theme-dark` で `static/` に CSS を出力します。画像や OGP 用アセットは `static/` 配下にまとめて配置してください。
+### SMUI テーマ
+
+SMUI トークンは `src/theme/` に配置され、`npm run prepare` で Light/Dark 両テーマの CSS を `static/` に出力します。
+
+### 静的アセット
+
+- **画像**: CloudFront CDN（`https://d1mt09hgbl7gpz.cloudfront.net`）から配信
+- **設定**: `src/lib/AppConfig.ts` で画像 URL を管理
+- **プリロード**: 重要な画像は `<link rel="preload">` で事前読み込み
 
 ## デプロイ
 

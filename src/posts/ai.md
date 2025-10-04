@@ -9,7 +9,7 @@ AIは、今や未来の技術ではなく、現代のビジネスや行政にと
 ### Introduction
 
 <div class="center-container">
-    <img src="/imgs/ai/2024-09-23-15-42-47.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/ai/2024-09-23-15-42-47.png" class="center-image">
 </div>
 
 #### なぜ今AIなのか？
@@ -29,7 +29,7 @@ AIは業務効率化やデータ解析の自動化だけでなく、意思決定
 ### The Role of AI in Business and Government
 
 <div class="center-container">
-    <img src="/imgs/ai/2024-09-23-15-43-21.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/ai/2024-09-23-15-43-21.png" class="center-image">
 </div>
 
 #### 現代ビジネスや行政におけるAIの役割
@@ -71,7 +71,7 @@ AIは、財務データやバランスシートを解析し、企業や行政に
 ### AI Tools and My Use Cases
 
 <div class="center-container">
-    <img src="/imgs/ai/2024-09-23-15-44-05.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/ai/2024-09-23-15-44-05.png" class="center-image">
 </div>
 
 #### AIツールと私の活用事例
@@ -199,7 +199,7 @@ PerplexityのProサーチを使い、行政におけるプロジェクトマネ�
 ##### 実際の処理（Pro Search）
 
 <div class="center-container">
-    <img src="/imgs/ai/2024-09-23-18-32-42.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/ai/2024-09-23-18-32-42.png" class="center-image">
 </div>
 
 ###
@@ -232,7 +232,7 @@ Midjourneyを利用し、`/imagine`プロンプトを使って効率的に画像
 その他、生成した画像を今後ギャラリーとしてご紹介します。（TBD）
 
 <div class="center-container">
-    <img src="/imgs/ai/2024-09-23-19-10-24.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/ai/2024-09-23-19-10-24.png" class="center-image">
 </div>
 
 ###
@@ -438,7 +438,7 @@ AIツールの利用規約には注意が必要です。特に画像や動画の
 ### AI Integration in Business Processes
 
 <div class="center-container">
-    <img src="/imgs/ai/2024-09-23-15-44-44.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/ai/2024-09-23-15-44-44.png" class="center-image">
 </div>
 
 #### AI導入プロセス
@@ -468,7 +468,7 @@ AI導入によるメリットを最大化するためには、現場でのフィ
 #### ケーススタディ
 
 <div class="center-container">
-    <img src="/imgs/ai/2024-09-28-23-27-33.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/ai/2024-09-28-23-27-33.png" class="center-image">
 </div>
 
 以下では、AI技術を行政機関や中小企業で効果的に導入した具体例を紹介します。それぞれの事例は、AIの導入がどのように業務効率の向上や市民サービスの改善に貢献しているかを示しています。
@@ -510,7 +510,7 @@ AI導入によるメリットを最大化するためには、現場でのフィ
 ### Services Offered
 
 <div class="center-container">
-    <img src="/imgs/ai/2024-09-23-15-45-30.png" class="center-image">
+    <img src="https://d1mt09hgbl7gpz.cloudfront.net/imgs/ai/2024-09-23-15-45-30.png" class="center-image">
 </div>
 
 #### 私が提供できるAIソリューション

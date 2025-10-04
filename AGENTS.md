@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-Code lives in `src/`: routes under `src/routes/` and shared utilities in `src/lib/`. Markdown posts reside in `src/posts/`; `src/tests/` hosts helpers and integration suites. Theme tokens in `src/theme/` (dark variants `src/theme/dark/`) compile to CSS in `static/` with public assets.
+Code lives in `src/`: routes under `src/routes/` and shared utilities in `src/lib/`. Markdown posts reside in `src/posts/`; `src/tests/` hosts helpers and integration suites. Theme tokens in `src/theme/` (dark variants `src/theme/dark/`) compile to CSS in `static/`. Static assets (images, icons) are served from CloudFront CDN (`https://d1mt09hgbl7gpz.cloudfront.net`), referenced in `src/lib/AppConfig.ts`.
 
 ## Build, Test, and Development Commands
 
@@ -10,7 +10,11 @@ Code lives in `src/`: routes under `src/routes/` and shared utilities in `src/li
 - `npm run build`: produce the production bundle; run before shipping.
 - `npm run preview`: serve the built app locally for final verification.
 - `npm run check`: sync SvelteKit and run type/compiler checks.
-- `npm run lint` / `npm run lint:fix`: enforce Prettier + ESLint; `lint:fix` applies fixes.
+- `npm run lint`: enforce quality checks across all files (Prettier + ESLint + markdownlint).
+- `npm run lint:fix`: auto-fix all issues (code + markdown).
+- `npm run lint:code` / `lint:code:fix`: code-only checks (TypeScript/Svelte).
+- `npm run lint:md` / `fix:md`: markdown-only checks and fixes for article quality.
+- `npm run format`: apply Prettier formatting.
 - `npm run test`, `test:run`, `test:coverage`: run Vitest in watch, single-pass, or coverage mode.
 - `npm run prepare`: rebuild SMUI themes after editing `src/theme/`.
 

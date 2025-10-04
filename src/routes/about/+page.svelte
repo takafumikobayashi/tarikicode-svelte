@@ -34,7 +34,7 @@
 	<meta property="og:title" content={`ABOUT - ${AppConfig.title}`} />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content={`${AppConfig.url}/about`} />
-	<meta property="og:image" content={`${AppConfig.url}/imgs/heroimage1.png`} />
+	<meta property="og:image" content="https://d1mt09hgbl7gpz.cloudfront.net/imgs/heroimage1.png" />
 	<meta property="og:description" content={AppConfig.description} />
 	<meta property="og:site_name" content={AppConfig.title} />
 
@@ -43,7 +43,10 @@
 	<meta name="twitter:site" content={AppConfig.xaccuont} />
 	<meta name="twitter:title" content={AppConfig.title} />
 	<meta name="twitter:description" content={AppConfig.description} />
-	<meta name="twitter:image" content={`${AppConfig.url}/imgs/heroimage1.png`} />
+	<meta
+		name="twitter:image"
+		content="https://d1mt09hgbl7gpz.cloudfront.net/imgs/heroimage1.png"
+	/>
 </svelte:head>
 
 <div class="mdc-typography--body1">
