@@ -10,12 +10,17 @@
 	import Works from '$lib/Works.svelte';
 	import Favorites from '$lib/Favorites.svelte';
 	import Profile from '$lib/Profile.svelte';
+	import Projects from '$lib/Projects.svelte';
 	import { AppConfig } from '$lib/AppConfig';
 
 	let tabs = [
 		{
 			icon: 'face',
 			label: 'Profile'
+		},
+		{
+			icon: 'code',
+			label: 'Projects'
 		},
 		{
 			icon: 'computer',
@@ -76,6 +81,12 @@
 						<Paper variant="unelevated">
 							<Content>
 								<Profile />
+							</Content>
+						</Paper>
+					{:else if active.label === 'Projects'}
+						<Paper variant="unelevated">
+							<Content>
+								<Projects />
 							</Content>
 						</Paper>
 					{:else if active.label === 'Works'}
