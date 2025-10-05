@@ -11,8 +11,7 @@ export const GET: RequestHandler = async ({ url }) => {
 	try {
 		const response = await fetch(targetUrl, {
 			headers: {
-				'User-Agent':
-					'Mozilla/5.0 (compatible; OGPBot/1.0; +https://tariki-code.tokyo)'
+				'User-Agent': 'Mozilla/5.0 (compatible; OGPBot/1.0; +https://tariki-code.tokyo)'
 			}
 		});
 
@@ -38,7 +37,10 @@ export const GET: RequestHandler = async ({ url }) => {
 };
 
 function extractOgp(html: string, property: string): string | null {
-	const regex = new RegExp(`<meta[^>]*property=["']${property}["'][^>]*content=["']([^"']*)["']`, 'i');
+	const regex = new RegExp(
+		`<meta[^>]*property=["']${property}["'][^>]*content=["']([^"']*)["']`,
+		'i'
+	);
 	const match = html.match(regex);
 	return match ? match[1] : null;
 }

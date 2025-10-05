@@ -22,7 +22,9 @@
 			// 各URLのOGP情報を取得
 			const ogpPromises = data.articles.map(async (article: { url: string }) => {
 				try {
-					const ogpResponse = await fetch(`/api/ogp?url=${encodeURIComponent(article.url)}`);
+					const ogpResponse = await fetch(
+						`/api/ogp?url=${encodeURIComponent(article.url)}`
+					);
 					const ogpData = await ogpResponse.json();
 					return {
 						title: ogpData.title || 'No Title',
