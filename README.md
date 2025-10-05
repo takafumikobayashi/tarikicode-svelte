@@ -141,6 +141,44 @@ SMUI トークンは `src/theme/` に配置され、`npm run prepare` で Light/
 - **設定**: `src/lib/AppConfig.ts` で画像 URL を管理
 - **プリロード**: 重要な画像は `<link rel="preload">` で事前読み込み
 
+### Recent Post（最新ツイート）の更新
+
+トップページの「Recent Post」セクションに表示される最新3件のツイートは、`static/recent-tweets.json` で管理しています。
+
+#### 更新方法（PC）
+
+1. `static/recent-tweets.json` を編集
+2. `tweets` 配列に最新3件のツイートURLを記載（新しい順）
+3. コミット＆プッシュ → Netlify が自動デプロイ
+
+#### 更新方法（スマホ）
+
+**GitHub Mobile アプリを使用**（推奨）
+
+1. GitHub Mobile アプリをインストール
+2. リポジトリを開く
+3. `static/recent-tweets.json` を編集
+4. Commit & Push → Netlify が自動デプロイ
+
+**ブラウザから更新**:
+
+1. GitHub.com にアクセス
+2. `static/recent-tweets.json` を開く
+3. 編集アイコン（鉛筆マーク）をクリック
+4. Commit changes
+
+#### JSONファイル形式
+
+```json
+{
+	"tweets": [
+		"https://twitter.com/kobatch_tk/status/ツイートID1",
+		"https://twitter.com/kobatch_tk/status/ツイートID2",
+		"https://twitter.com/kobatch_tk/status/ツイートID3"
+	]
+}
+```
+
 ## デプロイ
 
 Netlify でのホスティングを想定しています。main ブランチへのプッシュで自動的にデプロイが開始されます。環境ごとの設定は `vite.config.ts` と `svelte.config.js` のエイリアスやアダプタ設定を更新してください。独自ドメインや環境変数を追加する場合は Netlify ダッシュボードと `.env` 管理を合わせて調整します。
