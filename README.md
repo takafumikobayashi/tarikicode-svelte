@@ -179,6 +179,48 @@ SMUI トークンは `src/theme/` に配置され、`npm run prepare` で Light/
 }
 ```
 
+### Pickup Articles（ピックアップ記事）の更新
+
+トップページの「Pickup Articles」セクションに表示される外部記事は、`static/pickup-articles.json` で管理しています。
+
+#### OGP自動取得機能
+
+記事のURLを追加すると、サーバーサイドで自動的にOGP（Open Graph Protocol）メタデータを取得し、以下の情報をカード形式で表示します：
+
+- タイトル（`og:title` または `<title>`タグ）
+- 説明文（`og:description` または `<meta name="description">`）
+- サムネイル画像（`og:image`）
+- サイト名（`og:site_name` またはドメイン名）
+
+#### 更新方法
+
+Recent Postと同様に、PC・スマホのどちらからでも更新可能です。
+
+**JSONファイル形式**:
+
+```json
+{
+	"articles": [
+		{ "url": "https://example.com/article1" },
+		{ "url": "https://example.com/article2" }
+	]
+}
+```
+
+#### 技術仕様
+
+- **APIエンドポイント**: `/api/ogp` - OGPメタデータ取得
+- **対応サイト**: OGPタグを実装している全てのWebサイト
+- **フォールバック**: OGPタグがない場合は通常のHTMLメタタグから取得
+- **レスポンシブ対応**: PCでは2カラム、モバイルでは1カラム表示
+
+### New Release（新着情報）のモバイル対応
+
+「New Release」セクションは、デバイスに応じて表示形式が切り替わります：
+
+- **PC（768px以上）**: テーブル形式で表示
+- **モバイル（768px以下）**: カード形式で表示（ダークモード対応）
+
 ## デプロイ
 
 Netlify でのホスティングを想定しています。main ブランチへのプッシュで自動的にデプロイが開始されます。環境ごとの設定は `vite.config.ts` と `svelte.config.js` のエイリアスやアダプタ設定を更新してください。独自ドメインや環境変数を追加する場合は Netlify ダッシュボードと `.env` 管理を合わせて調整します。
