@@ -5,6 +5,8 @@
 
 	const TWITTER_WIDGET_URL = 'https://platform.twitter.com/widgets.js';
 	let theme = 'light';
+	let tweetUrls: string[] = [];
+
 	$: theme = $lightThemeStore ? 'light' : 'dark';
 
 	const loadWidgets = () => {
@@ -13,9 +15,19 @@
 		twttr?.widgets?.load?.();
 	};
 
-	onMount(() => {
+	onMount(async () => {
 		if (typeof window === 'undefined') {
 			return;
+		}
+
+		// JSONファイルから最新ツイートURLを読み込み
+		try {
+			const response = await fetch('/recent-tweets.json');
+			const data = await response.json();
+			tweetUrls = data.tweets;
+		} catch (error) {
+			console.error('Failed to load recent tweets:', error);
+			tweetUrls = []; // フォールバック
 		}
 
 		const unsubscribe = lightThemeStore.subscribe(async () => {
@@ -53,51 +65,15 @@
 
 {#key theme}
 	<LayoutGrid>
-		<Cell span={6}>
-			<div class="demo-cell">
-				<blockquote class="twitter-tweet" data-theme={theme}>
-					<p lang="ja" dir="ltr">
-						JBUG東京<br />壁打ちセッション - 公開お悩み解決 -<br /><br />経済産業省（<a
-							href="https://twitter.com/meti_NIPPON?ref_src=twsrc%5Etfw"
-							>@meti_NIPPON</a
-						>）<br />小林 崇文さん（<a
-							href="https://twitter.com/kobatch_tk?ref_src=twsrc%5Etfw">@kobatch_tk</a
-						>）<br /><br />株式会社デジタルキューブ（<a
-							href="https://twitter.com/DigitalCubeX?ref_src=twsrc%5Etfw"
-							>@DigitalCubeX</a
-						>） <br />恩田 淳子さん<br /><br />トレノケート株式会社（<a
-							href="https://twitter.com/TrainocateJ?ref_src=twsrc%5Etfw"
-							>@TrainocateJ</a
-						>）<br />西 貞臣さん<br /> <br />株式会社ヌーラボ（<a
-							href="https://twitter.com/nulabjp?ref_src=twsrc%5Etfw">@nulabjp</a
-						>）<br />原 彩香さん<br /><br />JBUG東京#23…
-						<a href="https://t.co/apgm6ye7NV">https://t.co/apgm6ye7NV</a>
-						<a href="https://t.co/uONfb89hl2">pic.twitter.com/uONfb89hl2</a>
-					</p>
-					&mdash; 株式会社FIXER (@FIXER_Inc_Japan)<a
-						href="https://twitter.com/FIXER_Inc_Japan/status/1821872770579624099?ref_src=twsrc%5Etfw"
-						>August 9, 2024</a
-					>
-				</blockquote>
-			</div>
-		</Cell>
-		<Cell span={6}>
-			<div class="demo-cell">
-				<blockquote class="twitter-tweet" data-theme={theme}>
-					<p lang="ja" dir="ltr">
-						本日の資料です、ありがとうございましたー<a
-							href="https://twitter.com/hashtag/PPACjp?src=hash&amp;ref_src=twsrc%5Etfw"
-							>#PPACjp</a
-						><br />2024.10.26_Power_Platform_Administrator勉強会#2
-						<a href="https://t.co/XWMBTr2TrE">https://t.co/XWMBTr2TrE</a>
-					</p>
-					&mdash; 他力code | コバッチ (@kobatch_tk)<a
-						href="https://twitter.com/kobatch_tk/status/1850085400062328896?ref_src=twsrc%5Etfw"
-						>October 26, 2024</a
-					>
-				</blockquote>
-			</div>
-		</Cell>
+		{#each tweetUrls as tweetUrl, index}
+			<Cell span={4} spanTablet={4} spanPhone={4}>
+				<div class="demo-cell fade-in-item" style="animation-delay: {index * 0.2}s;">
+					<blockquote class="twitter-tweet" data-theme={theme}>
+						<a href={tweetUrl}>Tweet {index + 1}</a>
+					</blockquote>
+				</div>
+			</Cell>
+		{/each}
 	</LayoutGrid>
 {/key}
 
@@ -109,5 +85,22 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+	}
+
+	/* フェードインアニメーション */
+	.fade-in-item {
+		opacity: 0;
+		animation: fadeInUp 0.6s ease-out forwards;
+	}
+
+	@keyframes fadeInUp {
+		from {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
 	}
 </style>
