@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render } from '@testing-library/svelte';
 import Articles from './Articles.svelte';
@@ -21,9 +20,7 @@ describe('Articles Component', () => {
 	});
 
 	it('should render Speaker Deck embeds', () => {
-		vi.mocked(global.fetch).mockImplementation(
-			() => new Promise(() => {})
-		);
+		vi.mocked(global.fetch).mockImplementation(() => new Promise(() => {}));
 
 		const { container } = render(Articles);
 		const iframes = container.querySelectorAll('.speakerdeck-iframe');
@@ -31,9 +28,7 @@ describe('Articles Component', () => {
 	});
 
 	it('should render Note embed', () => {
-		vi.mocked(global.fetch).mockImplementation(
-			() => new Promise(() => {})
-		);
+		vi.mocked(global.fetch).mockImplementation(() => new Promise(() => {}));
 
 		const { container } = render(Articles);
 		const noteEmbed = container.querySelector('.note-embed');
@@ -41,9 +36,7 @@ describe('Articles Component', () => {
 	});
 
 	it('should have layout grid', () => {
-		vi.mocked(global.fetch).mockImplementation(
-			() => new Promise(() => {})
-		);
+		vi.mocked(global.fetch).mockImplementation(() => new Promise(() => {}));
 
 		const { container } = render(Articles);
 		const grid = container.querySelector('.mdc-layout-grid');

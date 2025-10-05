@@ -34,6 +34,7 @@ Vitest runs in JSDOM via `src/tests/setup.ts`, which wires Testing Library clean
 - Add a body when context needs explanation; wrap lines at 72 characters.
 - Pull requests must summarise intent, reference issues, and attach screenshots or terminal snippets for UX or CLI changes.
 - Call out theme recompilation or migrations reviewers must run locally.
+- Before committing, ensure the workspace is clean after running `npm run test`, `npm run lint` (or `lint:fix` when fixes are needed), and `npm run lint:md`; all must pass with zero failures.
 
 ## Theming & Configuration Notes
 

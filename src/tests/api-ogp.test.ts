@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { GET } from './+server';
+import { GET } from '../routes/api/ogp/+server';
 
 // グローバルfetchのモック
 global.fetch = vi.fn();
@@ -167,7 +168,8 @@ describe('OGP API Endpoint', () => {
 		});
 
 		it('should handle URLs with special characters', async () => {
-			const mockHtml = '<html><head><meta property="og:title" content="Test" /></head></html>';
+			const mockHtml =
+				'<html><head><meta property="og:title" content="Test" /></head></html>';
 
 			vi.mocked(global.fetch).mockResolvedValue({
 				ok: true,
