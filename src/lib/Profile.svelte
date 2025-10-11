@@ -10,8 +10,8 @@
 			year: '2023',
 			period: '2023 - Present',
 			company: '経済産業省',
-			department: 'デジタルトランスフォーメーション室',
-			role: 'Product Manager / Community Manager',
+			department: '大臣官房デジタルトランスフォーメーション室',
+			role: 'Product Manager / Community Manager / IT Strategist',
 			highlights: [
 				'PowerPlatformを使った行政手続オンライン化システムのプロダクトマネジメント',
 				'デジタルツールを活用したワークエンゲージメントと組織コミュニケーション活性化施策'
@@ -21,8 +21,8 @@
 			year: '2021',
 			period: '2021 - 2023',
 			company: 'bitbank株式会社',
-			department: 'プロダクト開発部',
-			role: 'Product Manager',
+			department: 'COE部門',
+			role: 'Project Manager / Group Manager',
 			highlights: [
 				'暗号資産トレードアプリのUX継続的改善、トラベルルールなど規制対応に関する機能追加',
 				'新規事業におけるライセンス取得に向けたプロジェクトマネジメント'
@@ -32,7 +32,7 @@
 			year: '2012',
 			period: '2012 - 2021',
 			company: 'ソフトバンク株式会社',
-			department: '転籍',
+			department: 'Mobile IT Solution Unit',
 			role: 'Engineering Manager / Project Manager',
 			highlights: [
 				'基地局建設工事に関する統合管理システムのプロジェクトマネージャー',
@@ -44,7 +44,7 @@
 			period: '2005 - 2012',
 			company: 'イー・モバイル株式会社',
 			department: '出向',
-			role: 'System Engineer',
+			role: 'System Engineer / Assistant Manager',
 			highlights: ['携帯電話事業の立ち上げ', '工事管理に関するシステム開発・運用']
 		},
 		{

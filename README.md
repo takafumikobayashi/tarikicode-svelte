@@ -46,7 +46,24 @@ tarikicode-svelte/
    npm install
 ```
 
-3. 開発サーバーを起動します。
+3. 環境変数を設定します（オプション）。
+
+```bash
+   # .envファイルに以下を追加（必要に応じて）
+   # GitHub Personal Access Token（オプション - APIレート制限を60→5000/hourに拡大）
+   GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+GitHub Personal Access Tokenの作成方法：
+
+- <https://github.com/settings/tokens> にアクセス
+- "Generate new token (classic)" を選択
+- Note: 任意の名前（例：tarikicode-api）
+- Expiration: 任意の期限
+- Scopes: **public_repo のチェックは不要**（publicリポジトリのread-onlyアクセスは認証なしで可能）
+- トークンをコピーして `.env` の `GITHUB_TOKEN` に設定
+
+4. 開発サーバーを起動します。
 
 ```bash
    npm run dev
