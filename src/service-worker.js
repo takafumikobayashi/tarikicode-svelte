@@ -10,6 +10,7 @@ self.addEventListener('install', (event) => {
 		await cache.addAll(ASSETS);
 	}
 	event.waitUntil(addFilesToCache());
+	self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
@@ -17,6 +18,7 @@ self.addEventListener('activate', (event) => {
 		for (const key of await caches.keys()) if (key !== CACHE) await caches.delete(key);
 	}
 	event.waitUntil(deleteOldCaches());
+	self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
@@ -46,16 +48,32 @@ self.addEventListener('fetch', (event) => {
 			}
 		}
 
-		// ビルドアセットの場合はキャッシュ優先
-		if (ASSETS.includes(url.pathname)) return cache.match(event.request);
+		// ビルドアセット（_app/内のファイル）の場合はキャッシュ優先
+		if (url.pathname.startsWith('/_app/')) {
+			const cachedResponse = await cache.match(event.request);
+			if (cachedResponse) return cachedResponse;
+		}
 
-		// その他のリクエストはネットワーク優先
+		// その他のリクエストはネットワーク優先、キャッシュをフォールバックとして使用
 		try {
 			const response = await fetch(event.request);
-			if (response.status === 200) cache.put(event.request, response.clone());
+			// 成功したレスポンスで、HTML/CSS/JSファイルの場合のみキャッシュ
+			if (response.status === 200) {
+				const contentType = response.headers.get('content-type') || '';
+				if (
+					contentType.includes('text/html') ||
+					contentType.includes('text/css') ||
+					contentType.includes('application/javascript') ||
+					url.pathname.startsWith('/_app/')
+				) {
+					cache.put(event.request, response.clone());
+				}
+			}
 			return response;
 		} catch {
-			return cache.match(event.request);
+			const cachedResponse = await cache.match(event.request);
+			if (cachedResponse) return cachedResponse;
+			throw new Error('Network failed and no cache available');
 		}
 	}
 	event.respondWith(respond());
