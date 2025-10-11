@@ -6,7 +6,11 @@ SvelteKit で構築した個人ポートフォリオサイト「他力code(tarik
 
 - ホームヒーローセクションで 3 枚のビジュアルをスライド表示
 - プロフィール、Works、Pickup Articles、Recent Post (X/Twitter 埋め込み) などを掲載
-- Markdown ベースのブログ記事 (`/blog/[slug]`) を提供し、OGP/Twitter Card に対応
+- Markdown ベースのブログ機能 (`/blog`) を提供
+    - カテゴリ・タグによる絞り込み機能
+    - ページネーション対応（12件/ページ）
+    - Mermaid 図のサポート
+    - 個別記事ページ (`/blog/[slug]`) で OGP/Twitter Card に対応
 - SMUI を利用したライト／ダークテーマを切り替え可能
 
 ## 技術スタック
@@ -237,6 +241,64 @@ Recent Postと同様に、PC・スマホのどちらからでも更新可能で�
 
 - **PC（768px以上）**: テーブル形式で表示
 - **モバイル（768px以下）**: カード形式で表示（ダークモード対応）
+
+### ブログ記事の管理
+
+ブログ機能は Markdown ファイルで記事を管理します。
+
+#### 記事の追加方法
+
+1. `src/posts/` ディレクトリに Markdown ファイルを作成
+2. ファイル名は `YYYY-MM-DD-slug.md` 形式（例：`2025-01-25-api-design-patterns.md`）
+3. フロントマター（YAML 形式）で記事メタデータを定義
+
+#### フロントマターの構造
+
+```yaml
+---
+title: '記事タイトル'
+date: '2025-01-25'
+category: 'カテゴリ名'
+tags: ['タグ1', 'タグ2', 'タグ3']
+description: '記事の説明文（OGPにも使用）'
+image: 'https://example.com/image.png'
+featured: true # トップページの注目記事に表示
+type: 'blog' # 'blog' または 'work'
+---
+```
+
+#### 記事の種類
+
+- **blog**: ブログ記事（`/blog` ページに表示）
+- **work**: 制作実績（`/` トップページの Works セクションに表示）
+
+#### Mermaid 図の使用
+
+記事内で Mermaid 図を使用できます：
+
+````markdown
+```mermaid
+graph LR
+    A[Start] --> B[Process]
+    B --> C[End]
+```
+````
+
+サポートされている図の種類：
+
+- グラフ（graph）
+- シーケンス図（sequenceDiagram）
+- フローチャート（flowchart）
+- クラス図（classDiagram）
+- その他 Mermaid がサポートする全ての図
+
+#### ブログ記事の機能
+
+- **カテゴリフィルター**: セレクトボックスでカテゴリ別に絞り込み
+- **タグフィルター**: タグチップをクリックしてタグ別に絞り込み
+- **ページネーション**: 12件/ページで自動分割
+- **ライト/ダークモード対応**: 自動的にテーマに追従
+- **OGP対応**: 各記事で個別の OGP 画像とメタデータを設定可能
 
 ## デプロイ
 

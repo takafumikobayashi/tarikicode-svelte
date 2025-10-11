@@ -1,3 +1,14 @@
+---
+title: 'SNS Promotion / マーケティング'
+date: '2024-09-16'
+category: 'マーケティング'
+tags: ['SNS', 'Instagram', 'マーケティング', 'インフルエンサー', 'ブランディング']
+description: 'フォロワー1万人超の実績を持つインフルエンサーによるSNSマーケティング支援。効果的な発信戦略をご提案します。'
+image: 'https://d1mt09hgbl7gpz.cloudfront.net/public/snspromotion.png'
+featured: true
+type: 'work'
+---
+
 ##　SNS Promotion
 
 無名の一般人でもやり方次第で必要な発信力を作ることができる。京都・奈良の日本美を発信するフォロワー1万人超経験のあるインフルエンサーと一緒にSNSマーケティングをしてみませんか？

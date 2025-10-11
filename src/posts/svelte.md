@@ -1,3 +1,14 @@
+---
+title: 'Svelte / Node.js 開発'
+date: '2024-09-15'
+category: '開発'
+tags: ['Svelte', 'Node.js', 'フロントエンド', 'バックエンド', 'AWS', 'Azure']
+description: 'SvelteやNode.jsを活用したモダンなWebアプリケーション開発の実績と技術スタックをご紹介します。'
+image: 'https://d1mt09hgbl7gpz.cloudfront.net/public/sveltegirl.png'
+featured: true
+type: 'work'
+---
+
 ## Svelte
 
 このサイトもシンプル（かつ手作り感満載？）に見えて実は・・・難しい技術を使っています。

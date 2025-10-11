@@ -9,6 +9,7 @@
 	import AboutMe from '$lib/AboutMe.svelte';
 	import Articles from '$lib/Articles.svelte';
 	import RecentPost from '$lib/RecentPost.svelte';
+	import BlogPosts from '$lib/BlogPosts.svelte';
 	import { AppConfig } from '$lib/AppConfig';
 	import Contacts from '$lib/Contacts.svelte';
 	import NewRelease from '$lib/NewRelease.svelte';
@@ -88,6 +89,20 @@
 							<Subtitle>ピックアップ記事</Subtitle>
 							<Content>
 								<Articles />
+							</Content>
+						</Paper>
+					</div>
+				</div>
+			</Cell>
+
+			<Cell span={12}>
+				<div class="demo-cell">
+					<div class="paper-container">
+						<Paper variant="unelevated">
+							<Title>Blog</Title>
+							<Subtitle>ブログ記事</Subtitle>
+							<Content>
+								<BlogPosts />
 							</Content>
 						</Paper>
 					</div>
