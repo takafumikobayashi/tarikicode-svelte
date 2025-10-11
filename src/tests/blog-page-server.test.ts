@@ -14,10 +14,12 @@ describe('Blog Page Server Loader', () => {
 
 	describe('load function', () => {
 		it('should load and parse markdown file successfully', async () => {
-			const mockMarkdown = '## Test Post\n\nThis is a test post.';
+			const mockMarkdown =
+				'---\ntitle: "Test Post"\ndate: "2024-10-11"\n---\n\n## Test Post\n\nThis is a test post.';
 			const mockParams = { slug: 'test-post' };
 
 			// fsのモック設定
+			vi.mocked(fs.existsSync).mockReturnValue(true);
 			vi.mocked(fs.readFileSync).mockReturnValue(mockMarkdown);
 
 			const result = await load({ params: mockParams } as any);
@@ -26,12 +28,14 @@ describe('Blog Page Server Loader', () => {
 			expect(result.body).toContain('<h2');
 			expect(result.body).toContain('Test Post');
 			expect(result.body).toContain('<p>This is a test post.</p>');
+			expect(result.metadata.title).toBe('Test Post');
 		});
 
 		it('should read file from correct path', async () => {
-			const mockMarkdown = '# Test';
+			const mockMarkdown = '---\ntitle: "Test"\n---\n\n# Test';
 			const mockParams = { slug: 'svelte' };
 
+			vi.mocked(fs.existsSync).mockReturnValue(true);
 			vi.mocked(fs.readFileSync).mockReturnValue(mockMarkdown);
 
 			await load({ params: mockParams } as any);
@@ -48,7 +52,8 @@ describe('Blog Page Server Loader', () => {
 			];
 
 			for (const testCase of testCases) {
-				vi.mocked(fs.readFileSync).mockReturnValue('# Test');
+				vi.mocked(fs.existsSync).mockReturnValue(true);
+				vi.mocked(fs.readFileSync).mockReturnValue('---\ntitle: "Test"\n---\n\n# Test');
 
 				await load({ params: { slug: testCase.slug } } as any);
 
@@ -58,13 +63,18 @@ describe('Blog Page Server Loader', () => {
 		});
 
 		it('should convert markdown to HTML correctly', async () => {
-			const mockMarkdown = `# Heading 1
+			const mockMarkdown = `---
+title: "Test"
+---
+
+# Heading 1
 ## Heading 2
 - List item 1
 - List item 2
 
 [Link](https://example.com)`;
 
+			vi.mocked(fs.existsSync).mockReturnValue(true);
 			vi.mocked(fs.readFileSync).mockReturnValue(mockMarkdown);
 
 			const result = await load({ params: { slug: 'test' } } as any);
@@ -79,10 +89,8 @@ describe('Blog Page Server Loader', () => {
 		it('should return 404 error when file does not exist', async () => {
 			const mockParams = { slug: 'non-existent-post' };
 
-			// ファイルが存在しない場合のエラーをシミュレート
-			vi.mocked(fs.readFileSync).mockImplementation(() => {
-				throw new Error('ENOENT: no such file or directory');
-			});
+			// ファイルが存在しない場合
+			vi.mocked(fs.existsSync).mockReturnValue(false);
 
 			try {
 				await load({ params: mockParams } as any);
@@ -95,8 +103,10 @@ describe('Blog Page Server Loader', () => {
 		});
 
 		it('should handle code blocks in markdown', async () => {
-			const mockMarkdown = '```javascript\nconst test = "hello";\n```';
+			const mockMarkdown =
+				'---\ntitle: "Test"\n---\n\n```javascript\nconst test = "hello";\n```';
 
+			vi.mocked(fs.existsSync).mockReturnValue(true);
 			vi.mocked(fs.readFileSync).mockReturnValue(mockMarkdown);
 
 			const result = await load({ params: { slug: 'test' } } as any);
@@ -106,8 +116,10 @@ describe('Blog Page Server Loader', () => {
 		});
 
 		it('should preserve special characters in markdown', async () => {
-			const mockMarkdown = 'Test with special chars: <script>alert("test")</script>';
+			const mockMarkdown =
+				'---\ntitle: "Test"\n---\n\nTest with special chars: <script>alert("test")</script>';
 
+			vi.mocked(fs.existsSync).mockReturnValue(true);
 			vi.mocked(fs.readFileSync).mockReturnValue(mockMarkdown);
 
 			const result = await load({ params: { slug: 'test' } } as any);

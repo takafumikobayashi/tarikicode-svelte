@@ -1,3 +1,14 @@
+---
+title: 'TeamsとAdaptiveCardで実現する感謝を伝える文化'
+date: '2024-09-14'
+category: '業務改善'
+tags: ['Microsoft Teams', 'PowerAutomate', 'AdaptiveCard', 'ワークエンゲージメント', '組織改革']
+description: 'Microsoft TeamsとAdaptiveCardを活用した感謝を伝える仕組み「ThankCard」で、職場のワークエンゲージメントを向上させます。'
+image: 'https://d1mt09hgbl7gpz.cloudfront.net/public/thankscard.png'
+featured: false
+type: 'work'
+---
+
 ## TeamsとAdaptiveCardで実現する「感謝を伝える文化」
 
 あなたの職場では、感謝が伝わっていますか？  

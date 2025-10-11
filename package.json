@@ -82,6 +82,9 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@smui/chips": "^8.0.3",
+		"@smui/select": "^8.0.3",
+		"gray-matter": "^4.0.3",
 		"openai": "^6.1.0"
 	}
 }

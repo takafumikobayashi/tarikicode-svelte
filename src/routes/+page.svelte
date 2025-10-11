@@ -9,6 +9,7 @@
 	import AboutMe from '$lib/AboutMe.svelte';
 	import Articles from '$lib/Articles.svelte';
 	import RecentPost from '$lib/RecentPost.svelte';
+	import BlogPosts from '$lib/BlogPosts.svelte';
 	import { AppConfig } from '$lib/AppConfig';
 	import Contacts from '$lib/Contacts.svelte';
 	import NewRelease from '$lib/NewRelease.svelte';
@@ -19,7 +20,9 @@
 	<meta property="og:title" content="HOME" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content={AppConfig.url} />
-	<meta property="og:image" content={`${AppConfig.url}/logo-192.png`} />
+	<meta property="og:image" content={AppConfig.post_string.about} />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
 	<meta property="og:description" content={AppConfig.description} />
 	<meta property="og:site_name" content={AppConfig.title} />
 
@@ -28,7 +31,7 @@
 	<meta name="twitter:site" content={AppConfig.xaccuont} />
 	<meta name="twitter:title" content={AppConfig.title} />
 	<meta name="twitter:description" content={AppConfig.description} />
-	<meta name="twitter:image" content={`${AppConfig.url}/logo-192.png`} />
+	<meta name="twitter:image" content={AppConfig.post_string.about} />
 </svelte:head>
 
 <div class="mdc-typography--body1">
@@ -86,6 +89,20 @@
 							<Subtitle>ピックアップ記事</Subtitle>
 							<Content>
 								<Articles />
+							</Content>
+						</Paper>
+					</div>
+				</div>
+			</Cell>
+
+			<Cell span={12}>
+				<div class="demo-cell">
+					<div class="paper-container">
+						<Paper variant="unelevated">
+							<Title>Blog</Title>
+							<Subtitle>ブログ記事</Subtitle>
+							<Content>
+								<BlogPosts />
 							</Content>
 						</Paper>
 					</div>

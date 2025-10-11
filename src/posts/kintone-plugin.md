@@ -1,3 +1,14 @@
+---
+title: 'kintone プラグイン開発'
+date: '2024-09-14'
+category: '開発'
+tags: ['kintone', 'プラグイン', 'JavaScript', '業務効率化', 'NPO支援']
+description: 'kintoneを活用したNPO法人の業務デジタル化プロジェクト。QRコード連携やLINE通知などのプラグイン開発実績をご紹介します。'
+image: 'https://d1mt09hgbl7gpz.cloudfront.net/public/kintone.png'
+featured: false
+type: 'work'
+---
+
 ## kintone
 
 北海道の某NPO法人における子どもの居場所事業で、Kintoneを活用したデジタル化プロジェクトに携わっています。
