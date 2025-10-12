@@ -1,0 +1,105 @@
+---
+title: '記事のタイトルをここに入力'
+date: 'YYYY-MM-DD'
+category: 'カテゴリ名'
+tags: ['タグ1', 'タグ2', 'タグ3']
+description: '記事の説明文（OGP/Twitter Cardに使用されます。100-160文字程度推奨）'
+image: 'https://example.com/image.png'
+featured: false
+type: 'blog'
+---
+
+# 記事のタイトル
+
+記事の本文をここに記述します。Markdownの記法が使えます。
+
+## 見出し2
+
+段落の文章。**太字**や*斜体*、`コード`などの装飾が使えます。
+
+### 見出し3
+
+箇条書き：
+- 項目1
+- 項目2
+- 項目3
+
+番号付きリスト：
+1. 項目1
+2. 項目2
+3. 項目3
+
+## コードブロック
+
+```javascript
+// JavaScriptのコード例
+function hello() {
+  console.log('Hello, World!');
+}
+```
+
+```typescript
+// TypeScriptのコード例
+interface User {
+  name: string;
+  age: number;
+}
+```
+
+## Mermaid図
+
+### フローチャート
+
+```mermaid
+graph LR
+    A[開始] --> B[処理1]
+    B --> C[処理2]
+    C --> D[終了]
+```
+
+### シーケンス図
+
+```mermaid
+sequenceDiagram
+    participant A as クライアント
+    participant B as サーバー
+
+    A->>B: リクエスト
+    B-->>A: レスポンス
+```
+
+### クラス図
+
+```mermaid
+classDiagram
+    class User {
+        +String name
+        +int age
+        +login()
+        +logout()
+    }
+```
+
+## リンク
+
+[リンクテキスト](https://example.com)
+
+## 画像
+
+![画像の説明](https://example.com/image.png)
+
+## 引用
+
+> これは引用文です。
+> 複数行の引用も可能です。
+
+## テーブル
+
+| 列1 | 列2 | 列3 |
+|-----|-----|-----|
+| A   | B   | C   |
+| D   | E   | F   |
+
+## まとめ
+
+記事のまとめをここに記述します。
