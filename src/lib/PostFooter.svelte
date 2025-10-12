@@ -3,6 +3,10 @@
 	import { Cell } from '@smui/layout-grid';
 	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
+	import ShareButtons from './ShareButtons.svelte';
+
+	export let url: string;
+	export let title: string;
 
 	let likes = writable(0);
 	let pageUrl = '';
@@ -161,12 +165,16 @@
 				</div>
 			</div>
 		</Cell>
+		<Cell span={12}>
+			<ShareButtons {url} {title} />
+		</Cell>
 	</div>
 </div>
 
 <style>
 	.post-footer {
 		margin-top: 100px;
+		margin-bottom: 2em;
 		text-align: center;
 	}
 
@@ -186,5 +194,12 @@
 		align-items: center;
 		text-align: center;
 		width: 100%;
+	}
+
+	@media (max-width: 768px) {
+		.post-footer {
+			margin-top: 3em;
+			margin-bottom: 2em;
+		}
 	}
 </style>

@@ -43,5 +43,12 @@ export const AppConfig = {
 		'sns-promotion': 'https://d1mt09hgbl7gpz.cloudfront.net/public/snspromotion.jpg',
 		ai: 'https://d1mt09hgbl7gpz.cloudfront.net/public/ai.jpg',
 		'project-management': 'https://d1mt09hgbl7gpz.cloudfront.net/public/projectmanagement.jpg'
+	},
+	shareUrls: {
+		twitter: 'https://twitter.com/intent/tweet',
+		facebook: 'https://www.facebook.com/sharer/sharer.php',
+		linkedin: 'https://www.linkedin.com/sharing/share-offsite/',
+		hatena: 'https://b.hatena.ne.jp/entry/',
+		pocket: 'https://getpocket.com/edit'
 	}
 };

@@ -15,7 +15,7 @@
 			loop: true,
 			speed: 1000,
 			autoplay: {
-				delay: 5000, // 5秒ごとに自動遷移
+				delay: 10000, // 10秒ごとに自動遷移
 				disableOnInteraction: false // ユーザーの操作後も自動遷移を続ける
 			},
 			navigation: {

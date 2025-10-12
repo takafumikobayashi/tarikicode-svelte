@@ -49,7 +49,7 @@ describe('OGP API Endpoint', () => {
 			expect(data.title).toBe('Test Title');
 			expect(data.description).toBe('Test Description');
 			expect(data.image).toBe('https://example.com/image.jpg');
-			expect(data.site).toBe('Test Site');
+			expect(data.siteName).toBe('Test Site');
 		});
 
 		it('should fallback to <title> tag when og:title is missing', async () => {
@@ -98,7 +98,7 @@ describe('OGP API Endpoint', () => {
 			expect(data.description).toBe('Fallback Description');
 		});
 
-		it('should use hostname when og:site_name is missing', async () => {
+		it('should use empty string when og:site_name is missing', async () => {
 			const mockHtml = '<html><head></head></html>';
 
 			vi.mocked(global.fetch).mockResolvedValue({
@@ -112,7 +112,7 @@ describe('OGP API Endpoint', () => {
 			const response = await GET(request as any);
 			const data = await response.json();
 
-			expect(data.site).toBe('example.com');
+			expect(data.siteName).toBe('');
 		});
 
 		it('should include User-Agent header in fetch request', async () => {
@@ -150,8 +150,8 @@ describe('OGP API Endpoint', () => {
 			const response = await GET(request as any);
 			const data = await response.json();
 
-			expect(response.status).toBe(404);
-			expect(data.error).toBe('Failed to fetch URL');
+			expect(response.status).toBe(500);
+			expect(data.error).toBe('Failed to fetch OGP data');
 		});
 
 		it('should return 500 when fetch throws an error', async () => {

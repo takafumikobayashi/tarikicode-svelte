@@ -155,7 +155,7 @@
 			</div>
 			{@html data.body}
 		</article>
-		<PostFooter />
+		<PostFooter url="/blog/{post_string}" title={data.metadata?.title || post_string} />
 		<Footer />
 	</div>
 </div>
@@ -223,8 +223,12 @@
 	}
 
 	@media (max-width: 768px) {
+		.content {
+			padding-top: 70px;
+		}
+
 		.hero-image-container {
-			margin-top: 40px;
+			margin-top: 10px;
 		}
 	}
 

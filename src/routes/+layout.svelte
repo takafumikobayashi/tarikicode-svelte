@@ -19,5 +19,13 @@
 		padding: 1em;
 		margin: 1em auto;
 		box-sizing: border-box;
+		min-height: 100vh;
+	}
+
+	@media (max-width: 768px) {
+		main {
+			padding: 0.5em;
+			margin: 0.5em auto;
+		}
 	}
 </style>
