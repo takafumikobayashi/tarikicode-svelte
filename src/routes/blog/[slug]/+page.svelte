@@ -56,19 +56,22 @@
 
 <svelte:head>
 	<!-- Open Graph メタタグ -->
-	<meta property="og:title" content={`${post_string} - ${AppConfig.title}`} />
-	<meta property="og:type" content="website" />
+	<meta property="og:title" content={data.metadata?.title || `${post_string} - ${AppConfig.title}`} />
+	<meta property="og:type" content="article" />
 	<meta property="og:url" content={`${AppConfig.url}/blog/${post_string}`} />
-	<meta property="og:image" content={`${AppConfig.url}${AppConfig.post_string[post_string]}`} />
-	<meta property="og:description" content={AppConfig.description} />
+	<meta property="og:image" content={data.metadata?.image || `${AppConfig.url}${AppConfig.post_string[post_string] || '/default-og-image.png'}`} />
+	<meta property="og:description" content={data.metadata?.description || AppConfig.description} />
 	<meta property="og:site_name" content={AppConfig.title} />
+	{#if data.metadata?.date}
+		<meta property="article:published_time" content={data.metadata.date} />
+	{/if}
 
 	<!-- Twitter Card -->
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:site" content={AppConfig.xaccuont} />
-	<meta name="twitter:title" content={AppConfig.title} />
-	<meta name="twitter:description" content={AppConfig.description} />
-	<meta name="twitter:image" content={`${AppConfig.url}${AppConfig.post_string[post_string]}`} />
+	<meta name="twitter:title" content={data.metadata?.title || AppConfig.title} />
+	<meta name="twitter:description" content={data.metadata?.description || AppConfig.description} />
+	<meta name="twitter:image" content={data.metadata?.image || `${AppConfig.url}${AppConfig.post_string[post_string] || '/default-og-image.png'}`} />
 
 	<link
 		href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"

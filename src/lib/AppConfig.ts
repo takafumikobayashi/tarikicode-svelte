@@ -36,12 +36,12 @@ export const AppConfig = {
 		}
 	],
 	post_string: {
-		about: 'https://d1mt09hgbl7gpz.cloudfront.net/imgs/heroimage1.png',
+		'about': 'https://d1mt09hgbl7gpz.cloudfront.net/imgs/heroimage1.png',
 		'thanks-card': 'https://d1mt09hgbl7gpz.cloudfront.net/public/thankscard.png',
 		'kintone-plugin': 'https://d1mt09hgbl7gpz.cloudfront.net/public/kintone.png',
-		svelte: 'https://d1mt09hgbl7gpz.cloudfront.net/public/sveltegirl.png',
+		'svelte': 'https://d1mt09hgbl7gpz.cloudfront.net/public/sveltegirl.png',
 		'sns-promotion': 'https://d1mt09hgbl7gpz.cloudfront.net/public/snspromotion.png',
-		ai: 'https://d1mt09hgbl7gpz.cloudfront.net/public/ai.png',
+		'ai': 'https://d1mt09hgbl7gpz.cloudfront.net/public/ai.png',
 		'project-management': 'https://d1mt09hgbl7gpz.cloudfront.net/public/projectmanagement.png'
 	}
 };

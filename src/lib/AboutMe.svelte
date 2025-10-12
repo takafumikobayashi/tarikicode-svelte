@@ -13,7 +13,7 @@
 		<div class="demo-cell">
 			<div class="profile-image">
 				<img
-					src="https://d1mt09hgbl7gpz.cloudfront.net/icon/1681593350707.jpeg"
+					src="https://d1mt09hgbl7gpz.cloudfront.net/icon/GUiKceWbQAAO05i.jpg"
 					alt="プロフィール画像"
 				/>
 			</div>
@@ -26,12 +26,11 @@
 			</div>
 			<div class="mdc-typography--body1">
 				他力code代表<br />
+				超最新AI News&Tips, Microsoft, Node.js関連情報等を毎日発信<br />
+				某中央官庁にてDX担当する傍ら、副業でVibe Coding開発と支援<br />
+				ex.携帯電話大手、暗号資産スタートアップ、客員講師（地方国立高専）<br />
 				ITストラテジスト / プロジェクトマネージャー<br />
-				経済産業省 大臣官房デジタルトランスフォーメーション室<br />
-				Social Technology Officer（北海道のNPO事業とデジタル化伴走支援）<br />
-				客員講師（地方国立高専）<br />
-				Microsoft, Node.js関連等、技術コミュニティでの発信活動<br />
-				SNS発信活動（京都・奈良などの日本美 / 地域情報発信）
+				ネコ派、激辛好き、いつも白Tに黒パン
 			</div>
 			{#if linkon}
 				<div class="demo-cell-left">

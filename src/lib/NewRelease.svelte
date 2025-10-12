@@ -164,17 +164,17 @@
 	}
 
 	/* ダークモード対応 */
-	@media (max-width: 768px) and (prefers-color-scheme: dark) {
-		.release-card {
+	@media (max-width: 768px) {
+		:global([data-theme='dark']) .release-card {
 			background: #16181c;
 			border-color: #2f3336;
 		}
 
-		.release-date {
+		:global([data-theme='dark']) .release-date {
 			color: #71767b;
 		}
 
-		.release-title.no-link {
+		:global([data-theme='dark']) .release-title.no-link {
 			color: #e7e9ea;
 		}
 	}

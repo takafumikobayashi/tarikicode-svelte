@@ -248,24 +248,41 @@ Recent Postと同様に、PC・スマホのどちらからでも更新可能で�
 
 #### 記事の追加方法
 
-1. `src/posts/` ディレクトリに Markdown ファイルを作成
+1. テンプレートをコピー:
+
+   ```bash
+   cp src/posts/TEMPLATE.txt src/posts/YYYY-MM-DD-your-article-title.md
+   ```
+
 2. ファイル名は `YYYY-MM-DD-slug.md` 形式（例：`2025-01-25-api-design-patterns.md`）
-3. フロントマター（YAML 形式）で記事メタデータを定義
+3. フロントマター（YAML 形式）で記事メタデータを編集
+4. 記事本文を Markdown で記述
 
 #### フロントマターの構造
 
 ```yaml
 ---
-title: '記事タイトル'
-date: '2025-01-25'
-category: 'カテゴリ名'
-tags: ['タグ1', 'タグ2', 'タグ3']
-description: '記事の説明文（OGPにも使用）'
-image: 'https://example.com/image.png'
-featured: true # トップページの注目記事に表示
-type: 'blog' # 'blog' または 'work'
+title: '記事タイトル'              # 必須: 記事のタイトル
+date: '2025-01-25'                # 必須: 公開日（YYYY-MM-DD形式）
+category: 'カテゴリ名'             # 必須: カテゴリ（例: 開発, デザイン, ビジネス）
+tags: ['タグ1', 'タグ2', 'タグ3']  # 必須: タグの配列
+description: '記事の説明文'        # 必須: OGP/Twitter Card用（100-160文字推奨）
+image: 'https://example.com/image.png'  # 必須: OGP画像URL（1200x630px推奨）
+featured: false                   # オプション: トップページに注目記事として表示（true/false）
+type: 'blog'                      # 必須: 'blog'（ブログ記事）または 'work'（制作実績）
 ---
 ```
+
+**各フィールドの説明**:
+
+- **title**: 記事のタイトル。SEO とページタイトルに使用
+- **date**: 記事の公開日。ファイル名の日付と一致させることを推奨
+- **category**: カテゴリフィルターで使用。既存カテゴリ（開発、デザイン、ビジネスなど）との統一を推奨
+- **tags**: タグフィルターで使用。複数指定可能（3-5個程度を推奨）
+- **description**: SNS シェア時の説明文。簡潔で魅力的な文章を推奨（100-160文字）
+- **image**: 記事のヒーロー画像と OGP 画像。CloudFront URL を推奨（1200x630px）
+- **featured**: `true` にするとトップページの「注目記事」に表示される
+- **type**: `'blog'` でブログ一覧、`'work'` でトップページの Works に表示
 
 #### 記事の種類
 
