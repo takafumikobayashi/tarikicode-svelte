@@ -4,7 +4,6 @@ date: '2024-09-16'
 category: 'マーケティング'
 tags: ['SNS', 'Instagram', 'マーケティング', 'インフルエンサー', 'ブランディング']
 description: 'フォロワー1万人超の実績を持つインフルエンサーによるSNSマーケティング支援。効果的な発信戦略をご提案します。'
-image: 'https://d1mt09hgbl7gpz.cloudfront.net/public/snspromotion.png'
 featured: true
 type: 'work'
 ---

@@ -159,8 +159,38 @@ SMUI トークンは `src/theme/` に配置され、`npm run prepare` で Light/
 ### 静的アセット
 
 - **画像**: CloudFront CDN（`https://d1mt09hgbl7gpz.cloudfront.net`）から配信
-- **設定**: `src/lib/AppConfig.ts` で画像 URL を管理
+- **設定**: `src/lib/AppConfig.ts` で画像 URL を一元管理
 - **プリロード**: 重要な画像は `<link rel="preload">` で事前読み込み
+
+#### 画像URLの一元管理
+
+すべての画像URLは `src/lib/AppConfig.ts` の `post_string` オブジェクトで管理されています。これにより、画像を変更する際は1箇所を更新するだけで、以下のすべての場所に反映されます：
+
+- トップページの Works カード
+- ブログ記事のタイトル画像
+- OGP/Twitter Card の画像
+
+**画像変更の手順**:
+
+1. 新しい画像をCloudFrontにアップロード（推奨サイズ: 1200x630px JPEG）
+2. `src/lib/AppConfig.ts` の `post_string` を更新
+
+```typescript
+post_string: {
+  'thanks-card': 'https://d1mt09hgbl7gpz.cloudfront.net/public/thankscard.jpg',
+  'kintone-plugin': 'https://d1mt09hgbl7gpz.cloudfront.net/public/kintone.jpg',
+  // ... その他の記事
+}
+```
+
+3. マークダウンファイルの `image` フィールドは不要（自動的にAppConfigから取得）
+
+#### OGP画像の推奨仕様
+
+- **形式**: JPEG（PNGより約25%軽量）
+- **サイズ**: 1200x630px（Twitter Card `summary_large_image` の推奨サイズ）
+- **アスペクト比**: 1.91:1（横長）
+- **最大ファイルサイズ**: 5MB以下
 
 ### Recent Post（最新ツイート）の更新
 
@@ -250,9 +280,9 @@ Recent Postと同様に、PC・スマホのどちらからでも更新可能で�
 
 1. テンプレートをコピー:
 
-   ```bash
-   cp src/posts/TEMPLATE.txt src/posts/YYYY-MM-DD-your-article-title.md
-   ```
+    ```bash
+    cp src/posts/TEMPLATE.txt src/posts/YYYY-MM-DD-your-article-title.md
+    ```
 
 2. ファイル名は `YYYY-MM-DD-slug.md` 形式（例：`2025-01-25-api-design-patterns.md`）
 3. フロントマター（YAML 形式）で記事メタデータを編集
@@ -262,14 +292,14 @@ Recent Postと同様に、PC・スマホのどちらからでも更新可能で�
 
 ```yaml
 ---
-title: '記事タイトル'              # 必須: 記事のタイトル
-date: '2025-01-25'                # 必須: 公開日（YYYY-MM-DD形式）
-category: 'カテゴリ名'             # 必須: カテゴリ（例: 開発, デザイン, ビジネス）
-tags: ['タグ1', 'タグ2', 'タグ3']  # 必須: タグの配列
-description: '記事の説明文'        # 必須: OGP/Twitter Card用（100-160文字推奨）
-image: 'https://example.com/image.png'  # 必須: OGP画像URL（1200x630px推奨）
-featured: false                   # オプション: トップページに注目記事として表示（true/false）
-type: 'blog'                      # 必須: 'blog'（ブログ記事）または 'work'（制作実績）
+title: '記事タイトル' # 必須: 記事のタイトル
+date: '2025-01-25' # 必須: 公開日（YYYY-MM-DD形式）
+category: 'カテゴリ名' # 必須: カテゴリ（例: 開発, デザイン, ビジネス）
+tags: ['タグ1', 'タグ2', 'タグ3'] # 必須: タグの配列
+description: '記事の説明文' # 必須: OGP/Twitter Card用（100-160文字推奨）
+image: 'https://example.com/image.png' # オプション: 個別にOGP画像を指定（省略時はAppConfigから取得）
+featured: false # オプション: トップページに注目記事として表示（true/false）
+type: 'blog' # 必須: 'blog'（ブログ記事）または 'work'（制作実績）
 ---
 ```
 
@@ -280,9 +310,19 @@ type: 'blog'                      # 必須: 'blog'（ブログ記事）または
 - **category**: カテゴリフィルターで使用。既存カテゴリ（開発、デザイン、ビジネスなど）との統一を推奨
 - **tags**: タグフィルターで使用。複数指定可能（3-5個程度を推奨）
 - **description**: SNS シェア時の説明文。簡潔で魅力的な文章を推奨（100-160文字）
-- **image**: 記事のヒーロー画像と OGP 画像。CloudFront URL を推奨（1200x630px）
+- **image**: （オプション）記事のヒーロー画像とOGP画像を個別に指定。省略した場合は `AppConfig.ts` の `post_string[slug]` から自動取得
 - **featured**: `true` にするとトップページの「注目記事」に表示される
 - **type**: `'blog'` でブログ一覧、`'work'` でトップページの Works に表示
+
+**画像管理の仕組み**:
+
+記事の画像URLは以下の優先順位で決定されます：
+
+1. マークダウンの `image` フィールド（指定されている場合）
+2. `AppConfig.ts` の `post_string[slug]`（記事のslugをキーとして取得）
+3. 空文字列（画像なし）
+
+これにより、ほとんどの記事では `image` フィールドを省略でき、`AppConfig.ts` で一元管理できます。個別に異なる画像を使いたい場合のみ `image` フィールドを指定してください。
 
 #### 記事の種類
 
@@ -308,6 +348,36 @@ graph LR
 - フローチャート（flowchart）
 - クラス図（classDiagram）
 - その他 Mermaid がサポートする全ての図
+
+#### OGPカード機能（リンクプレビュー）
+
+記事内で外部サイトをリッチなカード形式で表示できます。`[[ogp:URL]]` という記法を使うだけで、自動的に外部サイトのOGP情報（タイトル、説明、画像、サイト名）を取得して表示します。
+
+**使用例**:
+
+```markdown
+## 参考リンク
+
+公式ドキュメント：
+[[ogp:https://svelte.dev/]]
+
+SvelteKitの詳細：
+[[ogp:https://kit.svelte.dev/]]
+```
+
+**機能**:
+
+- **自動取得**: OGPメタタグから情報を自動取得
+- **レスポンシブ**: PC（横並び）、モバイル（縦並び）に対応
+- **インタラクティブ**: ホバー時にプライマリーカラーのボーダー表示
+- **エラー処理**: OGP取得失敗時は通常のリンクとして表示
+- **キャッシュ**: APIレベルで1時間キャッシュしてパフォーマンス向上
+
+**技術仕様**:
+
+- **APIエンドポイント**: `/api/ogp` - サーバーサイドでOGP情報を取得
+- **対応形式**: `property="og:xxx"` および `name="og:xxx"` の両方に対応
+- **フォールバック**: OGPタグがない場合は `<title>` や `<meta name="description">` から取得
 
 #### ブログ記事の機能
 

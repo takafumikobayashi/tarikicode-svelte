@@ -87,7 +87,7 @@ describe('AppConfig', () => {
 		it('should have valid image paths', () => {
 			AppConfig.heroimage.forEach((hero) => {
 				expect(hero.image).toMatch(/\/imgs\//);
-				expect(hero.image).toMatch(/\.png$/);
+				expect(hero.image).toMatch(/\.(jpg|jpeg|png)$/);
 			});
 		});
 
@@ -107,7 +107,7 @@ describe('AppConfig', () => {
 
 		it('should have correct first hero image content', () => {
 			expect(AppConfig.heroimage[0].image).toBe(
-				'https://d1mt09hgbl7gpz.cloudfront.net/imgs/heroimage1.png'
+				'https://d1mt09hgbl7gpz.cloudfront.net/imgs/heroimage1.jpg'
 			);
 			expect(AppConfig.heroimage[0].descpiption).toBe('一緒に創る、明日のためのcode');
 		});
@@ -132,25 +132,25 @@ describe('AppConfig', () => {
 
 		it('should map correct images to posts', () => {
 			expect(AppConfig.post_string['about']).toBe(
-				'https://d1mt09hgbl7gpz.cloudfront.net/imgs/heroimage1.png'
+				'https://d1mt09hgbl7gpz.cloudfront.net/imgs/heroimage1.jpg'
 			);
 			expect(AppConfig.post_string['thanks-card']).toBe(
-				'https://d1mt09hgbl7gpz.cloudfront.net/public/thankscard.png'
+				'https://d1mt09hgbl7gpz.cloudfront.net/public/thankscard.jpg'
 			);
 			expect(AppConfig.post_string['kintone-plugin']).toBe(
-				'https://d1mt09hgbl7gpz.cloudfront.net/public/kintone.png'
+				'https://d1mt09hgbl7gpz.cloudfront.net/public/kintone.jpg'
 			);
 			expect(AppConfig.post_string['svelte']).toBe(
-				'https://d1mt09hgbl7gpz.cloudfront.net/public/sveltegirl.png'
+				'https://d1mt09hgbl7gpz.cloudfront.net/public/svelte.jpg'
 			);
 			expect(AppConfig.post_string['sns-promotion']).toBe(
-				'https://d1mt09hgbl7gpz.cloudfront.net/public/snspromotion.png'
+				'https://d1mt09hgbl7gpz.cloudfront.net/public/snspromotion.jpg'
 			);
 			expect(AppConfig.post_string['ai']).toBe(
-				'https://d1mt09hgbl7gpz.cloudfront.net/public/ai.png'
+				'https://d1mt09hgbl7gpz.cloudfront.net/public/ai.jpg'
 			);
 			expect(AppConfig.post_string['project-management']).toBe(
-				'https://d1mt09hgbl7gpz.cloudfront.net/public/projectmanagement.png'
+				'https://d1mt09hgbl7gpz.cloudfront.net/public/projectmanagement.jpg'
 			);
 		});
 	});
