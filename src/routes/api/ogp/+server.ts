@@ -65,26 +65,17 @@ function extractOgpTag(html: string, property: string): string {
 	if (match) return match[1];
 
 	// パターン2: content="..." property="og:xxx"（順序逆）
-	regex = new RegExp(
-		`<meta\\s+content=["']([^"']+)["']\\s+property=["']${property}["']`,
-		'is'
-	);
+	regex = new RegExp(`<meta\\s+content=["']([^"']+)["']\\s+property=["']${property}["']`, 'is');
 	match = html.match(regex);
 	if (match) return match[1];
 
 	// パターン3: name="og:xxx" content="..."（一部サイトで使用）
-	regex = new RegExp(
-		`<meta\\s+name=["']${property}["']\\s+content=["']([^"']+)["']`,
-		'is'
-	);
+	regex = new RegExp(`<meta\\s+name=["']${property}["']\\s+content=["']([^"']+)["']`, 'is');
 	match = html.match(regex);
 	if (match) return match[1];
 
 	// パターン4: content="..." name="og:xxx"（順序逆）
-	regex = new RegExp(
-		`<meta\\s+content=["']([^"']+)["']\\s+name=["']${property}["']`,
-		'is'
-	);
+	regex = new RegExp(`<meta\\s+content=["']([^"']+)["']\\s+name=["']${property}["']`, 'is');
 	match = html.match(regex);
 	if (match) return match[1];
 

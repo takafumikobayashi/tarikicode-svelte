@@ -154,4 +154,42 @@ describe('AppConfig', () => {
 			);
 		});
 	});
+
+	describe('Share URLs Configuration', () => {
+		it('should have all required SNS share URLs', () => {
+			expect(AppConfig.shareUrls).toHaveProperty('twitter');
+			expect(AppConfig.shareUrls).toHaveProperty('facebook');
+			expect(AppConfig.shareUrls).toHaveProperty('linkedin');
+			expect(AppConfig.shareUrls).toHaveProperty('hatena');
+			expect(AppConfig.shareUrls).toHaveProperty('pocket');
+		});
+
+		it('should have valid Twitter share URL', () => {
+			expect(AppConfig.shareUrls.twitter).toBe('https://twitter.com/intent/tweet');
+		});
+
+		it('should have valid Facebook share URL', () => {
+			expect(AppConfig.shareUrls.facebook).toBe('https://www.facebook.com/sharer/sharer.php');
+		});
+
+		it('should have valid LinkedIn share URL', () => {
+			expect(AppConfig.shareUrls.linkedin).toBe(
+				'https://www.linkedin.com/sharing/share-offsite/'
+			);
+		});
+
+		it('should have valid Hatena share URL', () => {
+			expect(AppConfig.shareUrls.hatena).toBe('https://b.hatena.ne.jp/entry/');
+		});
+
+		it('should have valid Pocket share URL', () => {
+			expect(AppConfig.shareUrls.pocket).toBe('https://getpocket.com/edit');
+		});
+
+		it('should have HTTPS URLs for all share platforms', () => {
+			Object.values(AppConfig.shareUrls).forEach((url) => {
+				expect(url).toMatch(/^https:\/\//);
+			});
+		});
+	});
 });

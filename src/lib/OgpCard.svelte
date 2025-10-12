@@ -72,7 +72,9 @@
 	}
 
 	:global(.ogp-card-container) {
-		transition: transform 0.2s, box-shadow 0.2s;
+		transition:
+			transform 0.2s,
+			box-shadow 0.2s;
 		cursor: pointer;
 	}
 

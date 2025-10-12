@@ -3,7 +3,7 @@ import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ url }) => {
 	// 全記事のメタデータを取得
-	const allPosts = getAllPostsMetadata();
+	const allPosts = await getAllPostsMetadata();
 
 	// URLパラメータから取得
 	const category = url.searchParams.get('category');
