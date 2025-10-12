@@ -8,15 +8,16 @@
 		aiLink,
 		projectManagementLink
 	} from './CommonFunction';
+	import { AppConfig } from './AppConfig';
 
-	// カード画像のURLを配列として定義
+	// AppConfigから画像URLを取得
 	const cardImages = [
-		'https://d1mt09hgbl7gpz.cloudfront.net/public/thankscard.png',
-		'https://d1mt09hgbl7gpz.cloudfront.net/public/kintone.png',
-		'https://d1mt09hgbl7gpz.cloudfront.net/public/sveltegirl.png',
-		'https://d1mt09hgbl7gpz.cloudfront.net/public/snspromotion.png',
-		'https://d1mt09hgbl7gpz.cloudfront.net/public/ai.png',
-		'https://d1mt09hgbl7gpz.cloudfront.net/public/projectmanagement.png'
+		AppConfig.post_string['thanks-card'],
+		AppConfig.post_string['kintone-plugin'],
+		AppConfig.post_string['svelte'],
+		AppConfig.post_string['sns-promotion'],
+		AppConfig.post_string['ai'],
+		AppConfig.post_string['project-management']
 	];
 </script>
 
@@ -26,7 +27,17 @@
 	{/each}
 </svelte:head>
 
-<div class="card-display">
+<div
+	class="card-display"
+	style="
+		--card-image-1: url({cardImages[0]});
+		--card-image-2: url({cardImages[1]});
+		--card-image-3: url({cardImages[2]});
+		--card-image-4: url({cardImages[3]});
+		--card-image-5: url({cardImages[4]});
+		--card-image-6: url({cardImages[5]});
+	"
+>
 	<div class="card-container">
 		<Card>
 			<div style="padding: 1rem;">
@@ -148,32 +159,32 @@
 	}
 
 	:global(.card-media-16x9) {
-		background-image: url(https://d1mt09hgbl7gpz.cloudfront.net/public/thankscard.png);
+		background-image: var(--card-image-1);
 		height: 180px;
 	}
 
 	:global(.card-media-16x9-2) {
-		background-image: url(https://d1mt09hgbl7gpz.cloudfront.net/public/kintone.png);
+		background-image: var(--card-image-2);
 		height: 180px;
 	}
 
 	:global(.card-media-16x9-3) {
-		background-image: url(https://d1mt09hgbl7gpz.cloudfront.net/public/sveltegirl.png);
+		background-image: var(--card-image-3);
 		height: 180px;
 	}
 
 	:global(.card-media-16x9-4) {
-		background-image: url(https://d1mt09hgbl7gpz.cloudfront.net/public/snspromotion.png);
+		background-image: var(--card-image-4);
 		height: 180px;
 	}
 
 	:global(.card-media-16x9-5) {
-		background-image: url(https://d1mt09hgbl7gpz.cloudfront.net/public/ai.png);
+		background-image: var(--card-image-5);
 		height: 180px;
 	}
 
 	:global(.card-media-16x9-6) {
-		background-image: url(https://d1mt09hgbl7gpz.cloudfront.net/public/projectmanagement.png);
+		background-image: var(--card-image-6);
 		height: 180px;
 	}
 

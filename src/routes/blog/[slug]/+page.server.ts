@@ -5,6 +5,7 @@ import { marked } from 'marked';
 import matter from 'gray-matter';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
+import { AppConfig } from '$lib/AppConfig';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const { slug } = params;
@@ -22,8 +23,17 @@ export const load: PageServerLoad = async ({ params }) => {
 				const fileContent = fs.readFileSync(filePath, { encoding: 'utf-8' });
 				const { data, content } = matter(fileContent);
 
+				// OGPカード記法を事前変換（marked処理前に置き換え）
+				const processedContent = content.replace(/\[\[ogp:(https?:\/\/[^\]]+)\]\]/g, (match, url) => {
+					// HTMLコメントで囲んでmarkedが処理しないようにする
+					return `\n\n<ogp-card data-url="${url}"></ogp-card>\n\n`;
+				});
+
 				// MarkdownをHTMLに変換
-				const htmlContent = marked(content);
+				let htmlContent = marked(processedContent) as string;
+
+				// AppConfigから画像URLを取得（フォールバック: マークダウンのimageフィールド）
+				const imageUrl = data.image || AppConfig.post_string[slug] || '';
 
 				// メタデータと本文を返す
 				return {
@@ -35,7 +45,7 @@ export const load: PageServerLoad = async ({ params }) => {
 						category: data.category || '',
 						tags: data.tags || [],
 						description: data.description || '',
-						image: data.image || '',
+						image: imageUrl,
 						type: data.type || 'blog'
 					}
 				};

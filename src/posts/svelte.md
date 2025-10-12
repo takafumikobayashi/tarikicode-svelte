@@ -4,7 +4,6 @@ date: '2024-09-15'
 category: '開発'
 tags: ['Svelte', 'Node.js', 'フロントエンド', 'バックエンド', 'AWS', 'Azure']
 description: 'SvelteやNode.jsを活用したモダンなWebアプリケーション開発の実績と技術スタックをご紹介します。'
-image: 'https://d1mt09hgbl7gpz.cloudfront.net/public/sveltegirl.png'
 featured: true
 type: 'work'
 ---
@@ -375,3 +374,13 @@ Node.jsでお困りなことはありませんか？
 #### 最後に
 
 今回ご紹介した技術スタックやプロジェクト事例は、私の豊富な経験とスキルを反映したものです。Node.jsやSvelteをはじめとする最新技術を活用し、クライアントのニーズに合わせた柔軟かつ効率的なソリューション提供が可能です。ぜひ開発やコンサルティングのご依頼をご検討ください。
+
+---
+
+### 参考リンク
+
+以下は関連する技術ドキュメントです：
+
+[[ogp:https://svelte.dev/]]
+
+[[ogp:https://kit.svelte.dev/]]

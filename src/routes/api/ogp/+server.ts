@@ -9,49 +9,98 @@ export const GET: RequestHandler = async ({ url }) => {
 	}
 
 	try {
+		// 対象URLのHTMLを取得
 		const response = await fetch(targetUrl, {
 			headers: {
-				'User-Agent': 'Mozilla/5.0 (compatible; OGPBot/1.0; +https://tariki-code.tokyo)'
+				'User-Agent': 'Mozilla/5.0 (compatible; OGPBot/1.0)'
 			}
 		});
 
 		if (!response.ok) {
-			return json({ error: 'Failed to fetch URL' }, { status: response.status });
+			throw new Error(`Failed to fetch: ${response.status}`);
 		}
 
 		const html = await response.text();
 
-		// OGP情報を抽出
+		// OGPメタタグを抽出
 		const ogpData = {
-			title: extractOgp(html, 'og:title') || extractTitle(html),
-			description: extractOgp(html, 'og:description') || extractDescription(html),
-			image: extractOgp(html, 'og:image'),
-			site: extractOgp(html, 'og:site_name') || new URL(targetUrl).hostname
+			title: extractOgpTag(html, 'og:title') || extractTag(html, 'title'),
+			description:
+				extractOgpTag(html, 'og:description') || extractMetaTag(html, 'description'),
+			image: extractOgpTag(html, 'og:image'),
+			siteName: extractOgpTag(html, 'og:site_name'),
+			url: extractOgpTag(html, 'og:url') || targetUrl
 		};
 
-		return json(ogpData);
+		// キャッシュヘッダーを設定（1時間）
+		return json(ogpData, {
+			headers: {
+				'Cache-Control': 'public, max-age=3600'
+			}
+		});
 	} catch (error) {
-		console.error('OGP fetch error:', error);
-		return json({ error: 'Failed to fetch OGP data' }, { status: 500 });
+		console.error('Error fetching OGP data:', error);
+		return json(
+			{
+				error: 'Failed to fetch OGP data',
+				title: targetUrl,
+				description: '',
+				image: '',
+				siteName: '',
+				url: targetUrl
+			},
+			{ status: 500 }
+		);
 	}
 };
 
-function extractOgp(html: string, property: string): string | null {
-	const regex = new RegExp(
-		`<meta[^>]*property=["']${property}["'][^>]*content=["']([^"']*)["']`,
-		'i'
+// OGPタグを抽出するヘルパー関数（property="og:xxx" と name="og:xxx" 両方に対応）
+function extractOgpTag(html: string, property: string): string {
+	// パターン1: property="og:xxx" content="..."
+	let regex = new RegExp(
+		`<meta\\s+property=["']${property}["']\\s+content=["']([^"']+)["']`,
+		'is'
 	);
-	const match = html.match(regex);
-	return match ? match[1] : null;
+	let match = html.match(regex);
+	if (match) return match[1];
+
+	// パターン2: content="..." property="og:xxx"（順序逆）
+	regex = new RegExp(
+		`<meta\\s+content=["']([^"']+)["']\\s+property=["']${property}["']`,
+		'is'
+	);
+	match = html.match(regex);
+	if (match) return match[1];
+
+	// パターン3: name="og:xxx" content="..."（一部サイトで使用）
+	regex = new RegExp(
+		`<meta\\s+name=["']${property}["']\\s+content=["']([^"']+)["']`,
+		'is'
+	);
+	match = html.match(regex);
+	if (match) return match[1];
+
+	// パターン4: content="..." name="og:xxx"（順序逆）
+	regex = new RegExp(
+		`<meta\\s+content=["']([^"']+)["']\\s+name=["']${property}["']`,
+		'is'
+	);
+	match = html.match(regex);
+	if (match) return match[1];
+
+	return '';
 }
 
-function extractTitle(html: string): string {
-	const match = html.match(/<title[^>]*>([^<]*)<\/title>/i);
+// 通常のmetaタグを抽出するヘルパー関数
+function extractMetaTag(html: string, name: string): string {
+	const regex = new RegExp(`<meta\\s+name=["']${name}["']\\s+content=["']([^"']+)["']`, 'i');
+	const match = html.match(regex);
 	return match ? match[1] : '';
 }
 
-function extractDescription(html: string): string {
-	const regex = /<meta[^>]*name=["']description["'][^>]*content=["']([^"']*)["']/i;
+// titleタグを抽出するヘルパー関数
+function extractTag(html: string, tag: string): string {
+	const regex = new RegExp(`<${tag}[^>]*>([^<]+)</${tag}>`, 'i');
 	const match = html.match(regex);
-	return match ? match[1] : '';
+	return match ? match[1].trim() : '';
 }

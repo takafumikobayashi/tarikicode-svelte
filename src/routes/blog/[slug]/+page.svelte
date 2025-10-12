@@ -41,6 +41,40 @@
 			//@ts-ignore
 			hljs.highlightBlock(block);
 		});
+
+		// OGPカードの処理
+		const ogpCards = document.querySelectorAll('ogp-card');
+		ogpCards.forEach(async (card) => {
+			const url = card.getAttribute('data-url');
+			if (!url) return;
+
+			// 読み込み中表示
+			card.innerHTML = '<div class="ogp-loading">読み込み中...</div>';
+
+			try {
+				const response = await fetch(`/api/ogp?url=${encodeURIComponent(url)}`);
+				if (!response.ok) throw new Error('Failed to fetch OGP data');
+
+				const ogpData = await response.json();
+
+				// OGPカードのHTMLを生成
+				card.innerHTML = `
+					<a href="${url}" target="_blank" rel="noopener noreferrer" class="ogp-link-card">
+						<div class="ogp-card-wrapper">
+							${ogpData.image ? `<div class="ogp-card-image"><img src="${ogpData.image}" alt="${ogpData.title || ''}" /></div>` : ''}
+							<div class="ogp-card-text">
+								<h3 class="ogp-card-title">${ogpData.title || url}</h3>
+								${ogpData.description ? `<p class="ogp-card-description">${ogpData.description}</p>` : ''}
+								${ogpData.siteName ? `<p class="ogp-card-site">${ogpData.siteName}</p>` : ''}
+							</div>
+						</div>
+					</a>
+				`;
+			} catch (error) {
+				console.error('Error loading OGP card:', error);
+				card.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer" class="ogp-error-link">${url}</a>`;
+			}
+		});
 	});
 
 	// slugを取得
@@ -56,10 +90,17 @@
 
 <svelte:head>
 	<!-- Open Graph メタタグ -->
-	<meta property="og:title" content={data.metadata?.title || `${post_string} - ${AppConfig.title}`} />
+	<meta
+		property="og:title"
+		content={data.metadata?.title || `${post_string} - ${AppConfig.title}`}
+	/>
 	<meta property="og:type" content="article" />
 	<meta property="og:url" content={`${AppConfig.url}/blog/${post_string}`} />
-	<meta property="og:image" content={data.metadata?.image || `${AppConfig.url}${AppConfig.post_string[post_string] || '/default-og-image.png'}`} />
+	<meta
+		property="og:image"
+		content={data.metadata?.image ||
+			`${AppConfig.url}${AppConfig.post_string[post_string] || '/default-og-image.png'}`}
+	/>
 	<meta property="og:description" content={data.metadata?.description || AppConfig.description} />
 	<meta property="og:site_name" content={AppConfig.title} />
 	{#if data.metadata?.date}
@@ -70,8 +111,15 @@
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:site" content={AppConfig.xaccuont} />
 	<meta name="twitter:title" content={data.metadata?.title || AppConfig.title} />
-	<meta name="twitter:description" content={data.metadata?.description || AppConfig.description} />
-	<meta name="twitter:image" content={data.metadata?.image || `${AppConfig.url}${AppConfig.post_string[post_string] || '/default-og-image.png'}`} />
+	<meta
+		name="twitter:description"
+		content={data.metadata?.description || AppConfig.description}
+	/>
+	<meta
+		name="twitter:image"
+		content={data.metadata?.image ||
+			`${AppConfig.url}${AppConfig.post_string[post_string] || '/default-og-image.png'}`}
+	/>
 
 	<link
 		href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
@@ -177,6 +225,110 @@
 	@media (max-width: 768px) {
 		.hero-image-container {
 			margin-top: 40px;
+		}
+	}
+
+	/* OGPカードのスタイル */
+	:global(.ogp-loading) {
+		padding: 1em;
+		text-align: center;
+		color: var(--mdc-theme-text-secondary-on-background, rgba(0, 0, 0, 0.6));
+	}
+
+	:global(.ogp-link-card) {
+		display: block;
+		text-decoration: none;
+		color: inherit;
+		margin: 1.5em 0;
+		border: 1px solid var(--mdc-theme-text-hint-on-background, rgba(0, 0, 0, 0.12));
+		border-radius: 12px;
+		overflow: hidden;
+		transition: all 0.2s;
+	}
+
+	:global(.ogp-link-card:hover) {
+		transform: translateY(-2px);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+		border-color: var(--mdc-theme-primary, #6200ee);
+	}
+
+	:global(.ogp-card-wrapper) {
+		display: flex;
+		gap: 1em;
+		padding: 1em;
+	}
+
+	:global(.ogp-card-image) {
+		flex-shrink: 0;
+		width: 200px;
+		height: 120px;
+		overflow: hidden;
+		border-radius: 8px;
+		background-color: var(--mdc-theme-text-hint-on-background, rgba(0, 0, 0, 0.06));
+	}
+
+	:global(.ogp-card-image img) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	:global(.ogp-card-text) {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5em;
+		min-width: 0;
+	}
+
+	:global(.ogp-card-title) {
+		margin: 0;
+		font-size: 1.1rem;
+		font-weight: 600;
+		line-height: 1.4;
+		color: var(--mdc-theme-text-primary-on-background, rgba(0, 0, 0, 0.87));
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+	}
+
+	:global(.ogp-card-description) {
+		margin: 0;
+		font-size: 0.9rem;
+		line-height: 1.5;
+		color: var(--mdc-theme-text-secondary-on-background, rgba(0, 0, 0, 0.6));
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+	}
+
+	:global(.ogp-card-site) {
+		margin: 0;
+		font-size: 0.8rem;
+		color: var(--mdc-theme-text-hint-on-background, rgba(0, 0, 0, 0.38));
+	}
+
+	:global(.ogp-error-link) {
+		display: block;
+		padding: 1em;
+		margin: 1.5em 0;
+		border: 1px solid var(--mdc-theme-text-hint-on-background, rgba(0, 0, 0, 0.12));
+		border-radius: 8px;
+		color: var(--mdc-theme-primary, #6200ee);
+		word-break: break-all;
+	}
+
+	/* モバイル対応 */
+	@media (max-width: 768px) {
+		:global(.ogp-card-wrapper) {
+			flex-direction: column;
+		}
+
+		:global(.ogp-card-image) {
+			width: 100%;
+			height: 180px;
 		}
 	}
 </style>

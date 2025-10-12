@@ -4,7 +4,6 @@ date: '2024-09-22'
 category: 'プロジェクトマネジメント'
 tags: ['PM', 'プロジェクト管理', 'アジャイル', 'リーダーシップ', 'Asana', 'Jira']
 description: '適応性と再現性を兼ね備えたプロジェクトマネジメントで、組織の課題を解決し成功に導きます。'
-image: 'https://d1mt09hgbl7gpz.cloudfront.net/public/projectmanagement.png'
 featured: true
 type: 'work'
 ---
