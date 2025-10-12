@@ -40,8 +40,6 @@
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content={`${AppConfig.url}/about`} />
 	<meta property="og:image" content={AppConfig.post_string.about} />
-	<meta property="og:image:width" content="1200" />
-	<meta property="og:image:height" content="630" />
 	<meta property="og:description" content={AppConfig.description} />
 	<meta property="og:site_name" content={AppConfig.title} />
 
