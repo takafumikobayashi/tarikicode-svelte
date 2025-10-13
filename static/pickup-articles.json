@@ -1,10 +1,10 @@
 {
 	"articles": [
 		{
-			"url": "https://openai.com/index/sora-2/"
+			"url": "https://www.anthropic.com/news/claude-sonnet-4-5"
 		},
 		{
-			"url": "https://www.anthropic.com/news/claude-sonnet-4-5"
+			"url": "https://cloud.google.com/blog/ja/topics/developers-practitioners/introducing-gemini-cli/"
 		}
 	]
 }
