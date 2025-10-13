@@ -31,7 +31,7 @@
 						description: ogpData.description || '',
 						url: article.url,
 						image: ogpData.image || '',
-						site: ogpData.site || new URL(article.url).hostname
+						site: ogpData.siteName || new URL(article.url).hostname
 					};
 				} catch (error) {
 					console.error(`Failed to fetch OGP for ${article.url}:`, error);
