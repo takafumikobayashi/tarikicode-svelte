@@ -1,10 +1,10 @@
 {
 	"articles": [
 		{
-			"url": "https://www.anthropic.com/news/claude-sonnet-4-5"
+			"url": "https://www.anthropic.com/news/skills"
 		},
 		{
-			"url": "https://cloud.google.com/blog/ja/topics/developers-practitioners/introducing-gemini-cli/"
+			"url": "https://developers.googleblog.com/en/say-hello-to-a-new-level-of-interactivity-in-gemini-cli/"
 		}
 	]
 }
