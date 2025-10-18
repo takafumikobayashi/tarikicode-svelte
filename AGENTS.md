@@ -26,6 +26,74 @@ Prettier handles formatting: two-space indentation, trailing semicolons, single 
 
 Vitest runs in JSDOM via `src/tests/setup.ts`, which wires Testing Library cleanup. Prefer colocating unit tests; reserve `src/tests/` for integration or shared fixtures. Run `npm run test:coverage` before merging and review the HTML report in `coverage/` for gaps.
 
+## Version Control with jj (Jujutsu)
+
+This project uses **jj (Jujutsu VCS)** for version control. Jj provides a more intuitive interface while maintaining Git compatibility under the hood.
+
+### Daily Development Workflow
+
+1. **Check current state**:
+
+    ```bash
+    jj status              # view working copy changes
+    jj log -n 5            # review recent commits
+    jj bookmark list       # check bookmark positions
+    ```
+
+2. **Start new work**:
+
+    ```bash
+    jj new                 # create new change on top of current
+    # Make your code changes
+    jj describe -m "feat: add new feature"  # set commit message
+    ```
+
+3. **Update develop bookmark** (recommended before pushing):
+
+    ```bash
+    jj bookmark set develop   # move develop bookmark to current commit
+    ```
+
+4. **Sync with remote**:
+
+    ```bash
+    jj git fetch              # pull latest from GitHub
+    jj git push               # push local changes to remote
+    ```
+
+### Bookmark (Branch) Management
+
+- **develop**: primary development bookmark, always tracks latest work
+- **main**: production bookmark, synced with GitHub main branch
+- Keep `develop` bookmark updated with `jj bookmark set develop` after completing changes
+- Before pushing, ensure `develop` points to your latest commit
+
+### Integration with Cursor/IDEs
+
+Some editors (like Cursor) may display commit hashes instead of bookmark names. Run `jj bookmark set develop` to update the bookmark reference, making it display correctly in the IDE.
+
+### Key Differences from Git
+
+- **Automatic commits**: `jj new` creates a commit immediately; no staging area
+- **Change IDs**: each logical change has a stable ID, separate from commit hash
+- **Bookmarks vs Branches**: bookmarks in jj behave like Git branches but with clearer semantics
+- **No detached HEAD**: working copy always sits on a commit; bookmarks can be moved freely
+
+### Common Operations
+
+| Task              | jj Command                | Git Equivalent                |
+| ----------------- | ------------------------- | ----------------------------- |
+| Check status      | `jj status`               | `git status`                  |
+| View log          | `jj log -n 5`             | `git log -5`                  |
+| Start new work    | `jj new`                  | `git commit` (after staging)  |
+| Set message       | `jj describe -m "msg"`    | `git commit --amend -m "msg"` |
+| Move bookmark     | `jj bookmark set develop` | `git checkout develop`        |
+| Push to remote    | `jj git push`             | `git push`                    |
+| Fetch from remote | `jj git fetch`            | `git fetch`                   |
+| View diff         | `jj diff`                 | `git diff`                    |
+
+For full reference, consult the [jj documentation](https://martinvonz.github.io/jj/latest/).
+
 ## Commit & Pull Request Guidelines
 
 - Start subjects with Conventional Commit tags and keep them imperative under 72 characters with no trailing period.

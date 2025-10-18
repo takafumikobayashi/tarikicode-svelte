@@ -75,6 +75,94 @@ GitHub Personal Access Tokenの作成方法：
 
 必要に応じて `npm run dev -- --open` でブラウザを自動起動できます。
 
+## バージョン管理（jj）
+
+このプロジェクトでは **jj (Jujutsu VCS)** をバージョン管理システムとして使用しています。jjはGitと共存でき、より直感的な操作が可能です。
+
+### jjのインストール
+
+```bash
+# macOS (Homebrew)
+brew install jj
+
+# その他のプラットフォーム
+# https://martinvonz.github.io/jj/latest/install-and-setup/
+```
+
+### 基本的なワークフロー
+
+このプロジェクトでは `develop` ブックマーク（≒Gitブランチ）で開発を行います。
+
+#### 状態確認
+
+```bash
+# 現在の状態を確認
+jj status
+
+# コミット履歴を確認
+jj log -n 5
+
+# ブックマーク一覧を確認
+jj bookmark list
+```
+
+#### 開発作業
+
+```bash
+# 新しい変更を開始（自動的に新しいコミットが作成される）
+jj new
+
+# 変更内容を記述
+jj describe -m "feat: 新機能の追加"
+
+# developブックマークを現在位置に移動（推奨）
+jj bookmark set develop
+```
+
+#### リモートとの同期
+
+```bash
+# リモートから最新を取得
+jj git fetch
+
+# ローカルの変更をリモートにプッシュ
+jj git push
+```
+
+### Cursorエディタとの連携
+
+Cursorでは、コミットハッシュ（例：`42baed1f`）で表示される場合があります。ブックマーク名で表示したい場合は、以下を実行してください：
+
+```bash
+# developブックマークを現在のコミットに移動
+jj bookmark set develop
+```
+
+これにより、Cursorでも `develop` として認識されるようになります。
+
+### jjとGitの関係
+
+- jjは内部的にGitリポジトリを使用
+- `.jj/` ディレクトリにjj固有のデータを保存
+- GitHubとの連携は `jj git push/fetch` コマンドで可能
+- Gitコマンドとjjコマンドは混在可能（非推奨）
+
+### よく使うコマンド早見表
+
+| コマンド                   | 説明                         |
+| -------------------------- | ---------------------------- |
+| `jj status`                | 現在の状態を確認             |
+| `jj log -n 5`              | 最新5件のコミットログを表示  |
+| `jj bookmark list`         | ブックマーク一覧を表示       |
+| `jj bookmark set <name>`   | ブックマークを現在位置に移動 |
+| `jj new`                   | 新しい変更を開始             |
+| `jj describe -m "message"` | コミットメッセージを設定     |
+| `jj git push`              | リモートへプッシュ           |
+| `jj git fetch`             | リモートからフェッチ         |
+| `jj diff`                  | 変更内容を確認               |
+
+詳細は [jj公式ドキュメント](https://martinvonz.github.io/jj/latest/) を参照してください。
+
 ## コマンド一覧
 
 ### 開発サーバー
