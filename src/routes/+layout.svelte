@@ -1,6 +1,18 @@
 <script>
 	// appConfig.jsなどからサイト全体の設定情報をインポート
 	import { AppConfig } from '$lib/AppConfig';
+	import { page } from '$app/stores';
+	import { afterNavigate } from '$app/navigation';
+
+	// ページ遷移時にGoogle Analyticsにページビューを送信
+	afterNavigate(() => {
+		if (typeof window !== 'undefined' && window.gtag) {
+			window.gtag('config', 'G-ZYB8P4GTXY', {
+				page_path: $page.url.pathname,
+				page_title: document.title
+			});
+		}
+	});
 </script>
 
 <svelte:head>
