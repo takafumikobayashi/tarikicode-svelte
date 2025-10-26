@@ -19,7 +19,7 @@ mermaid.registerIconPacks([
 ]);
 
 // Mermaid用の図をレンダリングする関数
-export function renderMermaidDiagrams(theme) {
+export function renderMermaidDiagrams(theme: 'default' | 'dark' | 'forest' | 'neutral' | 'base') {
 	// 初回描画
 	const mermaidElements = document.querySelectorAll('code.language-mermaid');
 	if (mermaidElements.length > 0) {
@@ -44,7 +44,7 @@ export function renderMermaidDiagrams(theme) {
 		});
 	} else {
 		// 2回目以降の描画
-		const processedMermaidElements = document.querySelectorAll('div.mermaid');
+		const processedMermaidElements = document.querySelectorAll<HTMLDivElement>('div.mermaid');
 		processedMermaidElements.forEach(async (element, index) => {
 			const mermaidCode = element.dataset.mermaidCode || '';
 			if (!mermaidCode) {

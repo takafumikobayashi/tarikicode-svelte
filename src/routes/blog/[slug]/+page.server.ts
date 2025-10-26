@@ -37,7 +37,7 @@ async function fetchOgpImage(url: string): Promise<string> {
 	}
 }
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load = async ({ params }: { params: { slug: string } }) => {
 	const { slug } = params;
 
 	// 複数のパスを試行（互換性のため）

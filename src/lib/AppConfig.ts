@@ -43,7 +43,7 @@ export const AppConfig = {
 		'sns-promotion': 'https://d1mt09hgbl7gpz.cloudfront.net/public/snspromotion.jpg',
 		ai: 'https://d1mt09hgbl7gpz.cloudfront.net/public/ai.jpg',
 		'project-management': 'https://d1mt09hgbl7gpz.cloudfront.net/public/projectmanagement.jpg'
-	},
+	} as Record<string, string>,
 	shareUrls: {
 		twitter: 'https://twitter.com/intent/tweet',
 		facebook: 'https://www.facebook.com/sharer/sharer.php',

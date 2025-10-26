@@ -4,8 +4,7 @@
 	import Button, { Label } from '@smui/button';
 	import { aboutLink } from './CommonFunction';
 
-	// @ts-ignore
-	export let linkon;
+	export let linkon: boolean;
 </script>
 
 <LayoutGrid>

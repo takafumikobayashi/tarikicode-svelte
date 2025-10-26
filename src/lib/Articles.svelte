@@ -57,14 +57,14 @@
 <LayoutGrid>
 	<!-- 外部記事カード -->
 	{#if loading}
-		<Cell span={4} spanTablet={6} spanPhone={4}>
+		<Cell span={4}>
 			<div class="demo-cell">
 				<p>記事を読み込み中...</p>
 			</div>
 		</Cell>
 	{:else}
 		{#each articles as article}
-			<Cell span={6} spanTablet={6} spanPhone={4}>
+			<Cell span={6}>
 				<div class="demo-cell">
 					<ArticleCard
 						title={article.title}
@@ -79,33 +79,33 @@
 	{/if}
 
 	<!-- 既存のSpeaker Deck埋め込み -->
-	<Cell span={6} spanTablet={6} spanPhone={4}>
+	<Cell span={6}>
 		<div class="demo-cell">
 			<iframe
 				class="speakerdeck-iframe"
 				frameborder="0"
 				src="https://speakerdeck.com/player/59662588fd324da6bceb344db49a6e50"
 				title="2024.1.20気ままに勉強会#75"
-				allowfullscreen="true"
+				allowfullscreen={true}
 				style="border: 0px; background: padding-box padding-box rgba(0, 0, 0, 0.1); margin: 0px; padding: 0px; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 40px; width: 100%; height: auto; aspect-ratio: 560 / 315;"
 				data-ratio="1.7777777777777777"
 			></iframe>
 		</div>
 	</Cell>
-	<Cell span={6} spanTablet={6} spanPhone={4}>
+	<Cell span={6}>
 		<div class="demo-cell">
 			<iframe
 				class="speakerdeck-iframe"
 				frameborder="0"
 				src="https://speakerdeck.com/player/0722866deb084bbfbb0eaeec191a615d"
 				title="2024.10.26_Power_Platform_Administrator勉強会#2"
-				allowfullscreen="true"
+				allowfullscreen={true}
 				style="border: 0px; background: padding-box padding-box rgba(0, 0, 0, 0.1); margin: 0px; padding: 0px; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 40px; width: 100%; height: auto; aspect-ratio: 560 / 315;"
 				data-ratio="1.7777777777777777"
 			></iframe>
 		</div>
 	</Cell>
-	<Cell span={6} spanTablet={6} spanPhone={4}>
+	<Cell span={6}>
 		<div class="demo-cell">
 			<iframe
 				class="note-embed"
