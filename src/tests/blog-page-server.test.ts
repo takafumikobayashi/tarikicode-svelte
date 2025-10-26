@@ -22,7 +22,7 @@ describe('Blog Page Server Loader', () => {
 			vi.mocked(fs.existsSync).mockReturnValue(true);
 			vi.mocked(fs.readFileSync).mockReturnValue(mockMarkdown);
 
-			const result = await load({ params: mockParams } as any);
+			const result = await load({ params: mockParams });
 
 			expect(result.status).toBe(200);
 			expect(result.body).toContain('<h2');
@@ -38,7 +38,7 @@ describe('Blog Page Server Loader', () => {
 			vi.mocked(fs.existsSync).mockReturnValue(true);
 			vi.mocked(fs.readFileSync).mockReturnValue(mockMarkdown);
 
-			await load({ params: mockParams } as any);
+			await load({ params: mockParams });
 
 			const expectedPath = path.resolve('src/posts', 'svelte.md');
 			expect(fs.readFileSync).toHaveBeenCalledWith(expectedPath, { encoding: 'utf-8' });
@@ -55,7 +55,7 @@ describe('Blog Page Server Loader', () => {
 				vi.mocked(fs.existsSync).mockReturnValue(true);
 				vi.mocked(fs.readFileSync).mockReturnValue('---\ntitle: "Test"\n---\n\n# Test');
 
-				await load({ params: { slug: testCase.slug } } as any);
+				await load({ params: { slug: testCase.slug } });
 
 				const expectedPath = path.resolve('src/posts', testCase.expectedFile);
 				expect(fs.readFileSync).toHaveBeenCalledWith(expectedPath, { encoding: 'utf-8' });
@@ -77,7 +77,7 @@ title: "Test"
 			vi.mocked(fs.existsSync).mockReturnValue(true);
 			vi.mocked(fs.readFileSync).mockReturnValue(mockMarkdown);
 
-			const result = await load({ params: { slug: 'test' } } as any);
+			const result = await load({ params: { slug: 'test' } });
 
 			expect(result.body).toContain('<h1');
 			expect(result.body).toContain('<h2');
@@ -93,7 +93,7 @@ title: "Test"
 			vi.mocked(fs.existsSync).mockReturnValue(false);
 
 			try {
-				await load({ params: mockParams } as any);
+				await load({ params: mockParams });
 				// エラーがスローされるべきなので、ここに到達してはいけない
 				expect.fail('Expected error to be thrown');
 			} catch (error: any) {
@@ -109,7 +109,7 @@ title: "Test"
 			vi.mocked(fs.existsSync).mockReturnValue(true);
 			vi.mocked(fs.readFileSync).mockReturnValue(mockMarkdown);
 
-			const result = await load({ params: { slug: 'test' } } as any);
+			const result = await load({ params: { slug: 'test' } });
 
 			expect(result.body).toContain('<pre>');
 			expect(result.body).toContain('<code');
@@ -122,7 +122,7 @@ title: "Test"
 			vi.mocked(fs.existsSync).mockReturnValue(true);
 			vi.mocked(fs.readFileSync).mockReturnValue(mockMarkdown);
 
-			const result = await load({ params: { slug: 'test' } } as any);
+			const result = await load({ params: { slug: 'test' } });
 
 			// markedはデフォルトでHTMLをエスケープしないが、レンダリングされるはず
 			expect(result.body).toBeTruthy();

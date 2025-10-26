@@ -53,7 +53,7 @@
 	{:else}
 		<LayoutGrid>
 			{#each repos as repo}
-				<Cell span={6} spanTablet={6} spanPhone={4}>
+				<Cell span={6}>
 					<div class="card-wrapper">
 						<GitHubRepoCard
 							name={repo.name}

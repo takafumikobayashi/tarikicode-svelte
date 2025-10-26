@@ -85,10 +85,10 @@
 			grecaptchaInstance.ready(() => {
 				grecaptchaInstance
 					.execute(import.meta.env.VITE_RECAPTCHA_V3_SITE_KEY, { action: 'submit' })
-					.then((token) => {
+					.then((token: string) => {
 						resolve(token);
 					})
-					.catch((error) => {
+					.catch((error: Error) => {
 						reject(error);
 					});
 			});
