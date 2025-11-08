@@ -5,6 +5,20 @@ import { GET } from '../routes/api/ogp/+server';
 // グローバルfetchのモック
 global.fetch = vi.fn();
 
+// fetchレスポンスモックを作成するヘルパー関数
+function createMockFetchResponse(html: string, contentType: string | null = null) {
+	const encoder = new TextEncoder();
+	const htmlBuffer = encoder.encode(html);
+
+	return {
+		ok: true,
+		arrayBuffer: async () => htmlBuffer.buffer,
+		headers: {
+			get: (name: string) => (name === 'content-type' ? contentType : null)
+		}
+	};
+}
+
 describe('OGP API Endpoint', () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
@@ -34,10 +48,7 @@ describe('OGP API Endpoint', () => {
 				</html>
 			`;
 
-			vi.mocked(global.fetch).mockResolvedValue({
-				ok: true,
-				text: async () => mockHtml
-			} as any);
+			vi.mocked(global.fetch).mockResolvedValue(createMockFetchResponse(mockHtml) as any);
 
 			const mockUrl = new URL('http://localhost/api/ogp?url=https://example.com');
 			const request = { url: mockUrl };
@@ -61,10 +72,7 @@ describe('OGP API Endpoint', () => {
 				</html>
 			`;
 
-			vi.mocked(global.fetch).mockResolvedValue({
-				ok: true,
-				text: async () => mockHtml
-			} as any);
+			vi.mocked(global.fetch).mockResolvedValue(createMockFetchResponse(mockHtml) as any);
 
 			const mockUrl = new URL('http://localhost/api/ogp?url=https://example.com');
 			const request = { url: mockUrl };
@@ -84,10 +92,7 @@ describe('OGP API Endpoint', () => {
 				</html>
 			`;
 
-			vi.mocked(global.fetch).mockResolvedValue({
-				ok: true,
-				text: async () => mockHtml
-			} as any);
+			vi.mocked(global.fetch).mockResolvedValue(createMockFetchResponse(mockHtml) as any);
 
 			const mockUrl = new URL('http://localhost/api/ogp?url=https://example.com');
 			const request = { url: mockUrl };
@@ -101,10 +106,7 @@ describe('OGP API Endpoint', () => {
 		it('should use empty string when og:site_name is missing', async () => {
 			const mockHtml = '<html><head></head></html>';
 
-			vi.mocked(global.fetch).mockResolvedValue({
-				ok: true,
-				text: async () => mockHtml
-			} as any);
+			vi.mocked(global.fetch).mockResolvedValue(createMockFetchResponse(mockHtml) as any);
 
 			const mockUrl = new URL('http://localhost/api/ogp?url=https://example.com/page');
 			const request = { url: mockUrl };
@@ -118,10 +120,7 @@ describe('OGP API Endpoint', () => {
 		it('should include User-Agent header in fetch request', async () => {
 			const mockHtml = '<html></html>';
 
-			vi.mocked(global.fetch).mockResolvedValue({
-				ok: true,
-				text: async () => mockHtml
-			} as any);
+			vi.mocked(global.fetch).mockResolvedValue(createMockFetchResponse(mockHtml) as any);
 
 			const mockUrl = new URL('http://localhost/api/ogp?url=https://example.com');
 			const request = { url: mockUrl };
@@ -132,7 +131,7 @@ describe('OGP API Endpoint', () => {
 				'https://example.com',
 				expect.objectContaining({
 					headers: expect.objectContaining({
-						'User-Agent': expect.stringContaining('OGPBot')
+						'User-Agent': 'tariki-code-bot/1.0 (+https://tariki-code.tokyo)'
 					})
 				})
 			);
@@ -171,10 +170,7 @@ describe('OGP API Endpoint', () => {
 			const mockHtml =
 				'<html><head><meta property="og:title" content="Test" /></head></html>';
 
-			vi.mocked(global.fetch).mockResolvedValue({
-				ok: true,
-				text: async () => mockHtml
-			} as any);
+			vi.mocked(global.fetch).mockResolvedValue(createMockFetchResponse(mockHtml) as any);
 
 			const encodedUrl = encodeURIComponent('https://example.com/page?query=test&foo=bar');
 			const mockUrl = new URL(`http://localhost/api/ogp?url=${encodedUrl}`);
@@ -198,10 +194,7 @@ describe('OGP API Endpoint', () => {
 				</html>
 			`;
 
-			vi.mocked(global.fetch).mockResolvedValue({
-				ok: true,
-				text: async () => mockHtml
-			} as any);
+			vi.mocked(global.fetch).mockResolvedValue(createMockFetchResponse(mockHtml) as any);
 
 			const mockUrl = new URL('http://localhost/api/ogp?url=https://example.com');
 			const request = { url: mockUrl };

@@ -1,5 +1,6 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import iconv from 'iconv-lite';
 
 export const GET: RequestHandler = async ({ url }) => {
 	const targetUrl = url.searchParams.get('url');
@@ -10,9 +11,11 @@ export const GET: RequestHandler = async ({ url }) => {
 
 	try {
 		// 対象URLのHTMLを取得
+		// 独自のUser-Agentを使用（サイト運営者が識別できるように）
+		// Bot保護があるサイトでは、pickup-articles.jsonで画像URLを直接指定してください
 		const response = await fetch(targetUrl, {
 			headers: {
-				'User-Agent': 'Mozilla/5.0 (compatible; OGPBot/1.0)'
+				'User-Agent': 'tariki-code-bot/1.0 (+https://tariki-code.tokyo)'
 			}
 		});
 
@@ -20,7 +23,17 @@ export const GET: RequestHandler = async ({ url }) => {
 			throw new Error(`Failed to fetch: ${response.status}`);
 		}
 
-		const html = await response.text();
+		// バイナリデータとして取得（文字エンコーディング対応のため）
+		const buffer = await response.arrayBuffer();
+		const uint8Array = new Uint8Array(buffer);
+
+		// HTMLから文字エンコーディングを検出
+		// まずUTF-8として読み取り、meta charsetタグを探す
+		const preliminaryHtml = iconv.decode(Buffer.from(uint8Array), 'utf-8');
+		const charset = detectCharset(preliminaryHtml, response.headers.get('content-type'));
+
+		// 検出した文字エンコーディングでデコード
+		const html = iconv.decode(Buffer.from(uint8Array), charset);
 
 		// OGPメタタグを抽出
 		const ogpData = {
@@ -32,10 +45,13 @@ export const GET: RequestHandler = async ({ url }) => {
 			url: extractOgpTag(html, 'og:url') || targetUrl
 		};
 
-		// キャッシュヘッダーを設定（1時間）
+		// キャッシュヘッダーを設定（開発中はキャッシュ無効、本番は24時間）
+		const isProduction = process.env.NODE_ENV === 'production';
 		return json(ogpData, {
 			headers: {
-				'Cache-Control': 'public, max-age=3600'
+				'Cache-Control': isProduction
+					? 'public, max-age=86400'
+					: 'no-cache, no-store, must-revalidate'
 			}
 		});
 	} catch (error) {
@@ -94,4 +110,66 @@ function extractTag(html: string, tag: string): string {
 	const regex = new RegExp(`<${tag}[^>]*>([^<]+)</${tag}>`, 'i');
 	const match = html.match(regex);
 	return match ? match[1].trim() : '';
+}
+
+// HTMLから文字エンコーディングを検出するヘルパー関数
+function detectCharset(html: string, contentType: string | null): string {
+	// 1. Content-Typeヘッダーからcharsetを取得
+	if (contentType) {
+		const charsetMatch = contentType.match(/charset=([^;\s]+)/i);
+		if (charsetMatch) {
+			return normalizeCharset(charsetMatch[1]);
+		}
+	}
+
+	// 2. <meta charset="..."> タグから取得
+	const metaCharsetMatch = html.match(/<meta\s+charset=["']?([^"'\s>]+)["']?/i);
+	if (metaCharsetMatch) {
+		return normalizeCharset(metaCharsetMatch[1]);
+	}
+
+	// 3. <meta http-equiv="content-type" content="...charset=..."> タグから取得
+	const metaContentTypeMatch = html.match(
+		/<meta\s+http-equiv=["']content-type["']\s+content=["']([^"']+)["']/i
+	);
+	if (metaContentTypeMatch) {
+		const charsetMatch = metaContentTypeMatch[1].match(/charset=([^;\s]+)/i);
+		if (charsetMatch) {
+			return normalizeCharset(charsetMatch[1]);
+		}
+	}
+
+	// 4. content属性が先に来るパターン
+	const metaContentTypeMatch2 = html.match(
+		/<meta\s+content=["']([^"']+)["']\s+http-equiv=["']content-type["']/i
+	);
+	if (metaContentTypeMatch2) {
+		const charsetMatch = metaContentTypeMatch2[1].match(/charset=([^;\s]+)/i);
+		if (charsetMatch) {
+			return normalizeCharset(charsetMatch[1]);
+		}
+	}
+
+	// デフォルトはUTF-8
+	return 'utf-8';
+}
+
+// 文字エンコーディング名を正規化するヘルパー関数
+function normalizeCharset(charset: string): string {
+	const normalized = charset.toLowerCase().trim();
+
+	// よくある別名を正規化
+	const aliases: Record<string, string> = {
+		shift_jis: 'shift_jis',
+		'shift-jis': 'shift_jis',
+		sjis: 'shift_jis',
+		'x-sjis': 'shift_jis',
+		'euc-jp': 'euc-jp',
+		eucjp: 'euc-jp',
+		'utf-8': 'utf-8',
+		utf8: 'utf-8',
+		'iso-2022-jp': 'iso-2022-jp'
+	};
+
+	return aliases[normalized] || normalized;
 }

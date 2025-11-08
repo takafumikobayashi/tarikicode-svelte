@@ -20,30 +20,49 @@
 			const data = await response.json();
 
 			// 各URLのOGP情報を取得
-			const ogpPromises = data.articles.map(async (article: { url: string }) => {
-				try {
-					const ogpResponse = await fetch(
-						`/api/ogp?url=${encodeURIComponent(article.url)}`
-					);
-					const ogpData = await ogpResponse.json();
-					return {
-						title: ogpData.title || 'No Title',
-						description: ogpData.description || '',
-						url: article.url,
-						image: ogpData.image || '',
-						site: ogpData.siteName || new URL(article.url).hostname
-					};
-				} catch (error) {
-					console.error(`Failed to fetch OGP for ${article.url}:`, error);
-					return {
-						title: 'Failed to load',
-						description: '',
-						url: article.url,
-						image: '',
-						site: new URL(article.url).hostname
-					};
+			const ogpPromises = data.articles.map(
+				async (article: {
+					url: string;
+					image?: string;
+					title?: string;
+					description?: string;
+				}) => {
+					// 画像URLが直接指定されている場合はOGP APIをスキップ
+					if (article.image) {
+						return {
+							title: article.title || new URL(article.url).hostname,
+							description: article.description || '',
+							url: article.url,
+							image: article.image,
+							site: new URL(article.url).hostname
+						};
+					}
+
+					// 画像URLが指定されていない場合はOGP APIで取得
+					try {
+						const ogpResponse = await fetch(
+							`/api/ogp?url=${encodeURIComponent(article.url)}`
+						);
+						const ogpData = await ogpResponse.json();
+						return {
+							title: ogpData.title || 'No Title',
+							description: ogpData.description || '',
+							url: article.url,
+							image: ogpData.image || '',
+							site: ogpData.siteName || new URL(article.url).hostname
+						};
+					} catch (error) {
+						console.error(`Failed to fetch OGP for ${article.url}:`, error);
+						return {
+							title: 'Failed to load',
+							description: '',
+							url: article.url,
+							image: '',
+							site: new URL(article.url).hostname
+						};
+					}
 				}
-			});
+			);
 
 			articles = await Promise.all(ogpPromises);
 		} catch (error) {
