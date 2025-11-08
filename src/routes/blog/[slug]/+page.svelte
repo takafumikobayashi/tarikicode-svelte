@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy, afterUpdate, tick } from 'svelte';
 	import Header from '$lib/Header.svelte';
 	import Footer from '$lib/Footer.svelte';
 	import { page } from '$app/stores';
-	import { onDestroy } from 'svelte';
 	import { AppConfig } from '$lib/AppConfig';
 	import PostFooter from '$lib/PostFooter.svelte';
 
@@ -11,12 +10,50 @@
 	import hljs from 'highlight.js';
 	import mermaid from 'mermaid';
 	import ChatGptGoMap from '$lib/ChatGptGoMap.svelte';
-	import type { ComponentType, SvelteComponent } from 'svelte';
+	import type { SvelteComponent } from 'svelte';
 
 	export let data;
 
 	// imperativeに作成したコンポーネントインスタンスを保存（メモリリーク防止）
 	let mapComponentInstances: SvelteComponent[] = [];
+	let lastHydratedSlug: string | null = null;
+	let mapHydrationPromise: Promise<void> | null = null;
+
+	function destroyChatGptGoMaps() {
+		if (!mapComponentInstances.length) {
+			return;
+		}
+
+		mapComponentInstances.forEach((instance) => {
+			instance.$destroy();
+		});
+		mapComponentInstances = [];
+	}
+
+	async function reinitializeChatGptGoMaps() {
+		destroyChatGptGoMaps();
+		await tick();
+
+		const mapElements = document.querySelectorAll('chatgpt-go-map');
+		mapElements.forEach((mapEl) => {
+			const mapInstance = new ChatGptGoMap({
+				target: mapEl as HTMLElement
+			});
+			mapComponentInstances.push(mapInstance);
+		});
+
+		lastHydratedSlug = post_string ?? null;
+	}
+
+	function scheduleMapHydration() {
+		if (mapHydrationPromise) {
+			return;
+		}
+
+		mapHydrationPromise = reinitializeChatGptGoMaps().finally(() => {
+			mapHydrationPromise = null;
+		});
+	}
 
 	onMount(async () => {
 		// Mermaidの初期化
@@ -82,14 +119,7 @@
 		});
 
 		// ChatGPT Go地図の処理
-		const mapElements = document.querySelectorAll('chatgpt-go-map');
-		mapElements.forEach((mapEl) => {
-			// Svelteコンポーネントをマウント（インスタンスを保存）
-			const mapInstance = new ChatGptGoMap({
-				target: mapEl as HTMLElement
-			});
-			mapComponentInstances.push(mapInstance);
-		});
+		scheduleMapHydration();
 	});
 
 	// slugを取得
@@ -99,16 +129,25 @@
 		post_string = $page.params.slug;
 	});
 
+	afterUpdate(() => {
+		if (!post_string) {
+			return;
+		}
+
+		if (lastHydratedSlug === post_string) {
+			return;
+		}
+
+		scheduleMapHydration();
+	});
+
 	// コンポーネントが破棄されたときにクリーンアップ
 	onDestroy(() => {
 		// page ストアの購読を解除
 		unsubscribe();
 
 		// imperativeに作成した地図コンポーネントを破棄（メモリリーク防止）
-		mapComponentInstances.forEach((instance) => {
-			instance.$destroy();
-		});
-		mapComponentInstances = [];
+		destroyChatGptGoMaps();
 	});
 </script>
 
