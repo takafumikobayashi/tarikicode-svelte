@@ -10,8 +10,13 @@
 	// ハイライトのスタイルを読み込む
 	import hljs from 'highlight.js';
 	import mermaid from 'mermaid';
+	import ChatGptGoMap from '$lib/ChatGptGoMap.svelte';
+	import type { ComponentType, SvelteComponent } from 'svelte';
 
 	export let data;
+
+	// imperativeに作成したコンポーネントインスタンスを保存（メモリリーク防止）
+	let mapComponentInstances: SvelteComponent[] = [];
 
 	onMount(async () => {
 		// Mermaidの初期化
@@ -75,6 +80,16 @@
 				card.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer" class="ogp-error-link">${url}</a>`;
 			}
 		});
+
+		// ChatGPT Go地図の処理
+		const mapElements = document.querySelectorAll('chatgpt-go-map');
+		mapElements.forEach((mapEl) => {
+			// Svelteコンポーネントをマウント（インスタンスを保存）
+			const mapInstance = new ChatGptGoMap({
+				target: mapEl as HTMLElement
+			});
+			mapComponentInstances.push(mapInstance);
+		});
 	});
 
 	// slugを取得
@@ -84,8 +99,17 @@
 		post_string = $page.params.slug;
 	});
 
-	// コンポーネントが破棄されたときに購読を解除
-	onDestroy(unsubscribe);
+	// コンポーネントが破棄されたときにクリーンアップ
+	onDestroy(() => {
+		// page ストアの購読を解除
+		unsubscribe();
+
+		// imperativeに作成した地図コンポーネントを破棄（メモリリーク防止）
+		mapComponentInstances.forEach((instance) => {
+			instance.$destroy();
+		});
+		mapComponentInstances = [];
+	});
 </script>
 
 <svelte:head>

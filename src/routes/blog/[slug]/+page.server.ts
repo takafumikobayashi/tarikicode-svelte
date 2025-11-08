@@ -4,7 +4,6 @@ import path from 'path';
 import { marked } from 'marked';
 import matter from 'gray-matter';
 import { error } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
 import { AppConfig } from '$lib/AppConfig';
 
 // 外部URLからOGP画像を取得するヘルパー関数
