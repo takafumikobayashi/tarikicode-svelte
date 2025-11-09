@@ -24,7 +24,9 @@
 			"a",
 			"svg",
 			"g",
-			"path"
+			"path",
+			"chatgpt-go-map",
+			"ogp-card"
 		]
 	},
 	"MD034": false,
