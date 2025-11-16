@@ -7,9 +7,21 @@
 	import Button, { Label } from '@smui/button';
 	import { AppConfig } from '$lib/AppConfig';
 	import { goto } from '$app/navigation';
+	import { onMount, onDestroy } from 'svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
+
+	// 無限スクロール用の状態
+	let displayedPosts = [...data.posts];
+	let isLoading = false;
+	let hasMore = data.hasMore ?? false;
+	let observer: IntersectionObserver | null = null;
+	let loadMoreTrigger: HTMLElement;
+	let abortController: AbortController | null = null;
+	let currentFilterKey = `${data.selectedCategory || ''}-${data.selectedTag || ''}-${data.selectedType || ''}-${data.currentPage}`;
+	let useInfiniteScroll = false; // page=1の場合のみtrueにする
+	let isMounted = false; // onMount完了フラグ
 
 	// カテゴリ変更時の処理
 	function onCategoryChange(event: Event) {
@@ -27,13 +39,140 @@
 		goto(`/blog?tag=${encodeURIComponent(tag)}`);
 	}
 
-	// ページネーション
+	// ページネーション（JavaScript無効時のフォールバック）
 	function goToPage(page: number) {
 		const params = new URLSearchParams();
 		if (data.selectedCategory) params.set('category', data.selectedCategory);
 		if (data.selectedTag) params.set('tag', data.selectedTag);
+		if (data.selectedType) params.set('type', data.selectedType);
 		params.set('page', page.toString());
 		goto(`/blog?${params.toString()}`);
+	}
+
+	// 追加の記事を読み込む
+	async function loadMorePosts() {
+		if (isLoading || !hasMore) return;
+
+		// 進行中のリクエストをキャンセル
+		if (abortController) {
+			abortController.abort();
+		}
+		abortController = new AbortController();
+
+		isLoading = true;
+		// 現在のフィルター状態を保存（レスポンス時に検証用）
+		const currentCategory = data.selectedCategory;
+		const currentTag = data.selectedTag;
+		const currentType = data.selectedType;
+
+		try {
+			const params = new URLSearchParams();
+			params.set('offset', displayedPosts.length.toString());
+			params.set('limit', '12');
+			if (currentCategory) params.set('category', currentCategory);
+			if (currentTag) params.set('tag', currentTag);
+			if (currentType) params.set('type', currentType);
+
+			const response = await fetch(`/api/blog/posts?${params.toString()}`, {
+				signal: abortController.signal
+			});
+			const result = await response.json();
+
+			// レスポンス受信時にフィルターが変更されていないか確認
+			if (
+				currentCategory !== data.selectedCategory ||
+				currentTag !== data.selectedTag ||
+				currentType !== data.selectedType
+			) {
+				// フィルターが変更されているので、このレスポンスは無視
+				return;
+			}
+
+			if (result.posts && result.posts.length > 0) {
+				displayedPosts = [...displayedPosts, ...result.posts];
+				hasMore = result.hasMore;
+			} else {
+				hasMore = false;
+			}
+		} catch (error) {
+			// AbortErrorは正常なキャンセルなので無視
+			if (error instanceof Error && error.name === 'AbortError') {
+				return;
+			}
+			console.error('Failed to load more posts:', error);
+		} finally {
+			isLoading = false;
+		}
+	}
+
+	// Intersection Observerのセットアップ
+	onMount(() => {
+		isMounted = true;
+	});
+
+	// data.currentPageの変化に応じて無限スクロール/ページネーションを切り替え
+	$: if (isMounted) {
+		if (data.currentPage === 1) {
+			// page=1: 無限スクロールを有効化
+			if (!useInfiniteScroll) {
+				useInfiniteScroll = true;
+				// Observerが存在しない場合は新規作成
+				if (!observer) {
+					observer = new IntersectionObserver(
+						(entries) => {
+							entries.forEach((entry) => {
+								if (entry.isIntersecting && hasMore && !isLoading) {
+									loadMorePosts();
+								}
+							});
+						},
+						{
+							rootMargin: '200px' // 画面下部200px手前で読み込み開始
+						}
+					);
+				}
+			}
+		} else {
+			// page>1: ページネーションに切り替え
+			if (useInfiniteScroll) {
+				useInfiniteScroll = false;
+				// Observerをクリーンアップ
+				if (observer) {
+					observer.disconnect();
+					observer = null;
+				}
+			}
+		}
+	}
+
+	// loadMoreTrigger要素が変更されたら再観察
+	$: if (observer && loadMoreTrigger) {
+		observer.disconnect();
+		observer.observe(loadMoreTrigger);
+	}
+
+	// クリーンアップ
+	onDestroy(() => {
+		if (observer) {
+			observer.disconnect();
+		}
+	});
+
+	// フィルターまたはページが変更されたかチェック
+	$: {
+		const newFilterKey = `${data.selectedCategory || ''}-${data.selectedTag || ''}-${data.selectedType || ''}-${data.currentPage}`;
+		if (newFilterKey !== currentFilterKey) {
+			// フィルター/ページ変更を検出
+			currentFilterKey = newFilterKey;
+			// 進行中のリクエストをキャンセル
+			if (abortController) {
+				abortController.abort();
+				abortController = null;
+			}
+			displayedPosts = [...data.posts];
+			hasMore = data.hasMore ?? false;
+			isLoading = false;
+		}
 	}
 
 	// 日付フォーマット
@@ -143,7 +282,7 @@
 			</Cell>
 
 			<!-- 記事一覧 -->
-			{#each data.posts as post}
+			{#each displayedPosts as post}
 				<Cell span={4}>
 					<div class="demo-cell">
 						<Card variant="outlined" class="post-card">
@@ -178,8 +317,19 @@
 				</Cell>
 			{/each}
 
-			<!-- ページネーション -->
-			{#if data.totalPages > 1}
+			<!-- 無限スクロール用のトリガーとローディングインジケーター（JavaScript有効時のみ） -->
+			{#if useInfiniteScroll && (hasMore || isLoading)}
+				<Cell span={12}>
+					<div class="demo-cell loading-container" bind:this={loadMoreTrigger}>
+						{#if isLoading}
+							<p class="loading-text mdc-typography--body2">読み込み中...</p>
+						{/if}
+					</div>
+				</Cell>
+			{/if}
+
+			<!-- ページネーション（JavaScript無効時のフォールバック） -->
+			{#if !useInfiniteScroll && data.totalPages > 1}
 				<Cell span={12}>
 					<div class="demo-cell pagination-container">
 						<div class="pagination">
@@ -404,6 +554,22 @@
 	.post-actions {
 		margin-top: auto;
 		padding-top: 1em;
+	}
+
+	.loading-container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		min-height: 60px;
+	}
+
+	.loading-text {
+		color: var(--mdc-theme-text-secondary-on-background, rgba(0, 0, 0, 0.6));
+		font-style: italic;
+	}
+
+	:global([data-theme='dark']) .loading-text {
+		color: rgba(255, 255, 255, 0.6);
 	}
 
 	.pagination-container {

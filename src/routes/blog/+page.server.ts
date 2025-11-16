@@ -32,7 +32,7 @@ export const load: PageServerLoad = async ({ url }) => {
 		filteredPosts = filteredPosts.filter((p) => p.tags.includes(tag));
 	}
 
-	// ページネーション
+	// ページネーション（JavaScript無効環境のため）
 	const totalPages = Math.ceil(filteredPosts.length / perPage);
 	const paginatedPosts = filteredPosts.slice((page - 1) * perPage, page * perPage);
 
@@ -45,9 +45,10 @@ export const load: PageServerLoad = async ({ url }) => {
 		posts: paginatedPosts,
 		categories,
 		tags,
+		totalPosts: filteredPosts.length,
 		currentPage: page,
 		totalPages,
-		totalPosts: filteredPosts.length,
+		hasMore: page * perPage < filteredPosts.length,
 		selectedCategory: category,
 		selectedTag: tag,
 		selectedType: type
