@@ -43,3 +43,6 @@ vite.config.ts.timestamp-*
 # Generated theme files
 /static/smui.css
 /static/smui-dark.css
+
+# Claude Code personal settings
+.claude/settings.local.json
