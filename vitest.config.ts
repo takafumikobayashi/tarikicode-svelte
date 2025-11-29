@@ -6,7 +6,7 @@ export default defineConfig({
 	plugins: [svelte({ hot: !process.env.VITEST })],
 	test: {
 		globals: true,
-		environment: 'jsdom',
+		environment: 'happy-dom',
 		setupFiles: ['./src/tests/setup.ts'],
 		include: ['src/**/*.{test,spec}.{js,ts}'],
 		exclude: ['src/routes/**/+*.test.{js,ts}', 'node_modules/**', '.svelte-kit/**'],
