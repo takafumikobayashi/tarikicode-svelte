@@ -221,7 +221,7 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 									currentNode.removeAttribute('src');
 									console.warn(`Blocked suspicious src: ${src}`);
 								}
-							} catch (e) {
+							} catch {
 								currentNode.removeAttribute('src');
 							}
 						}

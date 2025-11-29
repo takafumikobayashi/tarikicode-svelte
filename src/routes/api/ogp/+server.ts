@@ -33,7 +33,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		) {
 			return json({ error: 'Access to private network is forbidden' }, { status: 403 });
 		}
-	} catch (e) {
+	} catch {
 		return json({ error: 'Invalid URL' }, { status: 400 });
 	}
 
