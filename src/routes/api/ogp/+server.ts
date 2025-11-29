@@ -39,12 +39,8 @@ export const GET: RequestHandler = async ({ url }) => {
 				throw new Error('Response too large');
 			}
 
-			// バイナリデータとして取得（文字エンコーディング対応のため）
-			const buffer = await response.arrayBuffer();
-			if (buffer.byteLength > MAX_RESPONSE_BYTES) {
-				throw new Error('Response too large');
-			}
-			const uint8Array = new Uint8Array(buffer);
+			// ストリームでデータを取得し、サイズ制限を超えたら中断する
+			const uint8Array = await readBodyWithLimit(response, MAX_RESPONSE_BYTES);
 
 			// HTMLから文字エンコーディングを検出
 			// まずUTF-8として読み取り、meta charsetタグを探す
@@ -100,6 +96,55 @@ function resolveStatusCode(error: unknown): number {
 	if (error instanceof ForbiddenRequestError) return 403;
 	if (error instanceof InvalidRequestError) return 400;
 	return 500;
+}
+
+async function readBodyWithLimit(response: Response, limit: number): Promise<Uint8Array> {
+	if (!response.body) {
+		return new Uint8Array(0);
+	}
+
+	const reader = response.body.getReader();
+	const chunks: Uint8Array[] = [];
+	let receivedLength = 0;
+
+	try {
+		while (true) {
+			const { done, value } = await reader.read();
+
+			if (done) {
+				break;
+			}
+
+			if (value) {
+				chunks.push(value);
+				receivedLength += value.length;
+
+				if (receivedLength > limit) {
+					// ストリームをキャンセルして中断
+					await reader.cancel('Response too large');
+					throw new Error('Response too large');
+				}
+			}
+		}
+	} catch (e) {
+		// エラー発生時もキャンセルを試みる（念のため）
+		try {
+			await reader.cancel();
+		} catch {
+			/* ignore */
+		}
+		throw e;
+	}
+
+	// チャンクを結合
+	const result = new Uint8Array(receivedLength);
+	let position = 0;
+	for (const chunk of chunks) {
+		result.set(chunk, position);
+		position += chunk.length;
+	}
+
+	return result;
 }
 
 async function fetchWithValidation(
