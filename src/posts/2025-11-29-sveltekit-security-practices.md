@@ -183,23 +183,6 @@ if (
 今回は導入を見送りましたが、**CSP (Content Security Policy)** はXSS対策として最も強力なヘッダーの一つです。
 許可するスクリプトのドメインやリソースの読み込み元をブラウザ側で厳格に制御できるため、本格的に外部スクリプトを管理したい場合は、今回紹介した対策とCSPを組み合わせるのがベストプラクティスです。
 
-#### おまけ：開発体験の改善（Service Worker）
-
-セキュリティとは直接関係ありませんが、SvelteKitのService Workerが開発モードでもキャッシュを行ってしまい、更新が反映されない問題がありました。これに対処するため、開発モードではService Workerを無効化しています。
-
-```javascript
-// src/service-worker.js
-import { dev } from '$app/environment';
-
-if (dev) {
-	// 開発モードではキャッシュロジックを無効化
-	self.addEventListener('install', () => self.skipWaiting());
-	self.addEventListener('activate', () => self.clients.claim());
-} else {
-	// 本番モードのみキャッシュ実装
-}
-```
-
 ### まとめ
 
 セキュリティ対策は「機能の実装」と同じくらい重要であり、かつ創造的な作業でもあります。特にSvelteKitのようなモダンなフレームワークでは、サーバーサイド（API Routes, hooks）とクライアントサイドの責務を理解し、適切な場所で対策を行うことが重要です。
