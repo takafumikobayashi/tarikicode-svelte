@@ -136,39 +136,57 @@ Mermaidが生成するSVGを正しく表示するため、`x`, `y`, `dx`, `dy`, 
 - `<img src=x onerror="alert(1)">` → onerror属性が許可リストにないため削除
 - `<a href="javascript:alert(1)">` → javascriptスキームがブロックされ削除
 
-### 2. OGP取得APIにおけるSSRF対策
+#### 2. OGP取得APIにおけるSSRF対策
 
 当サイトでは、記事内のリンクをカード形式で表示するために、サーバーサイドで対象URLのOGP情報を取得するAPI（`/api/ogp`）を実装しています。
 
 このAPIに対し、攻撃者が `?url=http://localhost:3000` やクラウドサーバーのメタデータURLを指定すると、内部ネットワークの情報が漏洩する恐れがあります（SSRF）。
 
-これを防ぐため、厳格なバリデーションを行っています。
+##### DNSリバインディング攻撃（TOCTOU）への対策
+
+単に「DNS解決してIPをチェックしてからfetchする」だけでは不十分です。
+攻撃者が、1回目のDNS問い合わせ（チェック時）には安全なIPを返し、2回目（実際のfetch時）には内部IPを返すようにDNSサーバーを操作すると、チェックをすり抜けてしまいます（Time-of-Check to Time-of-Use: TOCTOU）。
+
+これを防ぐため、**検証済みのIPアドレスに接続先を固定（Pinning）** する必要があります。Node.js環境では `undici` ライブラリの `Agent` を使用してこれを実現しました。
 
 ```typescript
-const parsedUrl = new URL(targetUrl);
+import { Agent, fetch } from 'undici';
+import dns from 'node:dns';
 
-// 1. プロトコルチェック
-if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
-	return json({ error: 'Invalid protocol' }, { status: 400 });
+// 検証済みのIPアドレスにしか接続しないカスタムLookup関数を作成
+function createBoundLookup(hostname: string, validatedIp: string, family: number) {
+	return (requestedHost, options, callback) => {
+		if (requestedHost !== hostname) {
+			callback(new Error('Unexpected hostname'), '', 0);
+			return;
+		}
+		// 検証済みのIPアドレスを返す（再度のDNS問い合わせを行わせない）
+		process.nextTick(() => callback(null, [{ address: validatedIp, family }]));
+	};
 }
 
-// 2. プライベートIP・ローカルホストの拒否
-const hostname = parsedUrl.hostname;
-if (
-	hostname === 'localhost' ||
-	hostname === '127.0.0.1' ||
-	hostname === '::1' || // IPv6ループバック
-	hostname.startsWith('192.168.') ||
-	hostname.startsWith('10.') ||
-	(hostname.startsWith('172.') && // 172.16.0.0/12 の範囲
-		parseInt(hostname.split('.')[1]) >= 16 &&
-		parseInt(hostname.split('.')[1]) <= 31)
-) {
-	return json({ error: 'Access to private network is forbidden' }, { status: 403 });
-}
+// ...
+
+// 1. 安全なIPアドレスか検証
+const resolution = await resolveSafeUrl(currentUrl); // dns.lookup + IPチェック
+
+// 2. そのIPアドレスに固定したAgentを作成
+const agent = new Agent({
+	connect: {
+		lookup: createBoundLookup(currentUrl.hostname, resolution.address, resolution.family)
+	}
+});
+
+// 3. Agentを指定してfetch（これでDNSリバインディングを防げる）
+const response = await fetch(currentUrl, {
+	dispatcher: agent
+	// ...
+});
 ```
 
-※さらに堅牢にするには、内部向けドメイン（`.internal`など）やDNSリバインディング攻撃を防ぐため、DNS解決後のIPアドレスをチェックする手法も有効です。
+このように、HTTPクライアントの挙動を低レイヤーで制御することで、堅牢なSSRF対策を実現しています。
+
+さらに、`redirect: 'manual'` オプションを使用してリダイレクト先URLに対しても同様の厳格なチェックを再帰的に行うことで、リダイレクトを利用したセキュリティ回避も防いでいます。
 
 ### 3. セキュリティヘッダーの導入
 

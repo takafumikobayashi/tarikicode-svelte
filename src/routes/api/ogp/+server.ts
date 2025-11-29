@@ -1,6 +1,13 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import iconv from 'iconv-lite';
+import dns from 'dns';
+import net from 'net';
+import { Agent, fetch as undiciFetch } from 'undici';
+
+const MAX_REDIRECTS = 3;
+const REQUEST_TIMEOUT_MS = 5000;
+const MAX_RESPONSE_BYTES = 1024 * 1024; // 1MB
 
 export const GET: RequestHandler = async ({ url }) => {
 	const targetUrl = url.searchParams.get('url');
@@ -9,81 +16,69 @@ export const GET: RequestHandler = async ({ url }) => {
 		return json({ error: 'URL parameter is required' }, { status: 400 });
 	}
 
-	// URLのバリデーション (SSRF対策)
+	let parsedUrl: URL;
 	try {
-		const parsedUrl = new URL(targetUrl);
-
-		// http/https以外は拒否
-		if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
-			return json({ error: 'Invalid protocol' }, { status: 400 });
-		}
-
-		// プライベートIP・ローカルホストへのアクセス拒否 (簡易チェック)
-		// 本番環境ではより厳密なIPフィルタリングライブラリの使用を推奨
-		const hostname = parsedUrl.hostname;
-		if (
-			hostname === 'localhost' ||
-			hostname === '127.0.0.1' ||
-			hostname === '::1' ||
-			hostname.startsWith('192.168.') ||
-			hostname.startsWith('10.') ||
-			(hostname.startsWith('172.') &&
-				parseInt(hostname.split('.')[1]) >= 16 &&
-				parseInt(hostname.split('.')[1]) <= 31)
-		) {
-			return json({ error: 'Access to private network is forbidden' }, { status: 403 });
-		}
+		parsedUrl = new URL(targetUrl);
 	} catch {
 		return json({ error: 'Invalid URL' }, { status: 400 });
 	}
 
 	try {
-		// 対象URLのHTMLを取得
-		// 独自のUser-Agentを使用（サイト運営者が識別できるように）
-		// Bot保護があるサイトでは、pickup-articles.jsonで画像URLを直接指定してください
-		const response = await fetch(targetUrl, {
-			headers: {
-				'User-Agent': 'tariki-code-bot/1.0 (+https://tariki-code.tokyo)'
-			}
-		});
+		const { response, finalUrl, cleanup } = await fetchWithValidation(parsedUrl);
 
-		if (!response.ok) {
-			throw new Error(`Failed to fetch: ${response.status}`);
+		try {
+			// 対象URLのHTMLを取得
+			// 独自のUser-Agentを使用（サイト運営者が識別できるように）
+			// Bot保護があるサイトでは、pickup-articles.jsonで画像URLを直接指定してください
+			if (!response.ok) {
+				throw new Error(`Failed to fetch: ${response.status}`);
+			}
+
+			const contentLengthHeader = response.headers.get('content-length');
+			if (contentLengthHeader && Number(contentLengthHeader) > MAX_RESPONSE_BYTES) {
+				throw new Error('Response too large');
+			}
+
+			// バイナリデータとして取得（文字エンコーディング対応のため）
+			const buffer = await response.arrayBuffer();
+			if (buffer.byteLength > MAX_RESPONSE_BYTES) {
+				throw new Error('Response too large');
+			}
+			const uint8Array = new Uint8Array(buffer);
+
+			// HTMLから文字エンコーディングを検出
+			// まずUTF-8として読み取り、meta charsetタグを探す
+			const preliminaryHtml = iconv.decode(Buffer.from(uint8Array), 'utf-8');
+			const charset = detectCharset(preliminaryHtml, response.headers.get('content-type'));
+
+			// 検出した文字エンコーディングでデコード
+			const html = iconv.decode(Buffer.from(uint8Array), charset);
+
+			// OGPメタタグを抽出
+			const ogpData = {
+				title: extractOgpTag(html, 'og:title') || extractTag(html, 'title'),
+				description:
+					extractOgpTag(html, 'og:description') || extractMetaTag(html, 'description'),
+				image: extractOgpTag(html, 'og:image'),
+				siteName: extractOgpTag(html, 'og:site_name'),
+				url: extractOgpTag(html, 'og:url') || finalUrl.toString()
+			};
+
+			// キャッシュヘッダーを設定（開発中はキャッシュ無効、本番は24時間）
+			const isProduction = process.env.NODE_ENV === 'production';
+			return json(ogpData, {
+				headers: {
+					'Cache-Control': isProduction
+						? 'public, max-age=86400'
+						: 'no-cache, no-store, must-revalidate'
+				}
+			});
+		} finally {
+			await cleanup();
 		}
-
-		// バイナリデータとして取得（文字エンコーディング対応のため）
-		const buffer = await response.arrayBuffer();
-		const uint8Array = new Uint8Array(buffer);
-
-		// HTMLから文字エンコーディングを検出
-		// まずUTF-8として読み取り、meta charsetタグを探す
-		const preliminaryHtml = iconv.decode(Buffer.from(uint8Array), 'utf-8');
-		const charset = detectCharset(preliminaryHtml, response.headers.get('content-type'));
-
-		// 検出した文字エンコーディングでデコード
-		const html = iconv.decode(Buffer.from(uint8Array), charset);
-
-		// OGPメタタグを抽出
-		const ogpData = {
-			title: extractOgpTag(html, 'og:title') || extractTag(html, 'title'),
-			description:
-				extractOgpTag(html, 'og:description') || extractMetaTag(html, 'description'),
-			image: extractOgpTag(html, 'og:image'),
-			siteName: extractOgpTag(html, 'og:site_name'),
-			url: extractOgpTag(html, 'og:url') || targetUrl
-		};
-
-		// キャッシュヘッダーを設定（開発中はキャッシュ無効、本番は24時間）
-		const isProduction = process.env.NODE_ENV === 'production';
-		return json(ogpData, {
-			headers: {
-				'Cache-Control': isProduction
-					? 'public, max-age=86400'
-					: 'no-cache, no-store, must-revalidate'
-			}
-		});
 	} catch (error) {
 		console.error('Error fetching OGP data:', error);
+		const status = resolveStatusCode(error);
 		return json(
 			{
 				error: 'Failed to fetch OGP data',
@@ -93,47 +88,235 @@ export const GET: RequestHandler = async ({ url }) => {
 				siteName: '',
 				url: targetUrl
 			},
-			{ status: 500 }
+			{ status }
 		);
 	}
 };
 
-// OGPタグを抽出するヘルパー関数（property="og:xxx" と name="og:xxx" 両方に対応）
+class InvalidRequestError extends Error {}
+class ForbiddenRequestError extends Error {}
+
+function resolveStatusCode(error: unknown): number {
+	if (error instanceof ForbiddenRequestError) return 403;
+	if (error instanceof InvalidRequestError) return 400;
+	return 500;
+}
+
+async function fetchWithValidation(
+	initialUrl: URL
+): Promise<{ response: Response; finalUrl: URL; cleanup: () => Promise<void> }> {
+	let currentUrl = initialUrl;
+
+	for (let redirectCount = 0; redirectCount <= MAX_REDIRECTS; redirectCount++) {
+		const resolution = await resolveSafeUrl(currentUrl);
+
+		const controller = new AbortController();
+		const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+		const agent = new Agent({
+			connect: {
+				lookup: createBoundLookup(currentUrl.hostname, resolution)
+			}
+		});
+
+		const cleanup = async () => {
+			clearTimeout(timeoutId);
+			await agent.close();
+		};
+
+		let response: Response;
+
+		try {
+			response = (await undiciFetch(currentUrl, {
+				headers: {
+					'User-Agent': 'tariki-code-bot/1.0 (+https://tariki-code.tokyo)'
+				},
+				redirect: 'manual',
+				signal: controller.signal,
+				dispatcher: agent
+			})) as unknown as Response;
+		} catch (error) {
+			await cleanup();
+			if (error instanceof Error && error.name === 'AbortError') {
+				throw new InvalidRequestError('Request timed out');
+			}
+			throw error;
+		}
+
+		if (response.status >= 300 && response.status < 400) {
+			const location = response.headers.get('location');
+			await cleanup(); // リダイレクト時は現在の接続を閉じる
+
+			if (!location) {
+				throw new InvalidRequestError('Redirect location missing');
+			}
+
+			currentUrl = new URL(location, currentUrl);
+			continue;
+		}
+
+		return { response, finalUrl: currentUrl, cleanup };
+	}
+
+	throw new InvalidRequestError('Too many redirects');
+}
+
+async function resolveSafeUrl(target: URL): Promise<dns.LookupAddress> {
+	if (!['http:', 'https:'].includes(target.protocol)) {
+		throw new InvalidRequestError('Invalid protocol');
+	}
+
+	const hostname = target.hostname;
+
+	if (isForbiddenIp(hostname)) {
+		throw new ForbiddenRequestError('Access to private network is forbidden');
+	}
+
+	if (net.isIP(hostname) === 0) {
+		let lookupResults;
+		try {
+			lookupResults = await dns.promises.lookup(hostname, { all: true });
+		} catch (error) {
+			console.error('DNS lookup failed:', error);
+			throw new InvalidRequestError('DNS lookup failed');
+		}
+
+		if (lookupResults.some((record) => isForbiddenIp(record.address))) {
+			throw new ForbiddenRequestError('Access to private network is forbidden');
+		}
+
+		// IPv4を優先して探索（IPv6トラブル回避のため）
+		const ipv4 = lookupResults.find((r) => r.family === 4);
+		if (ipv4) return ipv4;
+
+		return lookupResults[0];
+	}
+
+	return { address: hostname, family: net.isIP(hostname) } as dns.LookupAddress;
+}
+
+function createBoundLookup(hostname: string, resolution: dns.LookupAddress) {
+	return (
+		requestedHost: string,
+		options: dns.LookupOptions,
+		callback: (err: Error | null, address: string | dns.LookupAddress[], family: number) => void
+	): void => {
+		if (requestedHost !== hostname) {
+			process.nextTick(() => callback(new Error('Unexpected hostname lookup'), '', 0));
+			return;
+		}
+
+		// options.all が true なら配列、そうでなければ単一アドレスを返す
+		if (options.all) {
+			process.nextTick(() =>
+				callback(null, [{ address: resolution.address, family: resolution.family }], 0)
+			);
+		} else {
+			process.nextTick(() => callback(null, resolution.address, resolution.family));
+		}
+	};
+}
+
+function isForbiddenIp(address: string): boolean {
+	const ipVersion = net.isIP(address);
+
+	if (ipVersion === 4) {
+		const parts = address.split('.').map((part) => Number(part));
+		if (parts.length !== 4 || parts.some((part) => Number.isNaN(part))) {
+			return false;
+		}
+
+		const [a, b] = parts;
+
+		if (a === 10 || a === 127 || a === 0) return true;
+		if (a === 169 && b === 254) return true;
+		if (a === 172 && b >= 16 && b <= 31) return true;
+		if (a === 192 && b === 168) return true;
+		if (a === 100 && b >= 64 && b <= 127) return true;
+		if (a >= 224) return true; // multicast/reserved
+
+		return false;
+	}
+
+	if (ipVersion === 6) {
+		const lower = address.toLowerCase();
+
+		const mapped = lower.match(/::ffff:(\d{1,3}(?:\.\d{1,3}){3})$/);
+		if (mapped) {
+			return isForbiddenIp(mapped[1]);
+		}
+
+		if (lower === '::1' || lower === '::') return true;
+
+		const firstBlock = lower.split(':').find((block) => block.length > 0) || '';
+		if (firstBlock.startsWith('fc') || firstBlock.startsWith('fd')) return true; // unique local
+
+		const linkLocalPrefixes = ['fe8', 'fe9', 'fea', 'feb'];
+		if (linkLocalPrefixes.some((prefix) => firstBlock.startsWith(prefix))) return true;
+
+		if (firstBlock.startsWith('ff')) return true; // multicast
+
+		return false;
+	}
+
+	return false;
+}
+
+// OGPタグを抽出するヘルパー関数（property="og:xxx" と name="og:xxx"両方に対応）
+
+function escapeRegex(value: string): string {
+	return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function extractOgpTag(html: string, property: string): string {
-	// パターン1: property="og:xxx" content="..."
-	let regex = new RegExp(
-		`<meta\\s+property=["']${property}["']\\s+content=["']([^"']+)["']`,
-		'is'
-	);
-	let match = html.match(regex);
-	if (match) return match[1];
+	const safeProp = escapeRegex(property);
+	const patterns = [
+		new RegExp(
+			`<meta[^>]*property\\s*=\\s*["']${safeProp}["'][^>]*content\\s*=\\s*["']([^"']+)["'][^>]*>`,
+			'i'
+		),
+		new RegExp(
+			`<meta[^>]*content\\s*=\\s*["']([^"']+)["'][^>]*property\\s*=\\s*["']${safeProp}["'][^>]*>`,
+			'i'
+		),
+		new RegExp(
+			`<meta[^>]*name\\s*=\\s*["']${safeProp}["'][^>]*content\\s*=\\s*["']([^"']+)["'][^>]*>`,
+			'i'
+		),
+		new RegExp(
+			`<meta[^>]*content\\s*=\\s*["']([^"']+)["'][^>]*name\\s*=\\s*["']${safeProp}["'][^>]*>`,
+			'i'
+		)
+	];
 
-	// パターン2: content="..." property="og:xxx"（順序逆）
-	regex = new RegExp(`<meta\\s+content=["']([^"']+)["']\\s+property=["']${property}["']`, 'is');
-	match = html.match(regex);
-	if (match) return match[1];
-
-	// パターン3: name="og:xxx" content="..."（一部サイトで使用）
-	regex = new RegExp(`<meta\\s+name=["']${property}["']\\s+content=["']([^"']+)["']`, 'is');
-	match = html.match(regex);
-	if (match) return match[1];
-
-	// パターン4: content="..." name="og:xxx"（順序逆）
-	regex = new RegExp(`<meta\\s+content=["']([^"']+)["']\\s+name=["']${property}["']`, 'is');
-	match = html.match(regex);
-	if (match) return match[1];
+	for (const regex of patterns) {
+		const match = html.match(regex);
+		if (match) return match[1];
+	}
 
 	return '';
 }
 
-// 通常のmetaタグを抽出するヘルパー関数
 function extractMetaTag(html: string, name: string): string {
-	const regex = new RegExp(`<meta\\s+name=["']${name}["']\\s+content=["']([^"']+)["']`, 'i');
-	const match = html.match(regex);
-	return match ? match[1] : '';
+	const safeName = escapeRegex(name);
+	const patterns = [
+		new RegExp(
+			`<meta[^>]*name\\s*=\\s*["']${safeName}["'][^>]*content\\s*=\\s*["']([^"']+)["'][^>]*>`,
+			'i'
+		),
+		new RegExp(
+			`<meta[^>]*content\\s*=\\s*["']([^"']+)["'][^>]*name\\s*=\\s*["']${safeName}["'][^>]*>`,
+			'i'
+		)
+	];
+
+	for (const regex of patterns) {
+		const match = html.match(regex);
+		if (match) return match[1];
+	}
+
+	return '';
 }
 
-// titleタグを抽出するヘルパー関数
 function extractTag(html: string, tag: string): string {
 	const regex = new RegExp(`<${tag}[^>]*>([^<]+)</${tag}>`, 'i');
 	const match = html.match(regex);

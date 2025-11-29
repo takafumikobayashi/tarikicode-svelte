@@ -80,7 +80,7 @@
 
 		// コンテンツがDOMにレンダリングされた後にハイライトを適用
 		document.querySelectorAll('pre code:not(.language-mermaid)').forEach((block) => {
-			//@ts-ignore
+			// @ts-expect-error highlight.js v11 exposes highlightBlock at runtime
 			hljs.highlightBlock(block);
 		});
 

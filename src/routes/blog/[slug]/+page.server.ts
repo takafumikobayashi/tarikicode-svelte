@@ -232,22 +232,28 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 				DOMPurify.addHook('uponSanitizeElement', (node, data) => {
 					// foreignObject要素内の全てのノードを保持
 					if (node.parentNode && node.parentNode.nodeName === 'foreignObject') {
+						// @ts-expect-error DOMPurify hook uses non-standard forceKeepAttr
 						data.forceKeepAttr = true;
 						return node;
 					}
 
+					// Elementノードのみ対象
+					if (node.nodeType !== 1) {
+						return node;
+					}
+					const element = node as unknown as Element;
+
 					// インラインスクリプトをブロック（XSS対策）
 					// src属性を持たない<script>タグは削除
-					if (node.nodeName === 'SCRIPT' && !node.hasAttribute('src')) {
-						return null; // ノードを削除
+					if (node.nodeName === 'SCRIPT' && !element.hasAttribute('src')) {
+						return null;
 					}
 
 					// src属性のないiframeもブロック（srcdoc経由のXSS対策）
-					if (node.nodeName === 'IFRAME' && !node.hasAttribute('src')) {
-						return null; // ノードを削除
+					if (node.nodeName === 'IFRAME' && !element.hasAttribute('src')) {
+						return null;
 					}
 				});
-
 				htmlContent = DOMPurify.sanitize(htmlContent, sanitizeOptions);
 
 				// Mermaidブロックを復元
