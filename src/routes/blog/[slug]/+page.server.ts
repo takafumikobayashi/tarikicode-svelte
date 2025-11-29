@@ -5,7 +5,7 @@ import { marked } from 'marked';
 import matter from 'gray-matter';
 import { error } from '@sveltejs/kit';
 import { AppConfig } from '$lib/AppConfig';
-import { JSDOM } from 'jsdom';
+import { Window } from 'happy-dom';
 import createDOMPurify from 'isomorphic-dompurify';
 
 // 外部URLからOGP画像を取得するヘルパー関数
@@ -79,8 +79,8 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 
 				// サニタイズ処理 (DOMPurify)
 				// 既存の埋め込み(iframe, script)を維持しつつ、XSSを防ぐための設定
-				const window = new JSDOM('').window;
-				const DOMPurify = createDOMPurify(window);
+				const window = new Window();
+				const DOMPurify = createDOMPurify(window as unknown as Window & typeof globalThis);
 
 				// 許可するタグと属性の設定
 				const sanitizeOptions = {
