@@ -216,6 +216,21 @@ function createBoundLookup(hostname: string, resolution: dns.LookupAddress) {
 	};
 }
 
+function normalizeIPv6(ip: string): string {
+	let parts = ip.toLowerCase().split(':');
+	const index = parts.indexOf('');
+
+	if (index !== -1) {
+		// "::" がある場合、0で埋める
+		const missing = 8 - (parts.length - 1);
+		const zeros = Array(missing).fill('0000');
+		parts.splice(index, 1, ...zeros);
+	}
+
+	// 各ブロックを4桁にパディング
+	return parts.map((part) => part.padStart(4, '0')).join(':');
+}
+
 function isForbiddenIp(address: string): boolean {
 	const ipVersion = net.isIP(address);
 
@@ -238,22 +253,29 @@ function isForbiddenIp(address: string): boolean {
 	}
 
 	if (ipVersion === 6) {
-		const lower = address.toLowerCase();
-
-		const mapped = lower.match(/::ffff:(\d{1,3}(?:\.\d{1,3}){3})$/);
-		if (mapped) {
-			return isForbiddenIp(mapped[1]);
+		// IPv4-mapped IPv6 (::ffff:1.2.3.4) の処理
+		if (address.toLowerCase().includes('.')) {
+			const lastColon = address.lastIndexOf(':');
+			const ipv4Part = address.substring(lastColon + 1);
+			if (net.isIPv4(ipv4Part)) {
+				return isForbiddenIp(ipv4Part);
+			}
 		}
 
-		if (lower === '::1' || lower === '::') return true;
+		const normalized = normalizeIPv6(address);
 
-		const firstBlock = lower.split(':').find((block) => block.length > 0) || '';
-		if (firstBlock.startsWith('fc') || firstBlock.startsWith('fd')) return true; // unique local
+		// ::1 (Loopback) -> 0000:0000:0000:0000:0000:0000:0000:0001
+		if (normalized === '0000:0000:0000:0000:0000:0000:0000:0001') return true;
+		// :: (Unspecified) -> 0000:0000:0000:0000:0000:0000:0000:0000
+		if (normalized === '0000:0000:0000:0000:0000:0000:0000:0000') return true;
 
-		const linkLocalPrefixes = ['fe8', 'fe9', 'fea', 'feb'];
-		if (linkLocalPrefixes.some((prefix) => firstBlock.startsWith(prefix))) return true;
-
-		if (firstBlock.startsWith('ff')) return true; // multicast
+		// fc00::/7 (Unique Local Address) -> fc00... ~ fdff...
+		if (normalized.startsWith('fc') || normalized.startsWith('fd')) return true;
+		// fe80::/10 (Link-local) -> fe80... ~ febf...
+		const prefix = parseInt(normalized.substring(0, 4), 16);
+		if (prefix >= 0xfe80 && prefix <= 0xfebf) return true;
+		// ff00::/8 (Multicast) -> ff00...
+		if (normalized.startsWith('ff')) return true;
 
 		return false;
 	}
