@@ -1,10 +1,9 @@
-// src/routes/blog/[slug]/+page.server.ts
 import { marked } from 'marked';
 import matter from 'gray-matter';
 import { error } from '@sveltejs/kit';
 import { AppConfig } from '$lib/AppConfig';
 import { Window } from 'happy-dom';
-import createDOMPurify from 'isomorphic-dompurify';
+import DOMPurify from 'dompurify';
 
 // Markdownファイルをビルド時にバンドルするためにimport.meta.globを使用
 const posts = import.meta.glob('/src/posts/**/*.md', {
@@ -86,7 +85,7 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 			// サニタイズ処理 (DOMPurify)
 			// 既存の埋め込み(iframe, script)を維持しつつ、XSSを防ぐための設定
 			const window = new Window();
-			const DOMPurify = createDOMPurify(window as unknown as Window & typeof globalThis);
+			const purify = DOMPurify(window as unknown as Window);
 
 			// 許可するタグと属性の設定
 			const sanitizeOptions = {
@@ -197,7 +196,7 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 			};
 
 			// フックによる厳格なドメインチェック
-			DOMPurify.addHook('beforeSanitizeAttributes', (currentNode) => {
+			purify.addHook('beforeSanitizeAttributes', (currentNode) => {
 				if (currentNode.tagName === 'IFRAME' || currentNode.tagName === 'SCRIPT') {
 					const src = currentNode.getAttribute('src');
 					if (src) {
@@ -233,7 +232,7 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 			});
 
 			// foreignObject内のHTML要素を保護（Mermaid図のテキスト表示に必要）
-			DOMPurify.addHook('uponSanitizeElement', (node, data) => {
+			purify.addHook('uponSanitizeElement', (node, data) => {
 				// foreignObject要素内の全てのノードを保持
 				if (node.parentNode && node.parentNode.nodeName === 'foreignObject') {
 					// @ts-expect-error DOMPurify hook uses non-standard forceKeepAttr
@@ -258,7 +257,7 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 					return null;
 				}
 			});
-			htmlContent = DOMPurify.sanitize(htmlContent, sanitizeOptions);
+			htmlContent = purify.sanitize(htmlContent, sanitizeOptions);
 
 			// Mermaidブロックを復元
 			mermaidBlocks.forEach((block, index) => {
