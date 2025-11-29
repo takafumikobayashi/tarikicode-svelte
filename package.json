@@ -53,6 +53,8 @@
 		"@testing-library/jest-dom": "^6.9.1",
 		"@testing-library/svelte": "^5.2.8",
 		"@testing-library/user-event": "^14.6.1",
+		"@types/dompurify": "^3.0.5",
+		"@types/jsdom": "^27.0.0",
 		"@types/leaflet": "^1.9.21",
 		"@types/marked": "^6.0.0",
 		"@typescript-eslint/eslint-plugin": "^8.45.0",
@@ -65,7 +67,6 @@
 		"happy-dom": "^19.0.2",
 		"highlight.js": "^11.9.0",
 		"i": "^0.3.7",
-		"jsdom": "^27.0.0",
 		"markdownlint-cli2": "^0.18.1",
 		"marked": "^12.0.1",
 		"mermaid": "^11.2.0",
@@ -90,7 +91,10 @@
 		"@smui/tooltip": "^7.0.0-beta.16",
 		"gray-matter": "^4.0.3",
 		"iconv-lite": "^0.7.0",
+		"isomorphic-dompurify": "^2.33.0",
+		"jsdom": "^27.2.0",
 		"leaflet": "^1.9.4",
-		"openai": "^6.1.0"
+		"openai": "^6.1.0",
+		"undici": "^6.18.0"
 	}
 }

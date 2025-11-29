@@ -238,6 +238,38 @@ npm run check       # 型チェック
 
 `npm run lint` と `npm run check` を CI の品質ゲートとして利用します。
 
+## セキュリティ
+
+本プロジェクトでは、以下のセキュリティ対策を実装しています。
+
+### 1. XSS対策 (Markdownレンダリング)
+
+Markdown記事のHTML変換時に `isomorphic-dompurify` によるサニタイズ処理を行っています。
+既存のコンテンツ表示を維持しつつ安全性を確保するため、許可リスト方式を採用しています。
+
+- **許可タグ:** `iframe`, `script`, `ogp-card`, `blockquote`, `chatgpt-go-map` など
+- **許可属性:** `target`, `allow`, `allowfullscreen`, `data-url`, `charset`, `async`, `class`, `id`, `style`、SVG属性（`x`, `y`, `fill`, `stroke`等） 等
+- **ドメイン制限:** `iframe` と `script` の `src` 属性に対し、信頼できるドメイン（YouTube, Twitter, Instagram, Note, SpeakerDeck等）のみを許可する厳格なフィルターを適用
+- **インラインスクリプトブロック:** `src`属性を持たない`<script>`タグは自動削除（XSS対策）
+- **srcdoc iframeブロック:** `src`属性を持たない`<iframe>`タグは自動削除（XSS対策）
+
+### 2. SSRF対策 (OGP取得API)
+
+`/api/ogp` エンドポイントでは、URLパラメータに対して以下の検証を行っています。
+
+- プロトコル制限 (`http:` / `https:` のみ許可)
+- ローカルネットワーク（localhost, プライベートIP等）へのアクセス拒否
+
+### 3. HTTPセキュリティヘッダー
+
+`src/hooks.server.ts` により、以下のセキュリティヘッダーを全レスポンスに付与しています。
+
+- `X-Frame-Options: DENY`
+- `X-Content-Type-Options: nosniff`
+- `Referrer-Policy: strict-origin-when-cross-origin`
+- `X-XSS-Protection: 1; mode=block`
+- `Strict-Transport-Security` (本番環境のみ有効)
+
 ## テーマとアセット
 
 ### SMUI テーマ

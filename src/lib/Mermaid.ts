@@ -37,7 +37,16 @@ export function renderMermaidDiagrams(theme: 'default' | 'dark' | 'forest' | 'ne
 			element.replaceWith(mermaidContainer);
 
 			// Mermaidを再初期化して図を描画
-			mermaid.initialize({ startOnLoad: false, theme });
+			mermaid.initialize({
+				startOnLoad: false,
+				theme,
+				securityLevel: 'loose', // foreignObject内のHTMLを許可
+				fontFamily: 'system-ui, -apple-system, sans-serif',
+				flowchart: {
+					htmlLabels: true, // HTMLラベルを有効化
+					useMaxWidth: true
+				}
+			});
 			await mermaid.run({
 				querySelector: '.mermaid'
 			});
@@ -63,7 +72,16 @@ export function renderMermaidDiagrams(theme: 'default' | 'dark' | 'forest' | 'ne
 			element.replaceWith(newMermaidContainer);
 
 			// Mermaidを再初期化して図を再描画
-			mermaid.initialize({ startOnLoad: false, theme });
+			mermaid.initialize({
+				startOnLoad: false,
+				theme,
+				securityLevel: 'loose', // foreignObject内のHTMLを許可
+				fontFamily: 'system-ui, -apple-system, sans-serif',
+				flowchart: {
+					htmlLabels: true, // HTMLラベルを有効化
+					useMaxWidth: true
+				}
+			});
 			await mermaid.run({
 				querySelector: '.mermaid'
 			});

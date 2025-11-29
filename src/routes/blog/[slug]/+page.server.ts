@@ -5,6 +5,8 @@ import { marked } from 'marked';
 import matter from 'gray-matter';
 import { error } from '@sveltejs/kit';
 import { AppConfig } from '$lib/AppConfig';
+import { JSDOM } from 'jsdom';
+import createDOMPurify from 'isomorphic-dompurify';
 
 // 外部URLからOGP画像を取得するヘルパー関数
 async function fetchOgpImage(url: string): Promise<string> {
@@ -64,7 +66,203 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 				// MarkdownをHTMLに変換
 				let htmlContent = marked(processedContent) as string;
 
-				// 画像URLの取得ロジック
+				// Mermaidブロックを退避（サニタイズによる破壊防止）
+				const mermaidBlocks: string[] = [];
+				// 正規表現を修正（classにmermaidが含まれるcodeタグを持つpreタグ）
+				const mermaidRegex =
+					/<pre><code[^>]*class=["'][^"']*mermaid[^"']*["'][^>]*>([\s\S]*?)<\/code><\/pre>/g;
+
+				htmlContent = htmlContent.replace(mermaidRegex, (match) => {
+					mermaidBlocks.push(match);
+					return `__MERMAID_BLOCK_${mermaidBlocks.length - 1}__`;
+				});
+
+				// サニタイズ処理 (DOMPurify)
+				// 既存の埋め込み(iframe, script)を維持しつつ、XSSを防ぐための設定
+				const window = new JSDOM('').window;
+				const DOMPurify = createDOMPurify(window);
+
+				// 許可するタグと属性の設定
+				const sanitizeOptions = {
+					ADD_TAGS: [
+						'iframe',
+						'script',
+						'ogp-card',
+						'blockquote',
+						'chatgpt-go-map',
+						'pre',
+						'code',
+						'div',
+						'span',
+						'p',
+						'br',
+						// SVG関連タグ（Mermaid図表示に必要）
+						'svg',
+						'path',
+						'g',
+						'rect',
+						'line',
+						'circle',
+						'ellipse',
+						'polygon',
+						'polyline',
+						'text',
+						'tspan',
+						'foreignObject',
+						'marker',
+						'defs',
+						'clipPath',
+						'linearGradient',
+						'radialGradient',
+						'stop',
+						'use'
+					],
+					// foreignObject内のHTML要素を許可
+					ALLOW_UNKNOWN_PROTOCOLS: false,
+					ALLOW_DATA_ATTR: true,
+					FORBID_CONTENTS: [],
+					KEEP_CONTENT: true,
+					IN_PLACE: false,
+					ADD_ATTR: [
+						'target',
+						'allow',
+						'allowfullscreen',
+						'frameborder',
+						'scrolling',
+						'data-url',
+						'data-media-max-width', // Twitter widget
+						'charset',
+						'async',
+						'class',
+						'id',
+						'style', // 必要に応じてスタイル属性も許可（ただしリスクあり、今回は互換性優先）
+						// SVG属性（Mermaid図のテキスト表示に必要）
+						'x',
+						'y',
+						'dx',
+						'dy',
+						'x1',
+						'y1',
+						'x2',
+						'y2',
+						'cx',
+						'cy',
+						'r',
+						'rx',
+						'ry',
+						'width',
+						'height',
+						'viewBox',
+						'xmlns',
+						'd', // path data
+						'fill',
+						'stroke',
+						'stroke-width',
+						'stroke-dasharray',
+						'stroke-linecap',
+						'stroke-linejoin',
+						'opacity',
+						'fill-opacity',
+						'stroke-opacity',
+						'transform',
+						'text-anchor',
+						'dominant-baseline',
+						'font-size',
+						'font-family',
+						'font-weight',
+						'font-style',
+						'points', // polygon/polyline
+						'marker-start',
+						'marker-end',
+						'marker-mid',
+						// グラデーション・その他のSVG属性
+						'offset',
+						'stop-color',
+						'stop-opacity',
+						'clip-path',
+						'href',
+						'xlink:href',
+						'preserveAspectRatio',
+						'gradientUnits',
+						'gradientTransform',
+						'spreadMethod'
+					],
+					WHOLE_DOCUMENT: false
+				};
+
+				// フックによる厳格なドメインチェック
+				DOMPurify.addHook('beforeSanitizeAttributes', (currentNode) => {
+					if (currentNode.tagName === 'IFRAME' || currentNode.tagName === 'SCRIPT') {
+						const src = currentNode.getAttribute('src');
+						if (src) {
+							const allowedDomains = [
+								'youtube.com',
+								'www.youtube.com',
+								'speakerdeck.com',
+								'www.slideshare.net',
+								'note.com',
+								'platform.twitter.com',
+								'www.instagram.com',
+								'connect.facebook.net'
+							];
+
+							try {
+								// 相対パスやプロトコル省略(//)に対応
+								const urlToCheck = src.startsWith('//') ? `https:${src}` : src;
+								const hostname = new URL(urlToCheck, 'https://example.com')
+									.hostname;
+
+								const isAllowed = allowedDomains.some(
+									(domain) =>
+										hostname === domain || hostname.endsWith(`.${domain}`)
+								);
+
+								if (!isAllowed) {
+									currentNode.removeAttribute('src');
+									console.warn(`Blocked suspicious src: ${src}`);
+								}
+							} catch {
+								currentNode.removeAttribute('src');
+							}
+						}
+					}
+				});
+
+				// foreignObject内のHTML要素を保護（Mermaid図のテキスト表示に必要）
+				DOMPurify.addHook('uponSanitizeElement', (node, data) => {
+					// foreignObject要素内の全てのノードを保持
+					if (node.parentNode && node.parentNode.nodeName === 'foreignObject') {
+						// @ts-expect-error DOMPurify hook uses non-standard forceKeepAttr
+						data.forceKeepAttr = true;
+						return node;
+					}
+
+					// Elementノードのみ対象
+					if (node.nodeType !== 1) {
+						return node;
+					}
+					const element = node as unknown as Element;
+
+					// インラインスクリプトをブロック（XSS対策）
+					// src属性を持たない<script>タグは削除
+					if (node.nodeName === 'SCRIPT' && !element.hasAttribute('src')) {
+						return null;
+					}
+
+					// src属性のないiframeもブロック（srcdoc経由のXSS対策）
+					if (node.nodeName === 'IFRAME' && !element.hasAttribute('src')) {
+						return null;
+					}
+				});
+				htmlContent = DOMPurify.sanitize(htmlContent, sanitizeOptions);
+
+				// Mermaidブロックを復元
+				mermaidBlocks.forEach((block, index) => {
+					const placeholder = `__MERMAID_BLOCK_${index}__`;
+					htmlContent = htmlContent.replace(placeholder, block);
+				});
+
+				// メタデータと本文を返す
 				let imageUrl = '';
 
 				if (data.image) {

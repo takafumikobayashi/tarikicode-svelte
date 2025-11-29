@@ -7,5 +7,21 @@ export const handle: Handle = async ({ event, resolve }) => {
 		return new Response(null, { status: 404 });
 	}
 
-	return resolve(event);
+	const response = await resolve(event);
+
+	// セキュリティヘッダーの追加
+	response.headers.set('X-Frame-Options', 'DENY');
+	response.headers.set('X-Content-Type-Options', 'nosniff');
+	response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+	response.headers.set('X-XSS-Protection', '1; mode=block');
+
+	// 本番環境のみHSTSを有効化 (ローカル開発でのトラブル防止)
+	if (process.env.NODE_ENV === 'production') {
+		response.headers.set(
+			'Strict-Transport-Security',
+			'max-age=31536000; includeSubDomains; preload'
+		);
+	}
+
+	return response;
 };
