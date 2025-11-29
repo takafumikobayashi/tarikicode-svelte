@@ -19,7 +19,16 @@ type: 'blog'
 
 当サイトの記事はMarkdownで記述され、`marked` ライブラリを使用してHTMLに変換されています。しかし、Markdown内に悪意のある `<script>` タグや `onclick` 属性が埋め込まれている場合、そのまま表示すると閲覧者のブラウザで不正なスクリプトが実行されてしまいます。
 
-これを防ぐために、**DOMPurify**（SvelteKitのサーバーサイドで動かすため `isomorphic-dompurify`）を導入し、HTMLのサニタイズ（無害化）を行っています。
+これを防ぐために、**DOMPurify**を導入し、HTMLのサニタイズ（無害化）を行っています。
+SvelteKitのサーバーサイド（SSR）でDOMPurifyを動作させるため、軽量なDOM実装である**happy-dom**と組み合わせて使用しています。
+
+```typescript
+import DOMPurify from 'dompurify';
+import { Window } from 'happy-dom';
+
+const window = new Window();
+const purify = DOMPurify(window as unknown as Window);
+```
 
 #### 1-1. 許可リスト（Allow List）方式の採用
 
@@ -28,38 +37,22 @@ type: 'blog'
 ```typescript
 // サニタイズの設定例
 const sanitizeOptions = {
-	ADD_TAGS: [
-		'iframe',
-		// scriptタグはsrc属性を持ち、かつドメインチェックを通過した場合のみ残します。
-		// インラインスクリプトはhookで完全に除去されます。
-		'script',
-		'ogp-card',
-		'blockquote',
-		'chatgpt-go-map',
-		'pre',
-		'code',
-		'div',
-		'span',
-		// Mermaid用のSVGタグも許可（後述）
-		'svg',
-		'g',
-		'path',
-		'rect',
-		'text',
-		'foreignObject'
-		// ...他多数
-	],
-	ADD_ATTR: [
-		'target',
-		'allow',
-		'class',
-		'id',
-		'style',
-		'width',
-		'height'
-		// ...SVG属性（後述）
-	],
-	WHOLE_DOCUMENT: false
+    ADD_TAGS: [
+        'iframe', 
+        // scriptタグはsrc属性を持ち、かつドメインチェックを通過した場合のみ許可されます。
+        // インラインスクリプトはhookで完全に除去されます。
+        'script', 
+        'ogp-card', 'blockquote', 'chatgpt-go-map',
+        'pre', 'code', 'div', 'span',
+        // Mermaid用のSVGタグも許可（後述）
+        'svg', 'g', 'path', 'rect', 'text', 'foreignObject',
+        // ...他多数
+    ],
+    ADD_ATTR: [
+        'target', 'allow', 'class', 'id', 'style', 'width', 'height',
+        // ...SVG属性（後述）
+    ],
+    WHOLE_DOCUMENT: false
 };
 ```
 
@@ -69,15 +62,15 @@ const sanitizeOptions = {
 そこで、`DOMPurify` のフック機能を使用して、**`src` 属性を持たない `<script>` タグを完全に削除** しています。
 
 ```typescript
-DOMPurify.addHook('uponSanitizeElement', (node) => {
-	// src属性を持たない<script>タグは完全にブロック
-	if (node.nodeName === 'SCRIPT' && !node.hasAttribute('src')) {
-		return null; // ノードを削除
-	}
-	// src属性を持たない<iframe>もブロック（srcdoc経由のXSS対策）
-	if (node.nodeName === 'IFRAME' && !node.hasAttribute('src')) {
-		return null;
-	}
+purify.addHook('uponSanitizeElement', (node) => {
+    // src属性を持たない<script>タグは完全にブロック
+    if (node.nodeName === 'SCRIPT' && !node.hasAttribute('src')) {
+        return null; // ノードを削除
+    }
+    // src属性を持たない<iframe>もブロック（srcdoc経由のXSS対策）
+    if (node.nodeName === 'IFRAME' && !node.hasAttribute('src')) {
+        return null;
+    }
 });
 ```
 
@@ -87,9 +80,9 @@ DOMPurify.addHook('uponSanitizeElement', (node) => {
 
 Mermaid（作図ツール）の表示には、いくつかの工夫が必要でした。安全に表示するためには、次の3点が重要です：
 
-1. **Markdown変換前のプレースホルダー保護**
-2. **サニタイズ後の復元**
-3. **クライアント側の securityLevel 設定**
+1.  **Markdown変換前のプレースホルダー保護**
+2.  **サニタイズ後の復元**
+3.  **クライアント側の securityLevel 設定**
 
 **Markdown段階での保護:**
 DOMPurifyがMermaidの記法（`-->` など）を壊さないよう、HTML変換前に正規表現でMermaidブロックを一時的なプレースホルダーに置換し、サニタイズ後に復元しています。
@@ -117,15 +110,15 @@ Mermaid v11以降ではセキュリティ設定が厳格化されており、デ
 ```typescript
 // src/lib/Mermaid.ts
 mermaid.initialize({
-	securityLevel: 'loose', // foreignObject内のHTMLを許可
-	flowchart: {
-		htmlLabels: true // HTMLラベルを有効化
-	}
+    securityLevel: 'loose',  // foreignObject内のHTMLを許可
+    flowchart: {
+        htmlLabels: true  // HTMLラベルを有効化
+    }
 });
 ```
 
 **SVG属性の許可:**
-Mermaidが生成するSVGを正しく表示するため、`x`, `y`, `dx`, `dy`, `viewBox`, `fill`, `stroke` など、**合計38個以上のSVG属性** と **11個以上のSVGタグ** を許可リストに追加しました。
+Mermaidが生成するSVGを正しく表示するため、`x`, `y`, `dx`, `dy`, `viewBox`, `fill`, `stroke` など、**このサイトの利用しているMermaid生成SVGに基づき、合計38個以上のSVG属性** と **11個以上のSVGタグ** を許可リストに追加しました。
 
 #### 1-4. ブロックされる攻撃例
 
@@ -155,14 +148,14 @@ import dns from 'node:dns';
 
 // 検証済みのIPアドレスにしか接続しないカスタムLookup関数を作成
 function createBoundLookup(hostname: string, validatedIp: string, family: number) {
-	return (requestedHost, options, callback) => {
-		if (requestedHost !== hostname) {
-			callback(new Error('Unexpected hostname'), '', 0);
-			return;
-		}
-		// 検証済みのIPアドレスを返す（再度のDNS問い合わせを行わせない）
-		process.nextTick(() => callback(null, [{ address: validatedIp, family }]));
-	};
+    return (requestedHost, options, callback) => {
+        if (requestedHost !== hostname) {
+            callback(new Error('Unexpected hostname'), '', 0);
+            return;
+        }
+        // 検証済みのIPアドレスを返す（再度のDNS問い合わせを行わせない）
+        process.nextTick(() => callback(null, [{ address: validatedIp, family }]));
+    };
 }
 
 // ...
@@ -172,21 +165,26 @@ const resolution = await resolveSafeUrl(currentUrl); // dns.lookup + IPチェッ
 
 // 2. そのIPアドレスに固定したAgentを作成
 const agent = new Agent({
-	connect: {
-		lookup: createBoundLookup(currentUrl.hostname, resolution.address, resolution.family)
-	}
+    connect: {
+        lookup: createBoundLookup(currentUrl.hostname, resolution.address, resolution.family)
+    }
 });
 
 // 3. Agentを指定してfetch（これでDNSリバインディングを防げる）
 const response = await fetch(currentUrl, {
-	dispatcher: agent
-	// ...
+    dispatcher: agent
+    // ...
 });
 ```
 
 このように、HTTPクライアントの挙動を低レイヤーで制御することで、堅牢なSSRF対策を実現しています。
 
-さらに、`redirect: 'manual'` オプションを使用してリダイレクト先URLに対しても同様の厳格なチェックを再帰的に行うことで、リダイレクトを利用したセキュリティ回避も防いでいます。
+さらに、`redirect: 'manual'` オプションを使用してリダイレクト先URLに対しても同様の厳格なチェックを**最大3回**再帰的に行うことで、リダイレクトを利用したセキュリティ回避も防いでいます。
+
+#### 巨大レスポンスによるDoS対策
+
+SSRF対策に加え、**レスポンスサイズの制限**も実装しています。
+`Content-Length` ヘッダーを信用せず、レスポンスボディをストリームとして読み込みながらサイズを計測し、上限（例: 1MB）を超えた時点で接続を強制的に切断することで、メモリ枯渇を狙ったDoS攻撃を防いでいます。
 
 ### 3. セキュリティヘッダーの導入
 
@@ -199,11 +197,11 @@ const response = await fetch(currentUrl, {
 #### さらなるセキュリティ強化に向けて（CSP）
 
 今回は導入を見送りましたが、**CSP (Content Security Policy)** はXSS対策として最も強力なヘッダーの一つです。
-許可するスクリプトのドメインやリソースの読み込み元をブラウザ側で厳格に制御できるため、本格的に外部スクリプトを管理したい場合は、今回紹介した対策とCSPを組み合わせるのがベストプラクティスです。
+Markdown / Mermaid / OGP埋め込みを併用するサイトでは、多岐にわたるリソースの読み込みが発生するため、CSPを厳格に設定するとサイトの表示が破綻しやすいという課題があります。本格的に外部スクリプトを管理したい場合は、今回紹介した対策とCSPを組み合わせるのがベストプラクティスです。
 
 ### まとめ
 
-セキュリティ対策は「機能の実装」と同じくらい重要であり、かつ創造的な作業でもあります。特にSvelteKitのようなモダンなフレームワークでは、サーバーサイド（API Routes, hooks）とクライアントサイドの責務を理解し、適切な場所で対策を行うことが重要です。
+セキュリティ対策は「機能の実装」と同じくらい重要であり、かつ創造的な作業でもあります。特にSvelteKitのようなモダンなフレームワークでは、サーバーサイド（API Routes, hooks）とクライアントサイドの責務を理解し、適切な場所で対策を行うことが重要であり、それを踏まえて今回の実装は確固たる基盤の上に成り立っています。
 
 今回の対応により、「他力code」はより安全な情報発信の場となりました。これからも技術とセキュリティの両面で、質の高いコンテンツを提供していきます。
 
@@ -212,5 +210,6 @@ const response = await fetch(currentUrl, {
 ### 参考文献
 
 [[ogp:https://github.com/cure53/DOMPurify]]
+[[ogp:https://github.com/capricorn86/happy-dom]]
 [[ogp:https://owasp.org/www-project-top-ten/]]
 [[ogp:https://developer.mozilla.org/ja/docs/Web/HTTP/CSP]]
