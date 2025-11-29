@@ -9,6 +9,34 @@ export const GET: RequestHandler = async ({ url }) => {
 		return json({ error: 'URL parameter is required' }, { status: 400 });
 	}
 
+	// URLのバリデーション (SSRF対策)
+	try {
+		const parsedUrl = new URL(targetUrl);
+
+		// http/https以外は拒否
+		if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
+			return json({ error: 'Invalid protocol' }, { status: 400 });
+		}
+
+		// プライベートIP・ローカルホストへのアクセス拒否 (簡易チェック)
+		// 本番環境ではより厳密なIPフィルタリングライブラリの使用を推奨
+		const hostname = parsedUrl.hostname;
+		if (
+			hostname === 'localhost' ||
+			hostname === '127.0.0.1' ||
+			hostname === '::1' ||
+			hostname.startsWith('192.168.') ||
+			hostname.startsWith('10.') ||
+			(hostname.startsWith('172.') &&
+				parseInt(hostname.split('.')[1]) >= 16 &&
+				parseInt(hostname.split('.')[1]) <= 31)
+		) {
+			return json({ error: 'Access to private network is forbidden' }, { status: 403 });
+		}
+	} catch (e) {
+		return json({ error: 'Invalid URL' }, { status: 400 });
+	}
+
 	try {
 		// 対象URLのHTMLを取得
 		// 独自のUser-Agentを使用（サイト運営者が識別できるように）
