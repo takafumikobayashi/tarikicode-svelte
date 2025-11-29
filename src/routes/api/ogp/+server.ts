@@ -243,7 +243,11 @@ function createBoundLookup(hostname: string, resolution: dns.LookupAddress) {
 	return (
 		requestedHost: string,
 		options: dns.LookupOptions,
-		callback: (err: Error | null, address: string | dns.LookupAddress[], family: number) => void
+		callback: (
+			err: Error | null,
+			address: string | dns.LookupAddress[],
+			family?: number
+		) => void
 	): void => {
 		if (requestedHost !== hostname) {
 			process.nextTick(() => callback(new Error('Unexpected hostname lookup'), '', 0));
@@ -253,7 +257,7 @@ function createBoundLookup(hostname: string, resolution: dns.LookupAddress) {
 		// options.all が true なら配列、そうでなければ単一アドレスを返す
 		if (options.all) {
 			process.nextTick(() =>
-				callback(null, [{ address: resolution.address, family: resolution.family }], 0)
+				callback(null, [{ address: resolution.address, family: resolution.family }])
 			);
 		} else {
 			process.nextTick(() => callback(null, resolution.address, resolution.family));
