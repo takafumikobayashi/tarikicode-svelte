@@ -37,22 +37,38 @@ const purify = DOMPurify(window as unknown as Window);
 ```typescript
 // サニタイズの設定例
 const sanitizeOptions = {
-    ADD_TAGS: [
-        'iframe', 
-        // scriptタグはsrc属性を持ち、かつドメインチェックを通過した場合のみ許可されます。
-        // インラインスクリプトはhookで完全に除去されます。
-        'script', 
-        'ogp-card', 'blockquote', 'chatgpt-go-map',
-        'pre', 'code', 'div', 'span',
-        // Mermaid用のSVGタグも許可（後述）
-        'svg', 'g', 'path', 'rect', 'text', 'foreignObject',
-        // ...他多数
-    ],
-    ADD_ATTR: [
-        'target', 'allow', 'class', 'id', 'style', 'width', 'height',
-        // ...SVG属性（後述）
-    ],
-    WHOLE_DOCUMENT: false
+	ADD_TAGS: [
+		'iframe',
+		// scriptタグはsrc属性を持ち、かつドメインチェックを通過した場合のみ許可されます。
+		// インラインスクリプトはhookで完全に除去されます。
+		'script',
+		'ogp-card',
+		'blockquote',
+		'chatgpt-go-map',
+		'pre',
+		'code',
+		'div',
+		'span',
+		// Mermaid用のSVGタグも許可（後述）
+		'svg',
+		'g',
+		'path',
+		'rect',
+		'text',
+		'foreignObject'
+		// ...他多数
+	],
+	ADD_ATTR: [
+		'target',
+		'allow',
+		'class',
+		'id',
+		'style',
+		'width',
+		'height'
+		// ...SVG属性（後述）
+	],
+	WHOLE_DOCUMENT: false
 };
 ```
 
@@ -63,14 +79,14 @@ const sanitizeOptions = {
 
 ```typescript
 purify.addHook('uponSanitizeElement', (node) => {
-    // src属性を持たない<script>タグは完全にブロック
-    if (node.nodeName === 'SCRIPT' && !node.hasAttribute('src')) {
-        return null; // ノードを削除
-    }
-    // src属性を持たない<iframe>もブロック（srcdoc経由のXSS対策）
-    if (node.nodeName === 'IFRAME' && !node.hasAttribute('src')) {
-        return null;
-    }
+	// src属性を持たない<script>タグは完全にブロック
+	if (node.nodeName === 'SCRIPT' && !node.hasAttribute('src')) {
+		return null; // ノードを削除
+	}
+	// src属性を持たない<iframe>もブロック（srcdoc経由のXSS対策）
+	if (node.nodeName === 'IFRAME' && !node.hasAttribute('src')) {
+		return null;
+	}
 });
 ```
 
@@ -80,9 +96,9 @@ purify.addHook('uponSanitizeElement', (node) => {
 
 Mermaid（作図ツール）の表示には、いくつかの工夫が必要でした。安全に表示するためには、次の3点が重要です：
 
-1.  **Markdown変換前のプレースホルダー保護**
-2.  **サニタイズ後の復元**
-3.  **クライアント側の securityLevel 設定**
+1. **Markdown変換前のプレースホルダー保護**
+2. **サニタイズ後の復元**
+3. **クライアント側の securityLevel 設定**
 
 **Markdown段階での保護:**
 DOMPurifyがMermaidの記法（`-->` など）を壊さないよう、HTML変換前に正規表現でMermaidブロックを一時的なプレースホルダーに置換し、サニタイズ後に復元しています。
@@ -110,10 +126,10 @@ Mermaid v11以降ではセキュリティ設定が厳格化されており、デ
 ```typescript
 // src/lib/Mermaid.ts
 mermaid.initialize({
-    securityLevel: 'loose',  // foreignObject内のHTMLを許可
-    flowchart: {
-        htmlLabels: true  // HTMLラベルを有効化
-    }
+	securityLevel: 'loose', // foreignObject内のHTMLを許可
+	flowchart: {
+		htmlLabels: true // HTMLラベルを有効化
+	}
 });
 ```
 
@@ -148,14 +164,14 @@ import dns from 'node:dns';
 
 // 検証済みのIPアドレスにしか接続しないカスタムLookup関数を作成
 function createBoundLookup(hostname: string, validatedIp: string, family: number) {
-    return (requestedHost, options, callback) => {
-        if (requestedHost !== hostname) {
-            callback(new Error('Unexpected hostname'), '', 0);
-            return;
-        }
-        // 検証済みのIPアドレスを返す（再度のDNS問い合わせを行わせない）
-        process.nextTick(() => callback(null, [{ address: validatedIp, family }]));
-    };
+	return (requestedHost, options, callback) => {
+		if (requestedHost !== hostname) {
+			callback(new Error('Unexpected hostname'), '', 0);
+			return;
+		}
+		// 検証済みのIPアドレスを返す（再度のDNS問い合わせを行わせない）
+		process.nextTick(() => callback(null, [{ address: validatedIp, family }]));
+	};
 }
 
 // ...
@@ -165,15 +181,15 @@ const resolution = await resolveSafeUrl(currentUrl); // dns.lookup + IPチェッ
 
 // 2. そのIPアドレスに固定したAgentを作成
 const agent = new Agent({
-    connect: {
-        lookup: createBoundLookup(currentUrl.hostname, resolution.address, resolution.family)
-    }
+	connect: {
+		lookup: createBoundLookup(currentUrl.hostname, resolution.address, resolution.family)
+	}
 });
 
 // 3. Agentを指定してfetch（これでDNSリバインディングを防げる）
 const response = await fetch(currentUrl, {
-    dispatcher: agent
-    // ...
+	dispatcher: agent
+	// ...
 });
 ```
 
