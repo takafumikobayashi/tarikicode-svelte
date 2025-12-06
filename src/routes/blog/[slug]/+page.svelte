@@ -123,10 +123,10 @@
 	});
 
 	// slugを取得
-	let post_string: string;
+	let post_string: string = '';
 	// page ストアを購読して slug パラメータを取得
 	const unsubscribe = page.subscribe(($page) => {
-		post_string = $page.params.slug;
+		post_string = $page.params.slug || '';
 	});
 
 	afterUpdate(() => {

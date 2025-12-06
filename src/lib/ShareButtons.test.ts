@@ -12,11 +12,13 @@ describe('ShareButtons Component', () => {
 	beforeEach(() => {
 		// Mock window.open
 		vi.stubGlobal('open', vi.fn());
-		// Mock navigator.clipboard
-		Object.assign(navigator, {
-			clipboard: {
+		// Mock navigator.clipboard (Object.definePropertyを使用)
+		Object.defineProperty(navigator, 'clipboard', {
+			value: {
 				writeText: vi.fn().mockResolvedValue(undefined)
-			}
+			},
+			writable: true,
+			configurable: true
 		});
 	});
 
@@ -129,11 +131,13 @@ describe('ShareButtons Component', () => {
 	});
 
 	it('should handle clipboard API error gracefully', async () => {
-		// Mock clipboard API to reject
-		Object.assign(navigator, {
-			clipboard: {
+		// Mock clipboard API to reject (Object.definePropertyを使用)
+		Object.defineProperty(navigator, 'clipboard', {
+			value: {
 				writeText: vi.fn().mockRejectedValue(new Error('Clipboard error'))
-			}
+			},
+			writable: true,
+			configurable: true
 		});
 
 		const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});

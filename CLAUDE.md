@@ -212,8 +212,33 @@ See `AGENTS.md` for comprehensive jj documentation.
 
 - **Unit tests**: Colocated with source files (e.g., `CommonFunction.test.ts` alongside `CommonFunction.ts`)
 - **Integration tests**: In `src/tests/`
-- **Test setup**: `src/tests/setup.ts` initializes Testing Library with JSDOM
+- **Test setup**: `src/tests/setup.ts` initializes Testing Library with happy-dom
 - **Coverage threshold**: Review HTML report in `coverage/` before merging PRs
+- **Current status**: 71 passing tests across 5 test files (as of 2025-12-06)
+
+### Known Testing Limitations
+
+**Build-Time Features**: Code using `import.meta.glob` (like `src/routes/blog/[slug]/+page.server.ts`) cannot be easily unit tested because this Vite feature is resolved at build time, not runtime. Prefer E2E testing for these scenarios.
+
+**Complex Security Logic**: APIs with extensive security features (like `/api/ogp` with DNS validation, SSRF protection, redirect limits) are better tested via E2E tests with real HTTP requests rather than attempting to mock 200+ lines of security code.
+
+**Read-Only Browser APIs**: When testing code that uses read-only browser properties (e.g., `navigator.clipboard`), use `Object.defineProperty` in your test setup, not `Object.assign`:
+
+```typescript
+// Correct approach for mocking navigator.clipboard
+Object.defineProperty(navigator, 'clipboard', {
+  value: { writeText: vi.fn().mockResolvedValue(undefined) },
+  writable: true,
+  configurable: true
+});
+```
+
+### E2E Testing (Future Work)
+
+For comprehensive coverage, consider implementing Playwright E2E tests for:
+- Blog post loading via `import.meta.glob`
+- OGP metadata fetching with security validation
+- Full user flows (navigation, theme switching, social sharing)
 
 ## Deployment
 

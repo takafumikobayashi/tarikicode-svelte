@@ -203,9 +203,12 @@ jj bookmark set develop
 
 ### テスト環境
 
-- **Vitest**: JSDOM 環境で動作
+- **Vitest**: happy-dom 環境で動作
 - **Testing Library**: `src/tests/setup.ts` で初期化
+- **現在のテストスイート**: 71個のテスト（5ファイル）がすべてパス
 - **カバレッジ**: `npm run test:coverage` で HTML レポート生成（`coverage/` ディレクトリ）
+
+詳細なテスト戦略（ユニット vs E2Eテストの判断基準、モックのベストプラクティスなど）は `AGENTS.md` の Testing Guidelines セクションを参照してください。
 
 ### コード品質チェック
 

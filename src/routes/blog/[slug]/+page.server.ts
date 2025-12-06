@@ -85,7 +85,8 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 			// サニタイズ処理 (DOMPurify)
 			// 既存の埋め込み(iframe, script)を維持しつつ、XSSを防ぐための設定
 			const window = new Window();
-			const purify = DOMPurify(window as unknown as Window);
+			// @ts-expect-error happy-dom WindowとDOMPurify WindowLike型の互換性問題を回避
+			const purify = DOMPurify(window);
 
 			// 許可するタグと属性の設定
 			const sanitizeOptions = {
