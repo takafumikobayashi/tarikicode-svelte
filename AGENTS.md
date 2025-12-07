@@ -29,6 +29,7 @@ Vitest runs in happy-dom via `src/tests/setup.ts`, which wires Testing Library c
 ### Current Test Suite
 
 As of 2025-12-06, the test suite contains **71 passing tests** across 5 test files:
+
 - `src/lib/ShareButtons.test.ts`: Social sharing buttons (10 tests)
 - `src/lib/CommonFunction.test.ts`: Utility functions
 - `src/lib/utils/posts.test.ts`: Blog post metadata extraction
@@ -42,13 +43,13 @@ As of 2025-12-06, the test suite contains **71 passing tests** across 5 test fil
 ```typescript
 // ✓ Correct: Object.defineProperty for read-only properties
 beforeEach(() => {
-  Object.defineProperty(navigator, 'clipboard', {
-    value: {
-      writeText: vi.fn().mockResolvedValue(undefined)
-    },
-    writable: true,
-    configurable: true
-  });
+	Object.defineProperty(navigator, 'clipboard', {
+		value: {
+			writeText: vi.fn().mockResolvedValue(undefined)
+		},
+		writable: true,
+		configurable: true
+	});
 });
 
 // ✗ Wrong: Object.assign fails with "Cannot set property"
@@ -58,18 +59,21 @@ Object.assign(navigator, { clipboard: { writeText: vi.fn() } });
 ### Unit vs E2E Testing Strategy
 
 **Use Unit Tests for**:
+
 - Pure functions and utilities
 - UI components with clear inputs/outputs
 - Business logic that can be isolated
 - Mocking simple dependencies (fetch, timers, etc.)
 
 **Use E2E Tests (Playwright) for**:
+
 - Build-time features like `import.meta.glob` (cannot be mocked at runtime)
 - Complex security logic with multiple layers (DNS validation, SSRF protection, redirect handling)
 - Integration flows spanning multiple systems
 - Features requiring real browser environment
 
 **Removed Tests** (E2E coverage recommended):
+
 - `src/tests/blog-page-server.test.ts`: Blog post loading uses `import.meta.glob` (Vite build-time feature)
 - `src/tests/api-ogp.test.ts`: OGP API uses `undici` with 200+ lines of security code (DNS checks, SSRF protection)
 
