@@ -227,15 +227,16 @@ See `AGENTS.md` for comprehensive jj documentation.
 ```typescript
 // Correct approach for mocking navigator.clipboard
 Object.defineProperty(navigator, 'clipboard', {
-  value: { writeText: vi.fn().mockResolvedValue(undefined) },
-  writable: true,
-  configurable: true
+	value: { writeText: vi.fn().mockResolvedValue(undefined) },
+	writable: true,
+	configurable: true
 });
 ```
 
 ### E2E Testing (Future Work)
 
 For comprehensive coverage, consider implementing Playwright E2E tests for:
+
 - Blog post loading via `import.meta.glob`
 - OGP metadata fetching with security validation
 - Full user flows (navigation, theme switching, social sharing)
