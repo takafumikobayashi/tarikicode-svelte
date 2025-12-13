@@ -149,6 +149,32 @@
 		// imperativeに作成した地図コンポーネントを破棄（メモリリーク防止）
 		destroyChatGptGoMaps();
 	});
+
+	$: jsonLd = {
+		'@context': 'https://schema.org',
+		'@type': 'Article',
+		headline: data.metadata?.title || post_string,
+		image: [
+			data.metadata?.image ||
+				`${AppConfig.url}${AppConfig.post_string[post_string] || '/default-og-image.png'}`
+		],
+		datePublished: data.metadata?.date ? new Date(data.metadata.date).toISOString() : undefined,
+		dateModified: data.metadata?.date ? new Date(data.metadata.date).toISOString() : undefined,
+		author: [
+			{
+				'@type': 'Person',
+				name: AppConfig.author,
+				url: AppConfig.contacts.twitter
+			}
+		],
+		description: data.metadata?.description || AppConfig.description,
+		mainEntityOfPage: {
+			'@type': 'WebPage',
+			'@id': `${AppConfig.url}/blog/${post_string}`
+		}
+	};
+
+	$: jsonLdString = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
 </script>
 
 <svelte:head>
@@ -183,6 +209,8 @@
 		content={data.metadata?.image ||
 			`${AppConfig.url}${AppConfig.post_string[post_string] || '/default-og-image.png'}`}
 	/>
+
+	{@html `<script type="application/ld+json">${jsonLdString}<\/script>`}
 
 	<link
 		href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"

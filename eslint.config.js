@@ -73,7 +73,8 @@ export default [
 			...sveltePlugin.configs.recommended.rules,
 			'svelte/no-at-html-tags': 'off',
 			'svelte/valid-compile': 'error',
-			'svelte/no-unused-svelte-ignore': 'warn'
+			'svelte/no-unused-svelte-ignore': 'warn',
+			'no-useless-escape': 'off'
 		}
 	},
 	// JavaScriptファイル用の設定

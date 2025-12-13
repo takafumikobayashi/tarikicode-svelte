@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tariki-code.tokyo/sitemap.xml
+

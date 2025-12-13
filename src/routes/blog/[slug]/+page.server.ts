@@ -1,7 +1,8 @@
-import { marked } from 'marked';
+import { Marked, Renderer } from 'marked';
 import matter from 'gray-matter';
 import { error } from '@sveltejs/kit';
 import { AppConfig } from '$lib/AppConfig';
+import { createHeadingIdGenerator } from '$lib/utils/headingIds';
 import { Window } from 'happy-dom';
 import DOMPurify from 'dompurify';
 
@@ -13,26 +14,50 @@ const posts = import.meta.glob('/src/posts/**/*.md', {
 });
 
 // 外部URLからOGP画像を取得するヘルパー関数
+const MAX_REDIRECTS = 3;
+
 async function fetchOgpImage(url: string): Promise<string> {
 	try {
-		const response = await fetch(url);
-		if (!response.ok) return '';
+		let currentUrl = url;
 
-		const html = await response.text();
+		// リダイレクトを手動で追跡（最大3回）
+		for (let i = 0; i <= MAX_REDIRECTS; i++) {
+			const response = await fetch(currentUrl, {
+				headers: {
+					'User-Agent': 'tariki-code-bot/1.0 (+https://tariki-code.tokyo)',
+					Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+				},
+				redirect: 'manual'
+			});
 
-		// og:image タグを抽出（複数パターン対応）
-		const patterns = [
-			/<meta\s+property=["']og:image["']\s+content=["']([^"']+)["']/i,
-			/<meta\s+content=["']([^"']+)["']\s+property=["']og:image["']/i,
-			/<meta\s+name=["']og:image["']\s+content=["']([^"']+)["']/i,
-			/<meta\s+content=["']([^"']+)["']\s+name=["']og:image["']/i
-		];
-
-		for (const pattern of patterns) {
-			const match = html.match(pattern);
-			if (match && match[1]) {
-				return match[1];
+			// リダイレクトの場合は追跡
+			if (response.status >= 300 && response.status < 400) {
+				const location = response.headers.get('location');
+				if (!location) return '';
+				currentUrl = new URL(location, currentUrl).toString();
+				continue;
 			}
+
+			if (!response.ok) return '';
+
+			const html = await response.text();
+
+			// og:image タグを抽出（複数パターン対応）
+			const patterns = [
+				/<meta\s+property=["']og:image["']\s+content=["']([^"']+)["']/i,
+				/<meta\s+content=["']([^"']+)["']\s+property=["']og:image["']/i,
+				/<meta\s+name=["']og:image["']\s+content=["']([^"']+)["']/i,
+				/<meta\s+content=["']([^"']+)["']\s+name=["']og:image["']/i
+			];
+
+			for (const pattern of patterns) {
+				const match = html.match(pattern);
+				if (match && match[1]) {
+					return match[1];
+				}
+			}
+
+			return '';
 		}
 
 		return '';
@@ -68,8 +93,16 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 				}
 			);
 
-			// MarkdownをHTMLに変換
-			let htmlContent = marked(processedContent) as string;
+			// MarkdownをHTMLに変換（見出しへidを付与してアンカー化）
+			const getHeadingId = createHeadingIdGenerator();
+			const renderer = new Renderer();
+			renderer.heading = (text, level, raw) => {
+				const id = getHeadingId(raw);
+				return `<h${level} id="${id}">${text}</h${level}>\n`;
+			};
+
+			const markedInstance = new Marked({ renderer });
+			let htmlContent = markedInstance.parse(processedContent) as string;
 
 			// Mermaidブロックを退避（サニタイズによる破壊防止）
 			const mermaidBlocks: string[] = [];
