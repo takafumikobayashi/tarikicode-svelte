@@ -15,27 +15,55 @@ export interface PostMetadata {
 	type: 'blog' | 'work';
 }
 
+export interface GetAllPostsMetadataOptions {
+	resolveImages?: boolean;
+}
+
 // 外部URLからOGP画像を取得するヘルパー関数
+const MAX_REDIRECTS = 3;
+
 async function fetchOgpImage(url: string): Promise<string> {
 	try {
-		const response = await fetch(url);
-		if (!response.ok) return '';
+		let currentUrl = url;
 
-		const html = await response.text();
+		// リダイレクトを手動で追跡（最大3回）
+		for (let i = 0; i <= MAX_REDIRECTS; i++) {
+			const response = await fetch(currentUrl, {
+				headers: {
+					'User-Agent': 'tariki-code-bot/1.0 (+https://tariki-code.tokyo)',
+					Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+				},
+				redirect: 'manual'
+			});
 
-		// og:image タグを抽出（複数パターン対応）
-		const patterns = [
-			/<meta\s+property=["']og:image["']\s+content=["']([^"']+)["']/i,
-			/<meta\s+content=["']([^"']+)["']\s+property=["']og:image["']/i,
-			/<meta\s+name=["']og:image["']\s+content=["']([^"']+)["']/i,
-			/<meta\s+content=["']([^"']+)["']\s+name=["']og:image["']/i
-		];
-
-		for (const pattern of patterns) {
-			const match = html.match(pattern);
-			if (match && match[1]) {
-				return match[1];
+			// リダイレクトの場合は追跡
+			if (response.status >= 300 && response.status < 400) {
+				const location = response.headers.get('location');
+				if (!location) return '';
+				currentUrl = new URL(location, currentUrl).toString();
+				continue;
 			}
+
+			if (!response.ok) return '';
+
+			const html = await response.text();
+
+			// og:image タグを抽出（複数パターン対応）
+			const patterns = [
+				/<meta\s+property=["']og:image["']\s+content=["']([^"']+)["']/i,
+				/<meta\s+content=["']([^"']+)["']\s+property=["']og:image["']/i,
+				/<meta\s+name=["']og:image["']\s+content=["']([^"']+)["']/i,
+				/<meta\s+content=["']([^"']+)["']\s+name=["']og:image["']/i
+			];
+
+			for (const pattern of patterns) {
+				const match = html.match(pattern);
+				if (match && match[1]) {
+					return match[1];
+				}
+			}
+
+			return '';
 		}
 
 		return '';
@@ -48,7 +76,10 @@ async function fetchOgpImage(url: string): Promise<string> {
 /**
  * 全記事のメタデータを取得（本文は読み込まない）
  */
-export async function getAllPostsMetadata(): Promise<PostMetadata[]> {
+export async function getAllPostsMetadata(
+	options: GetAllPostsMetadataOptions = {}
+): Promise<PostMetadata[]> {
+	const resolveImages = options.resolveImages ?? true;
 	const postsDir = path.resolve('src/posts');
 
 	if (!fs.existsSync(postsDir)) {
@@ -82,10 +113,15 @@ export async function getAllPostsMetadata(): Promise<PostMetadata[]> {
 						// 画像の直接URLの場合はそのまま使用
 						imageUrl = data.image;
 					} else {
-						// ページURLの場合はOGP画像を取得
-						imageUrl = await fetchOgpImage(data.image);
-						// OGP画像が取得できなかった場合はフォールバック画像（heroimage1）を使用
-						if (!imageUrl) {
+						if (resolveImages) {
+							// ページURLの場合はOGP画像を取得
+							imageUrl = await fetchOgpImage(data.image);
+							// OGP画像が取得できなかった場合はフォールバック画像（heroimage1）を使用
+							if (!imageUrl) {
+								imageUrl = AppConfig.post_string.about;
+							}
+						} else {
+							// ネットワークアクセスを避けたい場合はフォールバックを使用
 							imageUrl = AppConfig.post_string.about;
 						}
 					}
