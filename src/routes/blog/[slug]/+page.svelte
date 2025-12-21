@@ -11,13 +11,23 @@
 	import mermaid from 'mermaid';
 	import ChatGptGoMap from '$lib/ChatGptGoMap.svelte';
 	import type { SvelteComponent } from 'svelte';
+	import { lightThemeStore } from '$lib/themeStore';
 
 	export let data;
+
+	// Chart.jsモジュール（dynamic import for SSR compatibility）
+	let chartModule: typeof import('$lib/ChartRenderer') | null = null;
+	let lastRenderedChartSlug: string | null = null;
+	let chartRenderingPromise: Promise<void> | null = null;
 
 	// imperativeに作成したコンポーネントインスタンスを保存（メモリリーク防止）
 	let mapComponentInstances: SvelteComponent[] = [];
 	let lastHydratedSlug: string | null = null;
 	let mapHydrationPromise: Promise<void> | null = null;
+
+	// テーマストア（クライアント側でのみ購読）
+	let isLightTheme = true;
+	let unsubscribeTheme: (() => void) | null = null;
 
 	function destroyChatGptGoMaps() {
 		if (!mapComponentInstances.length) {
@@ -55,7 +65,39 @@
 		});
 	}
 
+	async function renderChartsForCurrentPost() {
+		// Chart.jsモジュールをロード（初回のみ）
+		if (!chartModule) {
+			chartModule = await import('$lib/ChartRenderer');
+		}
+
+		// 古いチャートインスタンスをクリーンアップ
+		chartModule.cleanupCharts();
+		await tick();
+
+		// 新しいチャートを描画
+		chartModule.renderCharts(!isLightTheme);
+
+		// 描画完了を記録
+		lastRenderedChartSlug = post_string ?? null;
+	}
+
+	function scheduleChartRendering() {
+		if (chartRenderingPromise) {
+			return;
+		}
+
+		chartRenderingPromise = renderChartsForCurrentPost().finally(() => {
+			chartRenderingPromise = null;
+		});
+	}
+
 	onMount(async () => {
+		// テーマストアを購読（クライアント側でのみ）
+		unsubscribeTheme = lightThemeStore.subscribe((value) => {
+			isLightTheme = value;
+		});
+
 		// Mermaidの初期化
 		mermaid.initialize({
 			startOnLoad: false,
@@ -78,11 +120,16 @@
 			}
 		}
 
+		// Chart.jsグラフの描画（dynamic import for SSR compatibility）
+		scheduleChartRendering();
+
 		// コンテンツがDOMにレンダリングされた後にハイライトを適用
-		document.querySelectorAll('pre code:not(.language-mermaid)').forEach((block) => {
-			// @ts-expect-error highlight.js v11 exposes highlightBlock at runtime
-			hljs.highlightBlock(block);
-		});
+		document
+			.querySelectorAll('pre code:not(.language-mermaid):not(.language-chartjs)')
+			.forEach((block) => {
+				// @ts-expect-error highlight.js v11 exposes highlightBlock at runtime
+				hljs.highlightBlock(block);
+			});
 
 		// OGPカードの処理
 		const ogpCards = document.querySelectorAll('ogp-card');
@@ -134,17 +181,35 @@
 			return;
 		}
 
-		if (lastHydratedSlug === post_string) {
-			return;
+		// Chart.jsの再描画（記事変更時）
+		if (lastRenderedChartSlug !== post_string) {
+			scheduleChartRendering();
 		}
 
-		scheduleMapHydration();
+		// 地図の再ハイドレーション（記事変更時）
+		if (lastHydratedSlug !== post_string) {
+			scheduleMapHydration();
+		}
 	});
+
+	// テーマ変更時にチャートを再描画
+	$: if (chartModule && typeof isLightTheme !== 'undefined') {
+		// DOMがマウント済みの場合のみ実行
+		if (typeof document !== 'undefined') {
+			chartModule.updateChartsTheme(!isLightTheme);
+		}
+	}
 
 	// コンポーネントが破棄されたときにクリーンアップ
 	onDestroy(() => {
 		// page ストアの購読を解除
 		unsubscribe();
+
+		// テーマストアの購読を解除
+		unsubscribeTheme?.();
+
+		// Chart.jsインスタンスをクリーンアップ
+		chartModule?.cleanupCharts();
 
 		// imperativeに作成した地図コンポーネントを破棄（メモリリーク防止）
 		destroyChatGptGoMaps();
