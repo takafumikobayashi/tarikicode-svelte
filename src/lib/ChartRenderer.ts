@@ -93,9 +93,10 @@ export function renderCharts(isDarkMode: boolean = false) {
 					responsive: true,
 					maintainAspectRatio: true,
 					layout: {
-						padding: chartData.type === 'pie'
-							? { top: 60, bottom: 60, left: 50, right: 50 } // 円グラフは外側ラベルのため上下に大きめの余白
-							: 10
+						padding:
+							chartData.type === 'pie'
+								? { top: 60, bottom: 60, left: 50, right: 50 } // 円グラフは外側ラベルのため上下に大きめの余白
+								: 10
 					},
 					plugins: {
 						legend: {
