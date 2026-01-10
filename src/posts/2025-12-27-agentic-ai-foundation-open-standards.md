@@ -55,12 +55,12 @@ AAIFの設立により、MCPやAGENTS.mdは特定企業の所有物ではなく�
 
 わずか1年で驚異的な普及を遂げました：
 
-| 指標 | 数値 |
-|------|------|
-| **Python/TypeScript SDK月間ダウンロード** | 9,700万以上 |
-| **公開MCPサーバー数** | 10,000以上 |
-| **採用プラットフォーム** | ChatGPT、Claude、Gemini、Cursor、VS Code、Microsoft Copilot |
-| **企業導入** | Block、Bloomberg、Amazon、Fortune 500企業多数 |
+| 指標                                      | 数値                                                        |
+| ----------------------------------------- | ----------------------------------------------------------- |
+| **Python/TypeScript SDK月間ダウンロード** | 9,700万以上                                                 |
+| **公開MCPサーバー数**                     | 10,000以上                                                  |
+| **採用プラットフォーム**                  | ChatGPT、Claude、Gemini、Cursor、VS Code、Microsoft Copilot |
+| **企業導入**                              | Block、Bloomberg、Amazon、Fortune 500企業多数               |
 
 MCPの特徴は、「**USBのような標準規格**」という設計思想にあります。かつて各メーカーが独自のケーブル規格を持っていた時代から、USBによって統一されたように、MCPはAIエージェントとツールの接続を標準化します。
 
@@ -81,9 +81,9 @@ graph LR
 
 「**エージェントのためのREADME**」とも呼ばれるこのフォーマットは、リリースからわずか4ヶ月で**60,000以上のオープンソースプロジェクト**に採用されました。
 
-| 採用ツール/プラットフォーム |
-|---------------------------|
-| Amp、Codex、Cursor、Devin、Factory |
+| 採用ツール/プラットフォーム                |
+| ------------------------------------------ |
+| Amp、Codex、Cursor、Devin、Factory         |
 | Gemini CLI、GitHub Copilot、Jules、VS Code |
 
 AGENTS.mdの仕組みはシンプルです。プロジェクトのルートディレクトリや各パッケージ内に`AGENTS.md`ファイルを配置すると、AIエージェントが自動的にそれを読み込み、プロジェクト固有のルールに従って動作します。
@@ -98,6 +98,7 @@ AGENTS.mdの仕組みはシンプルです。プロジェクトのルートデ�
 **goose**は、決済大手BlockがMCPの普及に合わせて開発した、**ローカルファースト**のAIエージェントフレームワークです。
 
 gooseの特徴：
+
 - **ローカル実行優先**: データをクラウドに送信せず、ローカルで処理可能
 - **MCP完全対応**: MCPのリファレンス実装として設計
 - **拡張性**: カスタムツールを簡単に追加可能
@@ -111,16 +112,16 @@ AAIFの設立には、AI業界のほぼすべての主要プレイヤーが参�
 
 #### プラチナメンバー（8社）
 
-| 企業 | 役割・貢献 |
-|------|-----------|
-| **Amazon Web Services** | クラウドインフラ、Bedrockとの統合 |
-| **Anthropic** | MCP寄贈、Claude連携 |
-| **Block** | goose寄贈、決済領域のユースケース |
-| **Bloomberg** | 金融データ領域のMCP活用 |
-| **Cloudflare** | エッジコンピューティング対応 |
-| **Google** | Geminiへの MCP統合 |
-| **Microsoft** | Windows 11でのMCPサポート、Copilot連携 |
-| **OpenAI** | AGENTS.md寄贈、ChatGPT統合 |
+| 企業                    | 役割・貢献                             |
+| ----------------------- | -------------------------------------- |
+| **Amazon Web Services** | クラウドインフラ、Bedrockとの統合      |
+| **Anthropic**           | MCP寄贈、Claude連携                    |
+| **Block**               | goose寄贈、決済領域のユースケース      |
+| **Bloomberg**           | 金融データ領域のMCP活用                |
+| **Cloudflare**          | エッジコンピューティング対応           |
+| **Google**              | Geminiへの MCP統合                     |
+| **Microsoft**           | Windows 11でのMCPサポート、Copilot連携 |
+| **OpenAI**              | AGENTS.md寄贈、ChatGPT統合             |
 
 #### ゴールドメンバー（18社）
 
