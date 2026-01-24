@@ -12,7 +12,7 @@
 		<div class="demo-cell">
 			<div class="profile-image">
 				<img
-					src="https://d1mt09hgbl7gpz.cloudfront.net/icon/GUiKceWbQAAO05i.jpg"
+					src="https://d1mt09hgbl7gpz.cloudfront.net/icon/GUiKceWbQAAO05i.png"
 					alt="プロフィール画像"
 				/>
 			</div>
