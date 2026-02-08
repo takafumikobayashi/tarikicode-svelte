@@ -13,6 +13,7 @@
 	import { AppConfig } from '$lib/AppConfig';
 	import Contacts from '$lib/Contacts.svelte';
 	import NewRelease from '$lib/NewRelease.svelte';
+	import Service from '$lib/Service.svelte';
 </script>
 
 <svelte:head>
@@ -76,6 +77,20 @@
 							<Subtitle>お仕事について</Subtitle>
 							<Content>
 								<Card />
+							</Content>
+						</Paper>
+					</div>
+				</div>
+			</Cell>
+
+			<Cell span={12}>
+				<div class="demo-cell">
+					<div class="paper-container">
+						<Paper variant="unelevated">
+							<Title>Service</Title>
+							<Subtitle>開発サービス</Subtitle>
+							<Content>
+								<Service />
 							</Content>
 						</Paper>
 					</div>
