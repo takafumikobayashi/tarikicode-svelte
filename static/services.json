@@ -1,0 +1,13 @@
+{
+	"services": [
+		{
+			"slug": "cbrief",
+			"name": "Cbrief",
+			"subtitle": "コード診断を、業務言語で。",
+			"description": "AI生成・外部委託コードを貼り付けるだけで、リスクと対応案を業務言語で即時レポート。静的解析×LLMの二重根拠。",
+			"image": "",
+			"url": "https://cbrief.tariki-code.tokyo/",
+			"label": "MVP"
+		}
+	]
+}
