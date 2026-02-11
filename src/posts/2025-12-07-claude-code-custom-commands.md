@@ -4,7 +4,7 @@ date: '2025-12-07'
 category: 'Development'
 tags: ['Claude Code', 'AI', '開発効率化', 'カスタムコマンド', 'Anthropic']
 description: 'Claude Codeのカスタムスラッシュコマンドの作り方を初心者向けに解説。コードレビューやコミットメッセージ生成など、実践的な例で開発効率を大幅に向上させる方法を紹介します。'
-image: 'https://www.anthropic.com/engineering/claude-code-best-practices'
+image: 'https://claude.com/product/claude-code'
 featured: false
 type: 'blog'
 ---
@@ -651,9 +651,7 @@ Claude Codeのカスタムスラッシュコマンドは、開発ワークフロ
 
 #### 公式ドキュメント
 
-[[ogp:https://code.claude.com/docs/en/slash-commands]]
-
-[[ogp:https://www.anthropic.com/engineering/claude-code-best-practices]]
+[[ogp:https://code.claude.com/docs/]]
 
 #### コミュニティリソース
 
