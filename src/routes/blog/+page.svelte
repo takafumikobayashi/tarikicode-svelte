@@ -515,11 +515,13 @@
 		margin-bottom: 1em;
 	}
 
-	:global(.post-card) {
+	:global(.post-card.mdc-card) {
 		width: 100%;
 		height: 100%;
 		display: flex;
 		flex-direction: column;
+		border-radius: 16px;
+		overflow: hidden;
 	}
 
 	:global(.card-media) {
