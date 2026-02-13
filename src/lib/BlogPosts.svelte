@@ -105,11 +105,13 @@
 		align-items: stretch;
 	}
 
-	:global(.blog-post-card) {
+	:global(.blog-post-card.mdc-card) {
 		width: 100%;
 		height: 100%;
 		display: flex;
 		flex-direction: column;
+		border-radius: 16px;
+		overflow: hidden;
 	}
 
 	:global(.card-media) {
