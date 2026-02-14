@@ -27,6 +27,7 @@
 		"@iconify-json/cib": "^1.2.0",
 		"@iconify-json/ic": "^1.2.0",
 		"@iconify-json/logos": "^1.2.0",
+		"@iconify-json/vscode-icons": "^1.2.42",
 		"@material/theme": "^14.0.0",
 		"@material/typography": "^14.0.0",
 		"@mdi/js": "^7.4.47",

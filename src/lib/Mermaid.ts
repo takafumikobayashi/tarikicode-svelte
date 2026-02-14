@@ -2,6 +2,7 @@ import mermaid from 'mermaid';
 import { icons as logos } from '@iconify-json/logos';
 import { icons as cib } from '@iconify-json/cib';
 import { icons as ic } from '@iconify-json/ic';
+import { icons as vscodeicons } from '@iconify-json/vscode-icons';
 
 mermaid.registerIconPacks([
 	{
@@ -15,6 +16,10 @@ mermaid.registerIconPacks([
 	{
 		name: ic.prefix, // To use the prefix defined in the icon pack
 		icons: ic
+	},
+	{
+		name: vscodeicons.prefix, // To use the prefix defined in the icon pack
+		icons: vscodeicons
 	}
 ]);
 
