@@ -4,7 +4,7 @@ date: '2024-09-23'
 category: 'AI'
 tags: ['AI', '生成AI', 'ビジネス', 'DX', 'OpenAI', 'Claude']
 description: 'AIは今や未来の技術ではなく、現代のビジネスや行政にとって不可欠なツールです。AIを戦略的に活用することで、組織は新たな価値を創出し、競争力を高めることができます。'
-featured: true
+featured: false
 type: 'work'
 ---
 

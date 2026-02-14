@@ -37,12 +37,12 @@
 			image: AppConfig.post_string['sns-promotion']
 		},
 		{
-			name: 'AI',
-			subtitle: 'ChatGPTやClaudeの業務利活用、MidjournyやDALL-Eを使ったクリエイティブ活用',
+			name: 'AI Agent',
+			subtitle: 'AIエージェントの力で組織を変革する──2026年の実践ガイド',
 			description:
-				'開発シーンにおけるAIを活用した問題解決ノウハウを提供します。このサイトではMidjourny生成画像を活用しています。',
-			slug: 'ai',
-			image: AppConfig.post_string['ai']
+				'Claude Codeによるサイト構築、Cbriefの開発、AI記事自動生成パイプラインなど、実体験に基づくAI活用の実践ガイド。',
+			slug: '2026-02-14-ai-transformation-2026',
+			image: AppConfig.post_string['2026-02-14-ai-transformation-2026']
 		},
 		{
 			name: 'Project Management',
