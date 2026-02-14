@@ -11,10 +11,13 @@
 			"site": "経済産業省（METI）"
 		},
 		{
-			"url": "https://www.itmedia.co.jp/aiplus/articles/2602/06/news110.html"
+			"url": "https://openai.com/index/introducing-lockdown-mode-and-elevated-risk-labels-in-chatgpt/",
+			"image": "https://images.ctfassets.net/kftzwdyauwt9/sz69YyLh9gs4Fm24UgsXJ/ae79311d1a85260970919e4f23dd03d6/Lockdown-Mode_SEO-Card.png",
+			"title": "Introducing Lockdown Mode and Elevated Risk labels in ChatGPT",
+			"description": "Introducing Lockdown Mode and Elevated Risk labels in ChatGPT to help organizations defend against prompt injection and AI-driven data exfiltration."
 		},
 		{
-			"url": "https://www.itmedia.co.jp/aiplus/articles/2602/06/news063.html"
+			"url": "https://www.anthropic.com/news/chris-liddell-appointed-anthropic-board"
 		}
 	]
 }
