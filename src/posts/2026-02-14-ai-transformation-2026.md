@@ -141,15 +141,15 @@ architecture-beta
 
 ```
 
-| ツール | カテゴリ | 主な用途 | 特徴 |
-| --- | --- | --- | --- |
-| [Claude Code](https://claude.ai/code) | コーディングエージェント | ソフトウェア開発全般 | 自律的なコード生成・テスト・デプロイ。MCP対応。CLAUDE.md/AGENTS.mdによるコンテキスト管理 |
-| [Cursor](https://cursor.sh/) | AIエディタ | コード編集・補完 | VS Code互換のAIネイティブエディタ。コードベース全体を理解した補完 |
-| [Claude](https://claude.ai/) | 汎用AI | 文章生成・分析・対話 | 長文コンテキスト対応、高い安全性設計、Artifacts機能 |
-| [GPT-5.x](https://openai.com/) | 汎用AI | 文章生成・推論・コード | マルチモーダル対応、Webブラウジング、プラグインエコシステム |
-| [Gemini 3](https://gemini.google.com/) | 汎用AI | 検索連携・マルチモーダル | Google検索との深い統合、長大コンテキスト |
-| [Perplexity](https://www.perplexity.ai/) | AI検索 | リサーチ・情報収集 | ソース付き回答、Pro Search機能 |
-| [Midjourney](https://www.midjourney.com/) | 画像生成 | デザイン・マーケティング | 高品質画像生成、スタイル制御 |
+| ツール                                    | カテゴリ                 | 主な用途                 | 特徴                                                                                     |
+| ----------------------------------------- | ------------------------ | ------------------------ | ---------------------------------------------------------------------------------------- |
+| [Claude Code](https://claude.ai/code)     | コーディングエージェント | ソフトウェア開発全般     | 自律的なコード生成・テスト・デプロイ。MCP対応。CLAUDE.md/AGENTS.mdによるコンテキスト管理 |
+| [Cursor](https://cursor.sh/)              | AIエディタ               | コード編集・補完         | VS Code互換のAIネイティブエディタ。コードベース全体を理解した補完                        |
+| [Claude](https://claude.ai/)              | 汎用AI                   | 文章生成・分析・対話     | 長文コンテキスト対応、高い安全性設計、Artifacts機能                                      |
+| [GPT-5.x](https://openai.com/)            | 汎用AI                   | 文章生成・推論・コード   | マルチモーダル対応、Webブラウジング、プラグインエコシステム                              |
+| [Gemini 3](https://gemini.google.com/)    | 汎用AI                   | 検索連携・マルチモーダル | Google検索との深い統合、長大コンテキスト                                                 |
+| [Perplexity](https://www.perplexity.ai/)  | AI検索                   | リサーチ・情報収集       | ソース付き回答、Pro Search機能                                                           |
+| [Midjourney](https://www.midjourney.com/) | 画像生成                 | デザイン・マーケティング | 高品質画像生成、スタイル制御                                                             |
 
 </div>
 </div>
@@ -202,12 +202,15 @@ Claude Codeでは、`.claude/commands/`ディレクトリにMarkdownファイル
 # /ai-news コマンドの定義例（.claude/commands/ai-news.md）
 
 ## Step 0: 日付と期間の確認
+
 今日の日付をYYYY-MM-DD形式で取得し、検索対象期間を報告
 
 ## Step 1: Research Phase
+
 最低3回のWebSearchで7日間のAI/LLMニュースを調査
 
 ## Step 2: Deep Dive
+
 選定トピックについて2-3回の追加WebSearchで詳細調査
 ...
 ```
@@ -404,12 +407,12 @@ AI導入の目的を明確にします。2026年では、単なる業務効率�
 <div class="mdc-data-table" style="max-width: 90%">
 <div class="mdc-data-table__table-container">
 
-| 項目 | 2024年 | 2026年 |
-| --- | --- | --- |
-| モデル推論コスト | 高（GPT-4で$30/1M tokens） | 大幅低下（競争による価格破壊） |
-| 主な課金形態 | APIトークン従量課金 | サブスクリプション＋従量のハイブリッド |
-| 開発者ツール | GitHub Copilot月額$10〜 | Claude Code月額$20（Pro）〜 |
-| エンタープライズ | カスタム契約のみ | Team/Enterprise プランの充実 |
+| 項目             | 2024年                     | 2026年                                 |
+| ---------------- | -------------------------- | -------------------------------------- |
+| モデル推論コスト | 高（GPT-4で$30/1M tokens） | 大幅低下（競争による価格破壊）         |
+| 主な課金形態     | APIトークン従量課金        | サブスクリプション＋従量のハイブリッド |
+| 開発者ツール     | GitHub Copilot月額$10〜    | Claude Code月額$20（Pro）〜            |
+| エンタープライズ | カスタム契約のみ           | Team/Enterprise プランの充実           |
 
 </div>
 </div>
