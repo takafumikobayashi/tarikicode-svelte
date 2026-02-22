@@ -11,13 +11,13 @@
 			"site": "経済産業省（METI）"
 		},
 		{
-			"url": "https://openai.com/index/introducing-lockdown-mode-and-elevated-risk-labels-in-chatgpt/",
-			"image": "https://images.ctfassets.net/kftzwdyauwt9/sz69YyLh9gs4Fm24UgsXJ/ae79311d1a85260970919e4f23dd03d6/Lockdown-Mode_SEO-Card.png",
-			"title": "Introducing Lockdown Mode and Elevated Risk labels in ChatGPT",
-			"description": "Introducing Lockdown Mode and Elevated Risk labels in ChatGPT to help organizations defend against prompt injection and AI-driven data exfiltration."
+			"url": "https://openai.com/index/openai-for-india/",
+			"image": "https://images.ctfassets.net/kftzwdyauwt9/G2A5VZHbNARmo6atQ2xdG/7adb24136736bce440fc6548952b4ee3/OpenAI_For_India.png",
+			"title": "Introducing OpenAI for India",
+			"description": "OpenAI for India expands AI access across the country—building local infrastructure, powering enterprises, and advancing workforce skills."
 		},
 		{
-			"url": "https://www.anthropic.com/news/chris-liddell-appointed-anthropic-board"
+			"url": "https://www.anthropic.com/news/claude-code-security"
 		}
 	]
 }
