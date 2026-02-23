@@ -8,6 +8,15 @@
 			"image": "",
 			"url": "https://cbrief.tariki-code.tokyo/",
 			"label": "MVP"
+		},
+		{
+			"slug": "localscope-agent",
+			"name": "LocalScope Agent",
+			"subtitle": "議会を、AI時代のインフラへ。",
+			"description": "地方議会の会議録を自動収集・AI要約・可視化するシビックインテリジェンス基盤。誰が・何を・どれだけ話したかを市民の手に届ける。",
+			"image": "https://d1mt09hgbl7gpz.cloudfront.net/localscope-agent/localscope-agent-ogplogo.jpg",
+			"url": "https://localscope.tariki-code.tokyo/",
+			"label": "MVP"
 		}
 	]
 }

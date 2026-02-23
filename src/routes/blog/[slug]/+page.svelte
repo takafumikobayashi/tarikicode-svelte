@@ -29,6 +29,15 @@
 	let isLightTheme = true;
 	let unsubscribeTheme: (() => void) | null = null;
 
+	function escapeHtml(str: string): string {
+		return str
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#x27;');
+	}
+
 	function destroyChatGptGoMaps() {
 		if (!mapComponentInstances.length) {
 			return;
@@ -146,22 +155,31 @@
 
 				const ogpData = await response.json();
 
-				// OGPカードのHTMLを生成
+				// OGPカードのHTMLを生成（XSS対策：全フィールドをエスケープ）
+				const safeTitle = escapeHtml(ogpData.title || '');
+				const safeDesc = ogpData.description ? escapeHtml(ogpData.description) : '';
+				const safeSite = ogpData.siteName ? escapeHtml(ogpData.siteName) : '';
+				const safeImage =
+					ogpData.image && /^https?:\/\//.test(ogpData.image)
+						? escapeHtml(ogpData.image)
+						: '';
+
 				card.innerHTML = `
-					<a href="${url}" target="_blank" rel="noopener noreferrer" class="ogp-link-card">
+					<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="ogp-link-card">
 						<div class="ogp-card-wrapper">
-							${ogpData.image ? `<div class="ogp-card-image"><img src="${ogpData.image}" alt="${ogpData.title || ''}" /></div>` : ''}
+							${safeImage ? `<div class="ogp-card-image"><img src="${safeImage}" alt="${safeTitle}" /></div>` : ''}
 							<div class="ogp-card-text">
-								<h3 class="ogp-card-title">${ogpData.title || url}</h3>
-								${ogpData.description ? `<p class="ogp-card-description">${ogpData.description}</p>` : ''}
-								${ogpData.siteName ? `<p class="ogp-card-site">${ogpData.siteName}</p>` : ''}
+								<h3 class="ogp-card-title">${safeTitle || escapeHtml(url)}</h3>
+								${safeDesc ? `<p class="ogp-card-description">${safeDesc}</p>` : ''}
+								${safeSite ? `<p class="ogp-card-site">${safeSite}</p>` : ''}
 							</div>
 						</div>
 					</a>
 				`;
 			} catch (error) {
 				console.error('Error loading OGP card:', error);
-				card.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer" class="ogp-error-link">${url}</a>`;
+				const safeUrl = escapeHtml(url);
+				card.innerHTML = `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="ogp-error-link">${safeUrl}</a>`;
 			}
 		});
 

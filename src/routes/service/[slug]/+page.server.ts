@@ -23,15 +23,32 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 	try {
 		const { data, content } = matter(fileContent);
 
+		// OGPカード記法を事前変換
+		const processedContent = content.replace(
+			/\[\[ogp:(https?:\/\/[^\]]+)\]\]/g,
+			(_match, url) => `\n\n<ogp-card data-url="${url}"></ogp-card>\n\n`
+		);
+
 		const markedInstance = new Marked();
-		const rawHtml = markedInstance.parse(content) as string;
+		const parsedHtml = markedInstance.parse(processedContent) as string;
+
+		// Mermaidブロックを退避（コードテキストのみ保存し復元時に構造を再構築）
+		const mermaidBlocks: string[] = [];
+		const mermaidRegex =
+			/<pre><code[^>]*class=["'][^"']*mermaid[^"']*["'][^>]*>([\s\S]*?)<\/code><\/pre>/g;
+		const htmlForSanitize = parsedHtml.replace(mermaidRegex, (_match, codeContent: string) => {
+			// HTMLタグを除去してテキストコンテンツのみ保持（サニタイズバイパス防止）
+			const safeCode = codeContent.replace(/<[^>]*>/g, '');
+			mermaidBlocks.push(safeCode);
+			return `__MERMAID_BLOCK_${mermaidBlocks.length - 1}__`;
+		});
 
 		// DOMPurifyでサニタイズ（サービスページはiframe/script不要のため厳格設定）
 		const window = new Window();
 		// @ts-expect-error happy-dom WindowとDOMPurify WindowLike型の互換性問題を回避
 		const purify = DOMPurify(window);
 
-		const htmlContent = purify.sanitize(rawHtml, {
+		let htmlContent = purify.sanitize(htmlForSanitize, {
 			ALLOWED_TAGS: [
 				'h1',
 				'h2',
@@ -60,10 +77,30 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 				'img',
 				'div',
 				'span',
-				'del'
+				'del',
+				'ogp-card'
 			],
-			ALLOWED_ATTR: ['href', 'target', 'rel', 'src', 'alt', 'width', 'height', 'class', 'id'],
+			ALLOWED_ATTR: [
+				'href',
+				'target',
+				'rel',
+				'src',
+				'alt',
+				'width',
+				'height',
+				'class',
+				'id',
+				'data-url'
+			],
 			ALLOW_DATA_ATTR: false
+		});
+
+		// Mermaidブロックを復元（安全なコードテキストから構造を再構築）
+		mermaidBlocks.forEach((code, index) => {
+			htmlContent = htmlContent.replace(
+				`__MERMAID_BLOCK_${index}__`,
+				`<pre><code class="language-mermaid">${code}</code></pre>`
+			);
 		});
 
 		return {
