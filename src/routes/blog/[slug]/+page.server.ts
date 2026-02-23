@@ -104,14 +104,15 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 			const markedInstance = new Marked({ renderer });
 			let htmlContent = markedInstance.parse(processedContent) as string;
 
-			// Mermaidブロックを退避（サニタイズによる破壊防止）
+			// Mermaidブロックを退避（コードテキストのみ保存し復元時に構造を再構築）
 			const mermaidBlocks: string[] = [];
-			// 正規表現を修正（classにmermaidが含まれるcodeタグを持つpreタグ）
 			const mermaidRegex =
 				/<pre><code[^>]*class=["'][^"']*mermaid[^"']*["'][^>]*>([\s\S]*?)<\/code><\/pre>/g;
 
-			htmlContent = htmlContent.replace(mermaidRegex, (match) => {
-				mermaidBlocks.push(match);
+			htmlContent = htmlContent.replace(mermaidRegex, (_match, codeContent: string) => {
+				// HTMLタグを除去してテキストコンテンツのみ保持（サニタイズバイパス防止）
+				const safeCode = codeContent.replace(/<[^>]*>/g, '');
+				mermaidBlocks.push(safeCode);
 				return `__MERMAID_BLOCK_${mermaidBlocks.length - 1}__`;
 			});
 
@@ -293,10 +294,13 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 			});
 			htmlContent = purify.sanitize(htmlContent, sanitizeOptions);
 
-			// Mermaidブロックを復元
-			mermaidBlocks.forEach((block, index) => {
+			// Mermaidブロックを復元（安全なコードテキストから構造を再構築）
+			mermaidBlocks.forEach((code, index) => {
 				const placeholder = `__MERMAID_BLOCK_${index}__`;
-				htmlContent = htmlContent.replace(placeholder, block);
+				htmlContent = htmlContent.replace(
+					placeholder,
+					`<pre><code class="language-mermaid">${code}</code></pre>`
+				);
 			});
 
 			// メタデータと本文を返す
