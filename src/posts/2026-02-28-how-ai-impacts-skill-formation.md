@@ -4,7 +4,7 @@ date: '2026-02-28'
 category: '論文解説'
 tags: ['Research Insight', 'Anthropic', 'AI研究', '学習', 'プログラミング教育']
 description: "AnthropicのShen・Tamkinによる実験的研究。52名の開発者を対象としたRCTで、AIアシスタントを使用したグループの学習テストスコアが17%（Cohen's d=0.738）低下すると判明。高スコアグループと低スコアグループでAIの使い方に大きな差が見られた。"
-image: "https://d1mt09hgbl7gpz.cloudfront.net/public/2026-02-28-how-ai-impacts-skill-formation.jpg"
+image: "https://d1mt09hgbl7gpz.cloudfront.net/public/2026-02-28-how-ai-impacts-skill-formation.jpeg"
 featured: false
 type: 'blog'
 ---
