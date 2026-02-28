@@ -1,0 +1,20 @@
+version: 2
+updates:
+    - package-ecosystem: 'npm'
+      directory: '/'
+      schedule:
+          interval: 'weekly'
+      groups:
+          npm_and_yarn:
+              patterns:
+                  - '*'
+      ignore:
+          # Svelte 5移行は別途計画的に対応するためメジャーアップデートを除外
+          - dependency-name: 'svelte'
+            update-types: ['version-update:semver-major']
+          - dependency-name: '@sveltejs/vite-plugin-svelte'
+            update-types: ['version-update:semver-major']
+          - dependency-name: 'vite'
+            update-types: ['version-update:semver-major']
+          - dependency-name: '@sveltejs/kit'
+            update-types: ['version-update:semver-major']
