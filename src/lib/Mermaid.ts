@@ -36,7 +36,7 @@ export function renderMermaidDiagrams(theme: 'default' | 'dark' | 'forest' | 'ne
 			mermaidContainer.classList.add('mermaid');
 			mermaidContainer.dataset.mermaidCode = mermaidCode;
 			mermaidContainer.id = `mermaid-container-${index}`; // ユニークIDを設定
-			mermaidContainer.innerHTML = mermaidCode;
+			mermaidContainer.textContent = mermaidCode;
 
 			// 元のcode.language-mermaid要素をdiv.mermaidに置き換える
 			element.replaceWith(mermaidContainer);

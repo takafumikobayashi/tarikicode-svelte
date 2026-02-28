@@ -38,7 +38,13 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 			/<pre><code[^>]*class=["'][^"']*mermaid[^"']*["'][^>]*>([\s\S]*?)<\/code><\/pre>/g;
 		const htmlForSanitize = parsedHtml.replace(mermaidRegex, (_match, codeContent: string) => {
 			// HTMLタグを除去してテキストコンテンツのみ保持（サニタイズバイパス防止）
-			const safeCode = codeContent.replace(/<[^>]*>/g, '');
+			// ネストされたタグによるバイパスを防ぐため、マッチがなくなるまで繰り返す
+			let safeCode = codeContent;
+			let prev: string;
+			do {
+				prev = safeCode;
+				safeCode = safeCode.replace(/<[^>]*>/g, '');
+			} while (safeCode !== prev);
 			mermaidBlocks.push(safeCode);
 			return `__MERMAID_BLOCK_${mermaidBlocks.length - 1}__`;
 		});
