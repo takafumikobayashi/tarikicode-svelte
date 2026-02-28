@@ -46,3 +46,7 @@ vite.config.ts.timestamp-*
 
 # Claude Code personal settings
 .claude/settings.local.json
+
+# Local papers for paper-to-blog (PDFs are not committed)
+/papers/*.pdf
+/papers/*.PDF
