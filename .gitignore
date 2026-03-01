@@ -50,3 +50,5 @@ vite.config.ts.timestamp-*
 # Local papers for paper-to-blog (PDFs are not committed)
 /papers/*.pdf
 /papers/*.PDF
+/papers/done/*.pdf
+/papers/done/*.PDF
