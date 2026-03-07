@@ -146,6 +146,11 @@
 			const url = card.getAttribute('data-url');
 			if (!url) return;
 
+			const fallbackImage = card.getAttribute('data-fallback-image') || '';
+			const fallbackTitle = card.getAttribute('data-fallback-title') || '';
+			const fallbackDesc = card.getAttribute('data-fallback-desc') || '';
+			const fallbackSite = card.getAttribute('data-fallback-site') || '';
+
 			// 読み込み中表示
 			card.innerHTML = '<div class="ogp-loading">読み込み中...</div>';
 
@@ -156,13 +161,13 @@
 				const ogpData = await response.json();
 
 				// OGPカードのHTMLを生成（XSS対策：全フィールドをエスケープ）
-				const safeTitle = escapeHtml(ogpData.title || '');
-				const safeDesc = ogpData.description ? escapeHtml(ogpData.description) : '';
-				const safeSite = ogpData.siteName ? escapeHtml(ogpData.siteName) : '';
-				const safeImage =
-					ogpData.image && /^https?:\/\//.test(ogpData.image)
-						? escapeHtml(ogpData.image)
-						: '';
+				// APIの値が空の場合はフォールバック値を使用
+				const apiImage =
+					ogpData.image && /^https?:\/\//.test(ogpData.image) ? ogpData.image : '';
+				const safeImage = escapeHtml(apiImage || fallbackImage);
+				const safeTitle = escapeHtml(ogpData.title || fallbackTitle || '');
+				const safeDesc = escapeHtml(ogpData.description || fallbackDesc || '');
+				const safeSite = escapeHtml(ogpData.siteName || fallbackSite || '');
 
 				card.innerHTML = `
 					<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="ogp-link-card">
@@ -179,7 +184,29 @@
 			} catch (error) {
 				console.error('Error loading OGP card:', error);
 				const safeUrl = escapeHtml(url);
-				card.innerHTML = `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="ogp-error-link">${safeUrl}</a>`;
+				const safeFallbackImage =
+					fallbackImage && /^https?:\/\//.test(fallbackImage)
+						? escapeHtml(fallbackImage)
+						: '';
+				const safeFallbackTitle = escapeHtml(fallbackTitle || url);
+				const safeFallbackDesc = escapeHtml(fallbackDesc);
+				const safeFallbackSite = escapeHtml(fallbackSite);
+				if (safeFallbackImage || fallbackTitle) {
+					card.innerHTML = `
+						<a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="ogp-link-card">
+							<div class="ogp-card-wrapper">
+								${safeFallbackImage ? `<div class="ogp-card-image"><img src="${safeFallbackImage}" alt="${safeFallbackTitle}" /></div>` : ''}
+								<div class="ogp-card-text">
+									<h3 class="ogp-card-title">${safeFallbackTitle}</h3>
+									${safeFallbackDesc ? `<p class="ogp-card-description">${safeFallbackDesc}</p>` : ''}
+									${safeFallbackSite ? `<p class="ogp-card-site">${safeFallbackSite}</p>` : ''}
+								</div>
+							</div>
+						</a>
+					`;
+				} else {
+					card.innerHTML = `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="ogp-error-link">${safeUrl}</a>`;
+				}
 			}
 		});
 

@@ -86,10 +86,18 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 
 			// OGPカード記法を事前変換（marked処理前に置き換え）
 			const processedContent = content.replace(
-				/\[\[ogp:(https?:\/\/[^\]]+)\]\]/g,
-				(match, url) => {
-					// HTMLコメントで囲んでmarkedが処理しないようにする
-					return `\n\n<ogp-card data-url="${url}"></ogp-card>\n\n`;
+				// 構文: [[ogp:URL|画像|タイトル|説明|サイト名]] （各フィールドは省略可、空欄は||で飛ばす）
+				/\[\[ogp:(https?:\/\/[^\]|]+)(?:\|([^\]|]*))?(?:\|([^\]|]*))?(?:\|([^\]|]*))?(?:\|([^\]|]*))?\]\]/g,
+				(match, url, fallbackImage, fallbackTitle, fallbackDesc, fallbackSite) => {
+					const imageAttr = fallbackImage
+						? ` data-fallback-image="${fallbackImage}"`
+						: '';
+					const titleAttr = fallbackTitle
+						? ` data-fallback-title="${fallbackTitle}"`
+						: '';
+					const descAttr = fallbackDesc ? ` data-fallback-desc="${fallbackDesc}"` : '';
+					const siteAttr = fallbackSite ? ` data-fallback-site="${fallbackSite}"` : '';
+					return `\n\n<ogp-card data-url="${url}"${imageAttr}${titleAttr}${descAttr}${siteAttr}></ogp-card>\n\n`;
 				}
 			);
 
@@ -176,6 +184,10 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 					'frameborder',
 					'scrolling',
 					'data-url',
+					'data-fallback-image',
+					'data-fallback-title',
+					'data-fallback-desc',
+					'data-fallback-site',
 					'data-media-max-width', // Twitter widget
 					'charset',
 					'async',

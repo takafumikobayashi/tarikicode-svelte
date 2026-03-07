@@ -50,14 +50,17 @@ export const GET: RequestHandler = async ({ url }) => {
 			// 検出した文字エンコーディングでデコード
 			const html = iconv.decode(Buffer.from(uint8Array), charset);
 
-			// OGPメタタグを抽出
+			// OGPメタタグを抽出（HTMLエンティティをデコードして返す）
 			const ogpData = {
-				title: extractOgpTag(html, 'og:title') || extractTag(html, 'title'),
-				description:
-					extractOgpTag(html, 'og:description') || extractMetaTag(html, 'description'),
-				image: extractOgpTag(html, 'og:image'),
-				siteName: extractOgpTag(html, 'og:site_name'),
-				url: extractOgpTag(html, 'og:url') || finalUrl.toString()
+				title: decodeHtmlEntities(
+					extractOgpTag(html, 'og:title') || extractTag(html, 'title')
+				),
+				description: decodeHtmlEntities(
+					extractOgpTag(html, 'og:description') || extractMetaTag(html, 'description')
+				),
+				image: decodeHtmlEntities(extractOgpTag(html, 'og:image')),
+				siteName: decodeHtmlEntities(extractOgpTag(html, 'og:site_name')),
+				url: decodeHtmlEntities(extractOgpTag(html, 'og:url') || finalUrl.toString())
 			};
 
 			// キャッシュヘッダーを設定（開発中はキャッシュ無効、本番は24時間）
@@ -330,6 +333,17 @@ function isForbiddenIp(address: string): boolean {
 	}
 
 	return false;
+}
+
+// HTMLエンティティをデコードするヘルパー関数
+function decodeHtmlEntities(str: string): string {
+	return str
+		.replace(/&amp;/g, '&')
+		.replace(/&lt;/g, '<')
+		.replace(/&gt;/g, '>')
+		.replace(/&quot;/g, '"')
+		.replace(/&#39;/g, "'")
+		.replace(/&apos;/g, "'");
 }
 
 // OGPタグを抽出するヘルパー関数（property="og:xxx" と name="og:xxx"両方に対応）

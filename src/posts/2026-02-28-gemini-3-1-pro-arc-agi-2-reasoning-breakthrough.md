@@ -125,4 +125,4 @@ AIの「最も良いモデルはどれか？」という問いに対して、202
 
 [[ogp:https://www.marktechpost.com/2026/02/19/google-ai-releases-gemini-3-1-pro-with-1-million-token-context-and-77-1-percent-arc-agi-2-reasoning-for-ai-agents/]]
 
-[[ogp:https://www.datacamp.com/blog/gemini-3-1]]
+[[ogp:https://www.datacamp.com/blog/gemini-3-1|https://media.datacamp.com/legacy/DC_New_mugdv8.png|Gemini 3.1: Features, Benchmarks, Hands-On Tests, and More|Gemini 3.1 Pro doubles reasoning performance with 77.1% on ARC-AGI-2. Explore features, benchmarks, tests, and how it compares to Claude models.|@DataCamp]]
