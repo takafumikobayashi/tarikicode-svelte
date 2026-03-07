@@ -6,6 +6,15 @@ import { createHeadingIdGenerator } from '$lib/utils/headingIds';
 import { Window } from 'happy-dom';
 import DOMPurify from 'dompurify';
 
+// HTML属性値をエスケープするヘルパー（ogp-card属性の二重引用符破壊を防ぐ）
+function escapeAttr(value: string): string {
+	return value
+		.replace(/&/g, '&amp;')
+		.replace(/"/g, '&quot;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;');
+}
+
 // Markdownファイルをビルド時にバンドルするためにimport.meta.globを使用
 const posts = import.meta.glob('/src/posts/**/*.md', {
 	query: '?raw',
@@ -90,14 +99,18 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 				/\[\[ogp:(https?:\/\/[^\]|]+)(?:\|([^\]|]*))?(?:\|([^\]|]*))?(?:\|([^\]|]*))?(?:\|([^\]|]*))?\]\]/g,
 				(match, url, fallbackImage, fallbackTitle, fallbackDesc, fallbackSite) => {
 					const imageAttr = fallbackImage
-						? ` data-fallback-image="${fallbackImage}"`
+						? ` data-fallback-image="${escapeAttr(fallbackImage)}"`
 						: '';
 					const titleAttr = fallbackTitle
-						? ` data-fallback-title="${fallbackTitle}"`
+						? ` data-fallback-title="${escapeAttr(fallbackTitle)}"`
 						: '';
-					const descAttr = fallbackDesc ? ` data-fallback-desc="${fallbackDesc}"` : '';
-					const siteAttr = fallbackSite ? ` data-fallback-site="${fallbackSite}"` : '';
-					return `\n\n<ogp-card data-url="${url}"${imageAttr}${titleAttr}${descAttr}${siteAttr}></ogp-card>\n\n`;
+					const descAttr = fallbackDesc
+						? ` data-fallback-desc="${escapeAttr(fallbackDesc)}"`
+						: '';
+					const siteAttr = fallbackSite
+						? ` data-fallback-site="${escapeAttr(fallbackSite)}"`
+						: '';
+					return `\n\n<ogp-card data-url="${escapeAttr(url)}"${imageAttr}${titleAttr}${descAttr}${siteAttr}></ogp-card>\n\n`;
 				}
 			);
 

@@ -38,6 +38,14 @@
 			.replace(/'/g, '&#x27;');
 	}
 
+	// ブラウザのDOM APIを使ってHTMLエンティティを安全にデコード
+	// APIから返されるOGP値（&amp; 等を含む）をテキストに戻す
+	function htmlDecode(str: string): string {
+		const el = document.createElement('textarea');
+		el.innerHTML = str;
+		return el.value;
+	}
+
 	function destroyChatGptGoMaps() {
 		if (!mapComponentInstances.length) {
 			return;
@@ -162,12 +170,13 @@
 
 				// OGPカードのHTMLを生成（XSS対策：全フィールドをエスケープ）
 				// APIの値が空の場合はフォールバック値を使用
-				const apiImage =
-					ogpData.image && /^https?:\/\//.test(ogpData.image) ? ogpData.image : '';
+				// htmlDecode: APIから返るHTMLエンティティ（&amp;等）をデコードしてからエスケープ
+				const rawImage = htmlDecode(ogpData.image || '');
+				const apiImage = rawImage && /^https?:\/\//.test(rawImage) ? rawImage : '';
 				const safeImage = escapeHtml(apiImage || fallbackImage);
-				const safeTitle = escapeHtml(ogpData.title || fallbackTitle || '');
-				const safeDesc = escapeHtml(ogpData.description || fallbackDesc || '');
-				const safeSite = escapeHtml(ogpData.siteName || fallbackSite || '');
+				const safeTitle = escapeHtml(htmlDecode(ogpData.title || '') || fallbackTitle || '');
+				const safeDesc = escapeHtml(htmlDecode(ogpData.description || '') || fallbackDesc || '');
+				const safeSite = escapeHtml(htmlDecode(ogpData.siteName || '') || fallbackSite || '');
 
 				card.innerHTML = `
 					<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="ogp-link-card">
