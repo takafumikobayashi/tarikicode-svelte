@@ -173,7 +173,9 @@
 				// htmlDecode: APIから返るHTMLエンティティ（&amp;等）をデコードしてからエスケープ
 				const rawImage = htmlDecode(ogpData.image || '');
 				const apiImage = rawImage && /^https?:\/\//.test(rawImage) ? rawImage : '';
-				const safeImage = escapeHtml(apiImage || fallbackImage);
+				const validFallbackImage =
+					fallbackImage && /^https?:\/\//.test(fallbackImage) ? fallbackImage : '';
+				const safeImage = escapeHtml(apiImage || validFallbackImage);
 				const safeTitle = escapeHtml(htmlDecode(ogpData.title || '') || fallbackTitle || '');
 				const safeDesc = escapeHtml(htmlDecode(ogpData.description || '') || fallbackDesc || '');
 				const safeSite = escapeHtml(htmlDecode(ogpData.siteName || '') || fallbackSite || '');
