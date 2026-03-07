@@ -6,6 +6,15 @@ import { createHeadingIdGenerator } from '$lib/utils/headingIds';
 import { Window } from 'happy-dom';
 import DOMPurify from 'dompurify';
 
+// HTML属性値をエスケープするヘルパー（ogp-card属性の二重引用符破壊を防ぐ）
+function escapeAttr(value: string): string {
+	return value
+		.replace(/&/g, '&amp;')
+		.replace(/"/g, '&quot;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;');
+}
+
 // Markdownファイルをビルド時にバンドルするためにimport.meta.globを使用
 const posts = import.meta.glob('/src/posts/**/*.md', {
 	query: '?raw',
@@ -86,10 +95,22 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 
 			// OGPカード記法を事前変換（marked処理前に置き換え）
 			const processedContent = content.replace(
-				/\[\[ogp:(https?:\/\/[^\]]+)\]\]/g,
-				(match, url) => {
-					// HTMLコメントで囲んでmarkedが処理しないようにする
-					return `\n\n<ogp-card data-url="${url}"></ogp-card>\n\n`;
+				// 構文: [[ogp:URL|画像|タイトル|説明|サイト名]] （各フィールドは省略可、空欄は||で飛ばす）
+				/\[\[ogp:(https?:\/\/[^\]|]+)(?:\|([^\]|]*))?(?:\|([^\]|]*))?(?:\|([^\]|]*))?(?:\|([^\]|]*))?\]\]/g,
+				(match, url, fallbackImage, fallbackTitle, fallbackDesc, fallbackSite) => {
+					const imageAttr = fallbackImage
+						? ` data-fallback-image="${escapeAttr(fallbackImage)}"`
+						: '';
+					const titleAttr = fallbackTitle
+						? ` data-fallback-title="${escapeAttr(fallbackTitle)}"`
+						: '';
+					const descAttr = fallbackDesc
+						? ` data-fallback-desc="${escapeAttr(fallbackDesc)}"`
+						: '';
+					const siteAttr = fallbackSite
+						? ` data-fallback-site="${escapeAttr(fallbackSite)}"`
+						: '';
+					return `\n\n<ogp-card data-url="${escapeAttr(url)}"${imageAttr}${titleAttr}${descAttr}${siteAttr}></ogp-card>\n\n`;
 				}
 			);
 
@@ -176,6 +197,10 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 					'frameborder',
 					'scrolling',
 					'data-url',
+					'data-fallback-image',
+					'data-fallback-title',
+					'data-fallback-desc',
+					'data-fallback-site',
 					'data-media-max-width', // Twitter widget
 					'charset',
 					'async',

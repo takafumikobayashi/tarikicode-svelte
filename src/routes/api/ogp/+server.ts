@@ -50,7 +50,7 @@ export const GET: RequestHandler = async ({ url }) => {
 			// 検出した文字エンコーディングでデコード
 			const html = iconv.decode(Buffer.from(uint8Array), charset);
 
-			// OGPメタタグを抽出
+			// OGPメタタグを抽出（エンティティデコードはクライアント側で実施）
 			const ogpData = {
 				title: extractOgpTag(html, 'og:title') || extractTag(html, 'title'),
 				description:
