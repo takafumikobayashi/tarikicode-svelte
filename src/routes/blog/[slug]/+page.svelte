@@ -176,9 +176,15 @@
 				const validFallbackImage =
 					fallbackImage && /^https?:\/\//.test(fallbackImage) ? fallbackImage : '';
 				const safeImage = escapeHtml(apiImage || validFallbackImage);
-				const safeTitle = escapeHtml(htmlDecode(ogpData.title || '') || fallbackTitle || '');
-				const safeDesc = escapeHtml(htmlDecode(ogpData.description || '') || fallbackDesc || '');
-				const safeSite = escapeHtml(htmlDecode(ogpData.siteName || '') || fallbackSite || '');
+				const safeTitle = escapeHtml(
+					htmlDecode(ogpData.title || '') || fallbackTitle || ''
+				);
+				const safeDesc = escapeHtml(
+					htmlDecode(ogpData.description || '') || fallbackDesc || ''
+				);
+				const safeSite = escapeHtml(
+					htmlDecode(ogpData.siteName || '') || fallbackSite || ''
+				);
 
 				card.innerHTML = `
 					<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="ogp-link-card">
