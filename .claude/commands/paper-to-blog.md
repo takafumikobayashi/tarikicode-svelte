@@ -4,7 +4,7 @@
 
 ## 使い方
 
-```
+```text
 /paper-to-blog papers/your-paper.pdf
 ```
 
@@ -174,7 +174,7 @@ type: 'blog'
 
 ### Step 6: 保存
 
-```
+```text
 src/posts/YYYY-MM-DD-{slug}.md
 ```
 
