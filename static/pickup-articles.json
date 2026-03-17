@@ -11,10 +11,14 @@
 			"site": "経済産業省（METI）"
 		},
 		{
-			"url": "https://github.com/googleworkspace/cli"
+			"url": "https://www.publickey1.jp/blog/26/javascriptvite.html"
 		},
 		{
-			"url": "https://claude.com/community/ambassadors"
+			"url": "https://openai.com/ja-JP/index/rakuten/",
+			"image": "https://images.ctfassets.net/kftzwdyauwt9/3PSiVDH1PKd0544F7v5oOy/acba6baa055d87310e4665d76e83a269/oai_Rakuten_SEO.png",
+			"title": "Rakuten fixes issues twice as fast with Codex",
+			"description": "Rakuten uses Codex, the coding agent from OpenAI, to ship software faster and safer, reducing MTTR 50%, automating CI/CD reviews, and delivering full-stack builds in weeks.",
+			"site": "@OpenAI"
 		}
 	]
 }
