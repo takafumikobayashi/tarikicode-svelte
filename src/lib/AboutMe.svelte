@@ -24,12 +24,12 @@
 				<p>{AppConfig.author}</p>
 			</div>
 			<div class="mdc-typography--body1">
-				他力code代表<br />
-				超最新AI News&Tips, Microsoft, Node.js関連情報等を毎日発信<br />
-				某中央官庁にてDX担当する傍ら、副業でVibe Coding開発と支援<br />
-				ex.携帯電話大手、暗号資産スタートアップ、客員講師（地方国立高専）<br />
-				ITストラテジスト / プロジェクトマネージャー<br />
-				ネコ派、激辛好き、いつも白Tに黒パン
+				Xで超最新AI Newsを毎日発信<br />
+				経産省にてDX＆行政手続プロダクト担当+副業でAIとVibe Cordingを活用したNPOデジタル化支援<br />
+				ex.携帯キャリアでエンジニアリングマネージャー・暗号資産プロジェクトマネージャー・国立高専臨時講師<br />
+				Claue Code & Codex・TypeScript・ITストラテジスト<br />
+				ネコ派・いつも白T黒パン・激辛は毎週摂取<br />
+				2026年4月から広島県安芸高田市と東京の二拠点生活<br />
 			</div>
 			{#if linkon}
 				<div class="demo-cell-left">

@@ -4,21 +4,16 @@
 			"url": "https://prtimes.jp/main/html/rd/p/000000039.000150655.html"
 		},
 		{
-			"url": "https://www.meti.go.jp/policy/digital_transformation/recruit/interview/interview05/",
-			"image": "https://www.meti.go.jp/policy/digital_transformation/asset/renewal_2024/images/page/recruit/interview/interview05-hero.jpg",
-			"title": "DX室採用情報職員インタビュー小林 崇文（METI/経済産業省）",
-			"description": "DXは技術提供だけではない。人と組織の変容を創り出す仕事──経済産業省DX室のデジタル化推進マネージャー（プロジェクトマネージャー）小林 崇文さんの職員インタビュー。",
-			"site": "経済産業省（METI）"
+			"url": "https://openai.com/ja-JP/index/introducing-gpt-5-4-mini-and-nano/",
+			"title": "GPT-5.4 mini と nano が登場",
+			"image": "https://images.ctfassets.net/kftzwdyauwt9/6EnJZAuVLIIArGkpgWz9Mh/92ab6109d7f17ca20ebc70e830294c66/5.4_Mini_Nano_Hero___SEO.png",
+			"description": "GPT-5.4 mini と nano は、コーディング、ツール利用、マルチモーダル推論、高負荷の API 処理やサブエージェントのワークロード向けに最適化された、GPT-5.4 のより小型で高速なバージョンです。"
 		},
 		{
-			"url": "https://www.publickey1.jp/blog/26/javascriptvite.html"
+			"url": "https://nextjs.org/blog/next-16-2"
 		},
 		{
-			"url": "https://openai.com/ja-JP/index/rakuten/",
-			"image": "https://images.ctfassets.net/kftzwdyauwt9/3PSiVDH1PKd0544F7v5oOy/acba6baa055d87310e4665d76e83a269/oai_Rakuten_SEO.png",
-			"title": "Rakuten fixes issues twice as fast with Codex",
-			"description": "Rakuten uses Codex, the coding agent from OpenAI, to ship software faster and safer, reducing MTTR 50%, automating CI/CD reviews, and delivering full-stack builds in weeks.",
-			"site": "@OpenAI"
+			"url": "https://claude.com/code-with-claude"
 		}
 	]
 }
