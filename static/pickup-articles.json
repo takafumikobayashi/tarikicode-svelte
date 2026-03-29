@@ -4,13 +4,10 @@
 			"url": "https://prtimes.jp/main/html/rd/p/000000039.000150655.html"
 		},
 		{
-			"url": "https://openai.com/ja-JP/index/introducing-gpt-5-4-mini-and-nano/",
-			"title": "GPT-5.4 mini と nano が登場",
-			"image": "https://images.ctfassets.net/kftzwdyauwt9/6EnJZAuVLIIArGkpgWz9Mh/92ab6109d7f17ca20ebc70e830294c66/5.4_Mini_Nano_Hero___SEO.png",
-			"description": "GPT-5.4 mini と nano は、コーディング、ツール利用、マルチモーダル推論、高負荷の API 処理やサブエージェントのワークロード向けに最適化された、GPT-5.4 のより小型で高速なバージョンです。"
+			"url": "https://techcrunch.com/podcast/vcs-are-betting-billions-on-ais-next-wave-so-why-is-openai-killing-sora/"
 		},
 		{
-			"url": "https://nextjs.org/blog/next-16-2"
+			"url": "https://www.businessinsider.jp/article/2603-anthropic-report-ai-gap-experience/"
 		},
 		{
 			"url": "https://claude.com/code-with-claude"
