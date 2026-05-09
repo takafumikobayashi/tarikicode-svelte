@@ -26,11 +26,11 @@
 			<div class="mdc-typography--body1">
 				Xで超最新AI Newsを毎日発信<br />
 				民間企業でのエンジニアリング経験を活かし、2023年より行政DXに従事<br />
-				AIとClaudeCode等を活用したVibeCording支援・NPO支援等<br />
-				ex.某政府機関・携帯キャリアでエンジニアリングマネージャー・暗号資産プロジェクトマネージャー・国立高専臨時講師<br
+				AIとClaudeCode等を活用したVibeCording支援・NPO伴走支援等<br />
+				ex.某政府機関・携帯キャリア・暗号資産スタートアップでマネージャー・国立高専臨時講師<br
 				/>
 				Claue Code & Codex・TypeScript・ITストラテジスト<br />
-				ネコ派・いつも白T黒パン・激辛は毎週摂取<br />
+				ネコ派・いつも感ジャケ感パン・激辛毎週摂取<br />
 				2026年4月から広島県安芸高田市と東京の二拠点生活<br />
 			</div>
 			{#if linkon}
