@@ -7,8 +7,16 @@
 
 	const careerHistory = [
 		{
+			year: '2026',
+			period: '2026 - Present',
+			company: '広島県庁',
+			department: '安芸高田市',
+			role: 'CIO補佐官 / Deputy General Manager',
+			highlights: ['行政DXにおける専門的知見からのデシジョンや助言','DX人材育成に関する計画実行']
+		},
+		{
 			year: '2023',
-			period: '2023 - Present',
+			period: '2023 - 2026',
 			company: '経済産業省',
 			department: '大臣官房デジタルトランスフォーメーション室',
 			role: 'Product Manager / Community Manager / IT Strategist',
