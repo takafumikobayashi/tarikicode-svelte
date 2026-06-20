@@ -113,5 +113,3 @@ GLM-5.2の要点を整理します。
 [[ogp:https://www.techtimes.com/articles/318543/20260617/glm-52-open-weights-live-top-coding-benchmark-api-use-carries-china-data-risk.htm]]
 
 [[ogp:https://www.edenai.co/post/glm-5-2-benchmark-vs-gpt-5-5-claude-opus-4-8-and-gemini-3-1-pro]]
-</parameter>
-</invoke>
