@@ -3,7 +3,7 @@ title: 'Research Insight | ChatGPTは「先進国男性のツール」ではな�
 date: '2026-07-04'
 category: '論文解説'
 tags: ['Research Insight', 'ChatGPT', 'OpenAI', 'AI普及', 'データ分析']
-description: 'OpenAIが2026年6月30日に公開したSignalsデータ分析によると、ChatGPTの成長を牽引しているのはアフリカ・アジアの低所得国と、ブラジルやナミビアなど一部地域における女性名ユーザーの利用量だった。一次データで実態を検証する。'
+description: 'OpenAIが2026年6月30日に公開したSignalsデータ分析によると、ChatGPTの成長を牽引しているのはアフリカ・アジアの低HDI国と、ブラジルやナミビアなど一部地域における女性名ユーザーの利用量だった。一次データで実態を検証する。'
 image: 'https://images.ctfassets.net/kftzwdyauwt9/5y44AZTbCFtUgl7wH7dFaI/c6f728dc935eb3790767c84b0360a954/signals_data_share_image.png'
 featured: false
 type: 'blog'
