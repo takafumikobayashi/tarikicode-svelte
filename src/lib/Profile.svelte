@@ -12,7 +12,10 @@
 			company: '広島県庁',
 			department: '安芸高田市',
 			role: 'CIO補佐官 / Deputy General Manager',
-			highlights: ['行政DXにおける専門的知見からのデシジョンや助言','DX人材育成に関する計画実行']
+			highlights: [
+				'行政DXにおける専門的知見からのデシジョンや助言',
+				'DX人材育成に関する計画実行'
+			]
 		},
 		{
 			year: '2023',

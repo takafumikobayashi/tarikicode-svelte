@@ -92,10 +92,10 @@ flowchart LR
 
 OSS公開と聞くと「外部からのコード貢献を歓迎している」と読みがちですが、**源内のリポジトリ（`genai-ai-api` / `genai-web`）はその想定ではありません**。両リポジトリの README には以下の方針が明記されています：
 
-| 種別 | 受付 |
-|---|---|
+| 種別                            | 受付        |
+| ------------------------------- | ----------- |
 | **Issue（致命的な問題の報告）** | ✅ 受付あり |
-| **Pull Request（コード貢献）** | ❌ 受付なし |
+| **Pull Request（コード貢献）**  | ❌ 受付なし |
 
 つまり、**OSS公開の主目的は「参照実装としての共有」**（フォーク・改変・自社運用は自由）であり、本家リポジトリへの直接的な開発参加は想定されていません。重要なバグ・セキュリティ問題を見つけた場合は Issue で報告できますが、修正コードを送ってのマージは受け付けない、という政府OSSとしては慎重な運用方針です。
 
@@ -194,10 +194,10 @@ AWS界隈で先行している `aws-samples/generative-ai-use-cases-jp`（GenU�
 
 源内をAWS環境にデプロイする場合、**2つの異なるパス** があり、必要なリソース・前提条件・運用負荷が大きく異なります。本記事では両方を扱いますが、読者の用途に応じて該当章だけを読めば充分です。
 
-| パス | 対象リポジトリ | 概要 | 規模感 | 推奨ユースケース |
-|---|---|---|---|---|
-| **Path A** | `genai-ai-api/aws/query-expansion-rag` | クエリ拡張型RAG **APIを単体デプロイ** | 軽量（API Gateway + Lambda + Bedrock KB） | 既存システムから REST API でRAGを呼び出したい場合 |
-| **Path B** | `genai-web`（self-hosting-dev 構成） | 源内Web UIごと **まるごとセルフホスティング** | 重量（CloudFront + Cognito + 254/487リソース、約20分） | 政府職員向けと同等のWeb UIを社内で再現したい場合 |
+| パス       | 対象リポジトリ                         | 概要                                          | 規模感                                                 | 推奨ユースケース                                  |
+| ---------- | -------------------------------------- | --------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------- |
+| **Path A** | `genai-ai-api/aws/query-expansion-rag` | クエリ拡張型RAG **APIを単体デプロイ**         | 軽量（API Gateway + Lambda + Bedrock KB）              | 既存システムから REST API でRAGを呼び出したい場合 |
+| **Path B** | `genai-web`（self-hosting-dev 構成）   | 源内Web UIごと **まるごとセルフホスティング** | 重量（CloudFront + Cognito + 254/487リソース、約20分） | 政府職員向けと同等のWeb UIを社内で再現したい場合  |
 
 > **要注意**：CloudFront用WAF（us-east-1 bootstrap必須）や `add-system-admin.sh` などの追加セットアップは **Path B のみ** に該当します。Path A 単体利用には **不要** です。
 
@@ -209,15 +209,15 @@ AWS界隈で先行している `aws-samples/generative-ai-use-cases-jp`（GenU�
 
 #### 7.1 前提条件
 
-| 項目          | 内容                                                                                                  |
-| ------------- | ----------------------------------------------------------------------------------------------------- |
-| AWS CLI       | 設定済み（プロファイル）                                                                              |
-| Node.js       | v22.x 以上                                                                                            |
-| AWS CDK       | インストール済み                                                                                      |
-| 必要IAM権限   | CloudFormation / Lambda / API Gateway / Bedrock / OpenSearch Serverless / KMS / S3 / CloudWatch       |
-| リージョン    | Bedrock Knowledge Base対応リージョン（例：`us-east-1`、`us-west-2`、`ap-northeast-1`）                |
-| Bedrockモデル | 利用予定モデル（`anthropic.claude-3-5-sonnet-20240620-v1:0` 等）の有効化必須                          |
-| WAF           | **必須ではない**。`parameter.ts` で `allowedIpV4AddressRanges` を設定する場合にのみ追加で必要となる   |
+| 項目          | 内容                                                                                                |
+| ------------- | --------------------------------------------------------------------------------------------------- |
+| AWS CLI       | 設定済み（プロファイル）                                                                            |
+| Node.js       | v22.x 以上                                                                                          |
+| AWS CDK       | インストール済み                                                                                    |
+| 必要IAM権限   | CloudFormation / Lambda / API Gateway / Bedrock / OpenSearch Serverless / KMS / S3 / CloudWatch     |
+| リージョン    | Bedrock Knowledge Base対応リージョン（例：`us-east-1`、`us-west-2`、`ap-northeast-1`）              |
+| Bedrockモデル | 利用予定モデル（`anthropic.claude-3-5-sonnet-20240620-v1:0` 等）の有効化必須                        |
+| WAF           | **必須ではない**。`parameter.ts` で `allowedIpV4AddressRanges` を設定する場合にのみ追加で必要となる |
 
 > **補足**：上表のうち **「必要IAM権限」「リージョン」「Bedrockモデル有効化」** は、`query-expansion-rag` の README 自体にここまで明示的な列挙はありません。本表は、**スタック構成（CDKコード）と AWS Bedrock / Knowledge Base の一般要件から実運用上必要となる項目を補完したもの** です。AWSの仕様変更に追随する必要があるため、本格デプロイ前には公式ドキュメント（[Bedrock対応リージョン一覧](https://docs.aws.amazon.com/bedrock/) ／ [Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html)）を併せてご確認ください。
 
