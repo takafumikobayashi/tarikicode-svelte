@@ -34,12 +34,15 @@ export const GET: RequestHandler = async ({ url }) => {
 				throw new Error(`Failed to fetch: ${response.status}`);
 			}
 
-			const contentLengthHeader = response.headers.get('content-length');
-			if (contentLengthHeader && Number(contentLengthHeader) > MAX_RESPONSE_BYTES) {
-				throw new Error('Response too large');
+			// HTML以外（PDF・画像・動画など）はOGPタグを持たないため、本文を読まずに離脱する
+			const contentType = response.headers.get('content-type') ?? '';
+			const mimeType = contentType.split(';')[0].trim().toLowerCase();
+			if (mimeType && !['text/html', 'application/xhtml+xml'].includes(mimeType)) {
+				throw new InvalidRequestError(`Unsupported content type: ${mimeType}`);
 			}
 
-			// ストリームでデータを取得し、サイズ制限を超えたら中断する
+			// OGPメタタグは <head> にあるため、先頭の一定量だけ読めば足りる。
+			// 上限を超えた場合はエラーにせず、そこまでの内容で解析する
 			const uint8Array = await readBodyWithLimit(response, MAX_RESPONSE_BYTES);
 
 			// HTMLから文字エンコーディングを検出
@@ -119,10 +122,11 @@ async function readBodyWithLimit(response: Response, limit: number): Promise<Uin
 				chunks.push(value);
 				receivedLength += value.length;
 
-				if (receivedLength > limit) {
-					// ストリームをキャンセルして中断
-					await reader.cancel('Response too large');
-					throw new Error('Response too large');
+				if (receivedLength >= limit) {
+					// 上限に達したら以降は読まない。
+					// OGPタグは <head> にあるため、先頭部分だけで解析できる
+					await reader.cancel('Reached size limit');
+					break;
 				}
 			}
 		}
@@ -165,6 +169,15 @@ async function fetchWithValidation(
 
 		const cleanup = async () => {
 			clearTimeout(timeoutId);
+			// 未読のbodyが残ったままagent.close()するとリクエスト完了待ちで解決しなくなる。
+			// サイズ超過などで途中離脱した場合に備え、ロックされていなければ先にcancelする
+			try {
+				if (response?.body && !response.body.locked) {
+					await response.body.cancel();
+				}
+			} catch {
+				/* ignore */
+			}
 			await agent.close();
 		};
 

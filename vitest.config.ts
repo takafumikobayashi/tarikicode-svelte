@@ -24,6 +24,9 @@ export default defineConfig({
 		}
 	},
 	resolve: {
+		// テスト時はブラウザ版のSvelteを解決する。
+		// これがないとSSRビルドが使われ、onMount等のライフサイクルが発火しない
+		conditions: process.env.VITEST ? ['browser'] : [],
 		alias: {
 			$lib: path.resolve(__dirname, './src/lib'),
 			$app: path.resolve(__dirname, './.svelte-kit/runtime/app')
