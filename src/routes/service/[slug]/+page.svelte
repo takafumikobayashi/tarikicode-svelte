@@ -1,25 +1,18 @@
 <script lang="ts">
-	import { onMount, afterUpdate } from 'svelte';
+	import { onMount, onDestroy, afterUpdate } from 'svelte';
 	import mermaid from 'mermaid';
 	import Header from '$lib/Header.svelte';
 	import Footer from '$lib/Footer.svelte';
 	import { AppConfig } from '$lib/AppConfig';
 	import { lightThemeStore } from '$lib/themeStore';
 	import { page } from '$app/stores';
+	import OgpCard from '$lib/OgpCard.svelte';
+	import type { SvelteComponent } from 'svelte';
 
 	export let data;
 
 	let isLightTheme = true;
 	$: isLightTheme = $lightThemeStore;
-
-	function escapeHtml(str: string): string {
-		return str
-			.replace(/&/g, '&amp;')
-			.replace(/</g, '&lt;')
-			.replace(/>/g, '&gt;')
-			.replace(/"/g, '&quot;')
-			.replace(/'/g, '&#x27;');
-	}
 
 	let lastProcessedSlug = '';
 
@@ -39,44 +32,40 @@
 		}
 	}
 
+	let ogpCardInstances: SvelteComponent[] = [];
+
+	function destroyOgpCards() {
+		if (!ogpCardInstances.length) {
+			return;
+		}
+
+		ogpCardInstances.forEach((instance) => {
+			instance.$destroy();
+		});
+		ogpCardInstances = [];
+	}
+
+	// 本文中の <ogp-card> プレースホルダに OgpCard をマウントする。
+	// 本文は {@html} で描画されるためコンポーネントを宣言的に書けない
 	function processOgpCards() {
-		const ogpCards = document.querySelectorAll('ogp-card');
-		ogpCards.forEach(async (card) => {
+		destroyOgpCards();
+
+		document.querySelectorAll('ogp-card').forEach((card) => {
 			const url = card.getAttribute('data-url');
 			if (!url) return;
 
-			card.innerHTML = '<div class="ogp-loading">読み込み中...</div>';
-
-			try {
-				const response = await fetch(`/api/ogp?url=${encodeURIComponent(url)}`);
-				if (!response.ok) throw new Error('Failed to fetch OGP data');
-
-				const ogpData = await response.json();
-
-				const safeTitle = escapeHtml(ogpData.title || '');
-				const safeDesc = ogpData.description ? escapeHtml(ogpData.description) : '';
-				const safeSite = ogpData.siteName ? escapeHtml(ogpData.siteName) : '';
-				const safeImage =
-					ogpData.image && /^https?:\/\//.test(ogpData.image)
-						? escapeHtml(ogpData.image)
-						: '';
-
-				card.innerHTML = `
-					<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="ogp-link-card">
-						<div class="ogp-card-wrapper">
-							${safeImage ? `<div class="ogp-card-image"><img src="${safeImage}" alt="${safeTitle}" /></div>` : ''}
-							<div class="ogp-card-text">
-								<h3 class="ogp-card-title">${safeTitle || escapeHtml(url)}</h3>
-								${safeDesc ? `<p class="ogp-card-description">${safeDesc}</p>` : ''}
-								${safeSite ? `<p class="ogp-card-site">${safeSite}</p>` : ''}
-							</div>
-						</div>
-					</a>
-				`;
-			} catch {
-				const safeUrl = escapeHtml(url);
-				card.innerHTML = `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="ogp-error-link">${safeUrl}</a>`;
-			}
+			card.innerHTML = '';
+			const instance = new OgpCard({
+				target: card as HTMLElement,
+				props: {
+					url,
+					fallbackImage: card.getAttribute('data-fallback-image') ?? '',
+					fallbackTitle: card.getAttribute('data-fallback-title') ?? '',
+					fallbackDesc: card.getAttribute('data-fallback-desc') ?? '',
+					fallbackSite: card.getAttribute('data-fallback-site') ?? ''
+				}
+			});
+			ogpCardInstances.push(instance);
 		});
 	}
 
@@ -94,6 +83,11 @@
 			await processMermaid();
 			processOgpCards();
 		}
+	});
+
+	// imperativeに作成したOGPカードを破棄（メモリリークと、進行中fetch/タイマーの残留を防ぐ）
+	onDestroy(() => {
+		destroyOgpCards();
 	});
 </script>
 

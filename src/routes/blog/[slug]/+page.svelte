@@ -10,6 +10,7 @@
 	import hljs from 'highlight.js';
 	import mermaid from 'mermaid';
 	import ChatGptGoMap from '$lib/ChatGptGoMap.svelte';
+	import OgpCard from '$lib/OgpCard.svelte';
 	import type { SvelteComponent } from 'svelte';
 	import { lightThemeStore } from '$lib/themeStore';
 
@@ -22,6 +23,7 @@
 
 	// imperativeに作成したコンポーネントインスタンスを保存（メモリリーク防止）
 	let mapComponentInstances: SvelteComponent[] = [];
+	let lastOgpHydratedSlug: string | null = null;
 	let lastHydratedSlug: string | null = null;
 	let mapHydrationPromise: Promise<void> | null = null;
 
@@ -29,21 +31,60 @@
 	let isLightTheme = true;
 	let unsubscribeTheme: (() => void) | null = null;
 
-	function escapeHtml(str: string): string {
-		return str
-			.replace(/&/g, '&amp;')
-			.replace(/</g, '&lt;')
-			.replace(/>/g, '&gt;')
-			.replace(/"/g, '&quot;')
-			.replace(/'/g, '&#x27;');
+	let ogpCardInstances: SvelteComponent[] = [];
+	// ハイドレーション中の再入を防ぐフラグ（詳細は hydrateOgpCards のコメント参照）
+	let hydratingOgpCards = false;
+
+	function destroyOgpCards() {
+		if (!ogpCardInstances.length) {
+			return;
+		}
+
+		ogpCardInstances.forEach((instance) => {
+			instance.$destroy();
+		});
+		ogpCardInstances = [];
 	}
 
-	// ブラウザのDOM APIを使ってHTMLエンティティを安全にデコード
-	// APIから返されるOGP値（&amp; 等を含む）をテキストに戻す
-	function htmlDecode(str: string): string {
-		const el = document.createElement('textarea');
-		el.innerHTML = str;
-		return el.value;
+	// 本文中の <ogp-card> プレースホルダに OgpCard をマウントする。
+	// 記事本文は {@html} で描画されるためコンポーネントを宣言的に書けず、
+	// 描画後にimperativeへ差し込む必要がある
+	function hydrateOgpCards() {
+		// new OgpCard() は内部で flush() を走らせ、その中で当ページの afterUpdate が再入する。
+		// 処理済みスラッグの更新をマウント後にすると、再入時に未更新のまま再ハイドレーションが
+		// 走って無限ループになるため、フラグとスラッグを先に更新しておく
+		if (hydratingOgpCards) {
+			return;
+		}
+		hydratingOgpCards = true;
+		lastOgpHydratedSlug = post_string ?? null;
+
+		try {
+			destroyOgpCards();
+			mountOgpCards();
+		} finally {
+			hydratingOgpCards = false;
+		}
+	}
+
+	function mountOgpCards() {
+		document.querySelectorAll('ogp-card').forEach((card) => {
+			const url = card.getAttribute('data-url');
+			if (!url) return;
+
+			card.innerHTML = '';
+			const instance = new OgpCard({
+				target: card as HTMLElement,
+				props: {
+					url,
+					fallbackImage: card.getAttribute('data-fallback-image') ?? '',
+					fallbackTitle: card.getAttribute('data-fallback-title') ?? '',
+					fallbackDesc: card.getAttribute('data-fallback-desc') ?? '',
+					fallbackSite: card.getAttribute('data-fallback-site') ?? ''
+				}
+			});
+			ogpCardInstances.push(instance);
+		});
 	}
 
 	function destroyChatGptGoMaps() {
@@ -149,83 +190,7 @@
 			});
 
 		// OGPカードの処理
-		const ogpCards = document.querySelectorAll('ogp-card');
-		ogpCards.forEach(async (card) => {
-			const url = card.getAttribute('data-url');
-			if (!url) return;
-
-			const fallbackImage = card.getAttribute('data-fallback-image') || '';
-			const fallbackTitle = card.getAttribute('data-fallback-title') || '';
-			const fallbackDesc = card.getAttribute('data-fallback-desc') || '';
-			const fallbackSite = card.getAttribute('data-fallback-site') || '';
-
-			// 読み込み中表示
-			card.innerHTML = '<div class="ogp-loading">読み込み中...</div>';
-
-			try {
-				const response = await fetch(`/api/ogp?url=${encodeURIComponent(url)}`);
-				if (!response.ok) throw new Error('Failed to fetch OGP data');
-
-				const ogpData = await response.json();
-
-				// OGPカードのHTMLを生成（XSS対策：全フィールドをエスケープ）
-				// APIの値が空の場合はフォールバック値を使用
-				// htmlDecode: APIから返るHTMLエンティティ（&amp;等）をデコードしてからエスケープ
-				const rawImage = htmlDecode(ogpData.image || '');
-				const apiImage = rawImage && /^https?:\/\//.test(rawImage) ? rawImage : '';
-				const validFallbackImage =
-					fallbackImage && /^https?:\/\//.test(fallbackImage) ? fallbackImage : '';
-				const safeImage = escapeHtml(apiImage || validFallbackImage);
-				const safeTitle = escapeHtml(
-					htmlDecode(ogpData.title || '') || fallbackTitle || ''
-				);
-				const safeDesc = escapeHtml(
-					htmlDecode(ogpData.description || '') || fallbackDesc || ''
-				);
-				const safeSite = escapeHtml(
-					htmlDecode(ogpData.siteName || '') || fallbackSite || ''
-				);
-
-				card.innerHTML = `
-					<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="ogp-link-card">
-						<div class="ogp-card-wrapper">
-							${safeImage ? `<div class="ogp-card-image"><img src="${safeImage}" alt="${safeTitle}" /></div>` : ''}
-							<div class="ogp-card-text">
-								<h3 class="ogp-card-title">${safeTitle || escapeHtml(url)}</h3>
-								${safeDesc ? `<p class="ogp-card-description">${safeDesc}</p>` : ''}
-								${safeSite ? `<p class="ogp-card-site">${safeSite}</p>` : ''}
-							</div>
-						</div>
-					</a>
-				`;
-			} catch (error) {
-				console.error('Error loading OGP card:', error);
-				const safeUrl = escapeHtml(url);
-				const safeFallbackImage =
-					fallbackImage && /^https?:\/\//.test(fallbackImage)
-						? escapeHtml(fallbackImage)
-						: '';
-				const safeFallbackTitle = escapeHtml(fallbackTitle || url);
-				const safeFallbackDesc = escapeHtml(fallbackDesc);
-				const safeFallbackSite = escapeHtml(fallbackSite);
-				if (safeFallbackImage || fallbackTitle) {
-					card.innerHTML = `
-						<a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="ogp-link-card">
-							<div class="ogp-card-wrapper">
-								${safeFallbackImage ? `<div class="ogp-card-image"><img src="${safeFallbackImage}" alt="${safeFallbackTitle}" /></div>` : ''}
-								<div class="ogp-card-text">
-									<h3 class="ogp-card-title">${safeFallbackTitle}</h3>
-									${safeFallbackDesc ? `<p class="ogp-card-description">${safeFallbackDesc}</p>` : ''}
-									${safeFallbackSite ? `<p class="ogp-card-site">${safeFallbackSite}</p>` : ''}
-								</div>
-							</div>
-						</a>
-					`;
-				} else {
-					card.innerHTML = `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="ogp-error-link">${safeUrl}</a>`;
-				}
-			}
-		});
+		hydrateOgpCards();
 
 		// ChatGPT Go地図の処理
 		scheduleMapHydration();
@@ -252,6 +217,11 @@
 		if (lastHydratedSlug !== post_string) {
 			scheduleMapHydration();
 		}
+
+		// OGPカードの再ハイドレーション（記事変更時）
+		if (lastOgpHydratedSlug !== post_string) {
+			hydrateOgpCards();
+		}
 	});
 
 	// テーマ変更時にチャートを再描画
@@ -275,6 +245,9 @@
 
 		// imperativeに作成した地図コンポーネントを破棄（メモリリーク防止）
 		destroyChatGptGoMaps();
+
+		// 同上：OGPカードコンポーネントを破棄
+		destroyOgpCards();
 	});
 
 	$: jsonLd = {
@@ -450,107 +423,7 @@
 		}
 	}
 
-	/* OGPカードのスタイル */
-	:global(.ogp-loading) {
-		padding: 1em;
-		text-align: center;
-		color: var(--mdc-theme-text-secondary-on-background, rgba(0, 0, 0, 0.6));
-	}
-
-	:global(.ogp-link-card) {
-		display: block;
-		text-decoration: none;
-		color: inherit;
-		margin: 1.5em 0;
-		border: 1px solid var(--mdc-theme-text-hint-on-background, rgba(0, 0, 0, 0.12));
-		border-radius: 12px;
-		overflow: hidden;
-		transition: all 0.2s;
-	}
-
-	:global(.ogp-link-card:hover) {
-		transform: translateY(-2px);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-		border-color: var(--mdc-theme-primary, #6200ee);
-	}
-
-	:global(.ogp-card-wrapper) {
-		display: flex;
-		gap: 1em;
-		padding: 1em;
-	}
-
-	:global(.ogp-card-image) {
-		flex-shrink: 0;
-		width: 200px;
-		height: 120px;
-		overflow: hidden;
-		border-radius: 8px;
-		background-color: var(--mdc-theme-text-hint-on-background, rgba(0, 0, 0, 0.06));
-	}
-
-	:global(.ogp-card-image img) {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-	}
-
-	:global(.ogp-card-text) {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		gap: 0.5em;
-		min-width: 0;
-	}
-
-	:global(.ogp-card-title) {
-		margin: 0;
-		font-size: 1.1rem;
-		font-weight: 600;
-		line-height: 1.4;
-		color: var(--mdc-theme-text-primary-on-background, rgba(0, 0, 0, 0.87));
-		overflow: hidden;
-		display: -webkit-box;
-		-webkit-line-clamp: 2;
-		-webkit-box-orient: vertical;
-	}
-
-	:global(.ogp-card-description) {
-		margin: 0;
-		font-size: 0.9rem;
-		line-height: 1.5;
-		color: var(--mdc-theme-text-secondary-on-background, rgba(0, 0, 0, 0.6));
-		overflow: hidden;
-		display: -webkit-box;
-		-webkit-line-clamp: 2;
-		-webkit-box-orient: vertical;
-	}
-
-	:global(.ogp-card-site) {
-		margin: 0;
-		font-size: 0.8rem;
-		color: var(--mdc-theme-text-hint-on-background, rgba(0, 0, 0, 0.38));
-	}
-
-	:global(.ogp-error-link) {
-		display: block;
-		padding: 1em;
-		margin: 1.5em 0;
-		border: 1px solid var(--mdc-theme-text-hint-on-background, rgba(0, 0, 0, 0.12));
-		border-radius: 8px;
-		color: var(--mdc-theme-primary, #6200ee);
-		word-break: break-all;
-	}
-
 	/* モバイル対応 */
 	@media (max-width: 768px) {
-		:global(.ogp-card-wrapper) {
-			flex-direction: column;
-		}
-
-		:global(.ogp-card-image) {
-			width: 100%;
-			height: 180px;
-		}
 	}
 </style>
