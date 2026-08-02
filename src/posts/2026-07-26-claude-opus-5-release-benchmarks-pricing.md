@@ -31,7 +31,7 @@ Anthropicが2026年7月24日、Opus系列の新モデル「Claude Opus 5」を�
 | 高速モード       | 出力トークン速度が最大約2.5倍。料金は基本の2倍（入力$10／出力$50）。Claude API（Claude Managed Agentsを含む）とClaude Code（usage credits経由）で提供。研究プレビュー |
 | 提供先           | Claude.ai、Claude Code、Claude Cowork／Claude API（`claude-opus-5`）、Amazon Bedrock（`anthropic.claude-opus-5`）、Google Cloud（`claude-opus-5`）、Microsoft Foundry |
 
-推論の深さを指定するeffortパラメータは、コストと知能のトレードオフを利用者側で選べる仕組みです。System Cardには後述のFrontierBenchでの内訳が記載されており、**xhighの平均報酬44.4%に対し、highは出力トークンが平均19%少なく平均報酬39%、lowは出力トークンが平均64%少なく平均報酬25%**とされています。
+推論の深さを指定するeffortパラメータは、コストと知能のトレードオフを利用者側で選べる仕組みです。System Cardには後述のFrontierBenchでの内訳が記載されており、xhighの平均報酬44.4%に対し、highは出力トークンが平均19%少なく平均報酬39%、lowは出力トークンが平均64%少なく平均報酬25%とされています。
 
 ### ベンチマーク：エージェント系で大幅な伸び、ただし全勝ではない
 
