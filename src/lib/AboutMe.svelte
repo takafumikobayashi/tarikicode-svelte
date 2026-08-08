@@ -24,12 +24,12 @@
 				<p>{AppConfig.author}</p>
 			</div>
 			<div class="mdc-typography--body1">
-				Xで超最新AI Newsを毎日発信<br />
+				最新AI Newsと解説記事を発信しています<br />
+				ClaudeCodeとCodexが相棒・Gemini Notebookと散歩が趣味<br />
 				民間企業での経験を活かし、2023年より行政DXに従事<br />
-				ClaudeCode等を活用したVibeCording支援・AIアプリ開発<br />
-				ex.某政府機関・携帯キャリア・暗号資産スタートアップ・国立高専臨時講師<br />
-				Claue Code & Codex・TypeScript・ITストラテジスト<br />
-				ネコ派・最近はスーツを着ている・激辛毎週摂取<br />
+				TypeScript・ITストラテジスト・AIアプリ開発<br />
+				ex.某政府機関・携帯キャリア・暗号資産・NPO伴走支援<br />
+				保護ネコの親・辛活が好き・最近はスーツを着ている<br />
 				2026年4月から広島県と東京の二拠点生活<br />
 			</div>
 			{#if linkon}

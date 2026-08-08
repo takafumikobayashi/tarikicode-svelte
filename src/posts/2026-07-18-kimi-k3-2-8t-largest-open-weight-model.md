@@ -4,7 +4,7 @@ date: '2026-07-18'
 category: 'AI'
 tags: ['Kimi', 'Moonshot AI', 'オープンソースLLM', 'LLM', 'AIエージェント']
 description: 'Moonshot AIが2026年7月16日に発表したKimi K3を検証。2.8兆パラメータ・1Mコンテキストの史上最大級オープンウェイトモデルは、自己申告でOpus 4.8超え、価格はSonnet 5と同水準の$3/$15。7月27日までの重み公開予告と注意点も整理する。'
-image: 'https://kimi-file.moonshot.cn/prod-chat-kimi/kfs/4/2/2026-07-17/d9cs7176rtp4tqfofnsg?x-tos-process=image%2Fauto-orient%2C1%2Fstrip%2Fignore-error%2C1%2Fformat%2Cwebp%2Fresize%2Cw_1440'
+image: 'https://kimi-file.moonshot.cn/prod-chat-kimi/kfs/4/2/2026-07-17/d9cs7176rtp4tqfofnsg'
 featured: true
 type: 'blog'
 ---
@@ -48,13 +48,13 @@ type: 'blog'
 
 Moonshotが公表した主要スコア（いずれも推論effort `max`での自己申告値）は以下の通りです。
 
-| ベンチマーク            | Kimi K3 | 備考                                     |
-| ----------------------- | ------- | ---------------------------------------- |
-| GPQA Diamond            | 93.5%   | 公表時点でオープンウェイト系最高値の主張 |
-| Terminal-Bench 2.1      | 88.3    | KimiCodeハーネス使用                     |
-| BrowseComp              | 91.2%   | 300Kトークンでコンテキスト圧縮を発動     |
-| Humanity's Last Exam    | 56.0    | ツール使用あり                           |
-| MCP Atlas               | 84.2    | エージェントのツール利用評価             |
+| ベンチマーク         | Kimi K3 | 備考                                     |
+| -------------------- | ------- | ---------------------------------------- |
+| GPQA Diamond         | 93.5%   | 公表時点でオープンウェイト系最高値の主張 |
+| Terminal-Bench 2.1   | 88.3    | KimiCodeハーネス使用                     |
+| BrowseComp           | 91.2%   | 300Kトークンでコンテキスト圧縮を発動     |
+| Humanity's Last Exam | 56.0    | ツール使用あり                           |
+| MCP Atlas            | 84.2    | エージェントのツール利用評価             |
 
 Moonshot自身の整理では、K3は複数の公表ベンチマークでClaude Opus 4.8（max）やGPT-5.5（high）を上回る一方、総合的にはClaude Fable 5とGPT-5.6 Solに届かない、という位置づけです。自社発表で最上位2モデルへの劣位を認めている点は、先日のGrok 4.5と同様に率直な部類です。
 
