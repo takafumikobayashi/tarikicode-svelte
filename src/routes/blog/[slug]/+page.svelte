@@ -8,7 +8,6 @@
 
 	// ハイライトのスタイルを読み込む
 	import hljs from 'highlight.js';
-	import mermaid from 'mermaid';
 	import ChatGptGoMap from '$lib/ChatGptGoMap.svelte';
 	import OgpCard from '$lib/OgpCard.svelte';
 	import type { SvelteComponent } from 'svelte';
@@ -156,27 +155,9 @@
 			isLightTheme = value;
 		});
 
-		// Mermaidの初期化
-		mermaid.initialize({
-			startOnLoad: false,
-			theme: 'default'
-		});
-
-		// Mermaid図の描画
-		const mermaidElements = document.querySelectorAll('.language-mermaid');
-		for (const element of mermaidElements) {
-			const code = element.textContent || '';
-			const parent = element.parentElement;
-			if (parent) {
-				try {
-					const { svg } = await mermaid.render(`mermaid-${Math.random()}`, code);
-					parent.innerHTML = svg;
-				} catch (error) {
-					console.error('Mermaid rendering error:', error);
-					parent.innerHTML = `<pre>Mermaid rendering error: ${error}</pre>`;
-				}
-			}
-		}
+		// Mermaid図の描画はHeader内のThemeButtonが$lib/Mermaidを通して行う。
+		// ここで初期化すると、描画途中でMermaidのグローバル設定が上書きされ、
+		// 親要素の実測幅を必要とするガント図が既定の300pxで描かれてしまう。
 
 		// Chart.jsグラフの描画（dynamic import for SSR compatibility）
 		scheduleChartRendering();

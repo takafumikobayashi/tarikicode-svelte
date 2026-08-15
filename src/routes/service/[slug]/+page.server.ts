@@ -43,8 +43,12 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 				const titleAttr = fallbackTitle
 					? ` data-fallback-title="${escapeAttr(fallbackTitle)}"`
 					: '';
-				const descAttr = fallbackDesc ? ` data-fallback-desc="${escapeAttr(fallbackDesc)}"` : '';
-				const siteAttr = fallbackSite ? ` data-fallback-site="${escapeAttr(fallbackSite)}"` : '';
+				const descAttr = fallbackDesc
+					? ` data-fallback-desc="${escapeAttr(fallbackDesc)}"`
+					: '';
+				const siteAttr = fallbackSite
+					? ` data-fallback-site="${escapeAttr(fallbackSite)}"`
+					: '';
 				return `\n\n<ogp-card data-url="${escapeAttr(url)}"${imageAttr}${titleAttr}${descAttr}${siteAttr}></ogp-card>\n\n`;
 			}
 		);
