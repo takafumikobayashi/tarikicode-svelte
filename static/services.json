@@ -17,6 +17,15 @@
 			"image": "https://d1mt09hgbl7gpz.cloudfront.net/localscope-agent/localscope-agent-ogplogo.jpg",
 			"url": "https://localscope.tariki-code.tokyo/",
 			"label": "MVP"
+		},
+		{
+			"slug": "machi-metrics-jp",
+			"name": "ひろしまダッシュボード",
+			"subtitle": "広島のまちの変化を、数字から読み解く。",
+			"description": "広島県23市町の人口・年齢構成・人口動態を公的統計から可視化。10年間の推移や全国の似た自治体との比較を、出典つきで確認できます。",
+			"image": "https://machi-metrics.tariki-code.tokyo/hiroshima-dashboard-ogp.jpg",
+			"url": "https://machi-metrics.tariki-code.tokyo/",
+			"label": "MVP"
 		}
 	]
 }
