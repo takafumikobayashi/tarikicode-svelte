@@ -1,13 +1,13 @@
 ---
 title: 'ひろしまダッシュボード - 広島のまちの変化を、数字から読み解く。'
 description: '広島県23市町の人口・年齢構成・人口動態を、公的統計から可視化する非公式ダッシュボード。10年間の推移や、全国の似た自治体との比較を、出典と計算方法つきで確認できます。'
-image: 'https://machi-metrics.tariki-code.tokyo/hiroshima-dashboard-ogp.jpg'
+image: 'https://d1mt09hgbl7gpz.cloudfront.net/machi-metrics/hiroshima-dashboard-ogp.jpg'
 service_url: 'https://machi-metrics.tariki-code.tokyo/'
 label: 'MVP'
 type: 'service'
 ---
 
-<img src="https://machi-metrics.tariki-code.tokyo/hiroshima-dashboard-ogp.jpg" alt="ひろしまダッシュボード - 広島県23市町の人口と人口動態を可視化" width="600" class="img-center">
+<img src="https://d1mt09hgbl7gpz.cloudfront.net/machi-metrics/hiroshima-dashboard-ogp.jpg" alt="ひろしまダッシュボード - 広島県23市町の人口と人口動態を可視化" width="600" class="img-center">
 
 ### ひろしまダッシュボードとは
 
