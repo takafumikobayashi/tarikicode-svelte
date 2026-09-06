@@ -336,7 +336,7 @@ OpenAIの新しい運用ルールは、最重要アラートについて「通�
 
 **情報ソース：**
 
-[[ogp:https://openai.com/index/hugging-face-incident-and-the-road-ahead/]]
+[[ogp:https://openai.com/index/hugging-face-incident-and-the-road-ahead/|https://images.ctfassets.net/kftzwdyauwt9/7jbTfQbHvOuLnJtYMi64y4/12f03addd9350bb3b4c359071aab7e45/hero-dark-social-v6.png|Hugging Face のインシデントと今後の道筋|OpenAI が、Hugging Face のセキュリティインシデントに関する調査結果と、AI モデルのセキュリティ、監視、アラインメントを強化するために現在進めている取り組みを紹介します。|OpenAI]]
 
 [[ogp:https://cdn.openai.com/pdf/67869394-cb91-4c12-888c-5cbd85c7814c/OpenAI-Hugging-Face%20Incident-Technical-Report.pdf||OpenAI – Hugging Face
 Incident|Technical Report (PDF 38 Pages)|OpenAI]]
@@ -345,7 +345,7 @@ Incident|Technical Report (PDF 38 Pages)|OpenAI]]
 
 [[ogp:https://huggingface.co/blog/agent-intrusion-technical-timeline]]
 
-[[ogp:https://openai.com/index/hugging-face-model-evaluation-security-incident/]]
+[[ogp:https://openai.com/index/hugging-face-model-evaluation-security-incident/|https://images.ctfassets.net/kftzwdyauwt9/1kXZRSOAQbv2BDKEO14tJl/b2f0a336afaddc32e5776ba555bc4dbf/Hugging_Face_Security_Incident_16x9.png|OpenAI と Hugging Face、モデル評価中のセキュリティインシデント対応で連携|OpenAI と Hugging Face が、AI モデル評価中のセキュリティインシデントに関する初期知見を共有し、高度なサイバー能力と防御側への教訓を示します。|OpenAI]]
 
 [[ogp:https://www.redwoodresearch.org/research]]
 

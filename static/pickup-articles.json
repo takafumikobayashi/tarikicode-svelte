@@ -4,13 +4,13 @@
 			"url": "https://prtimes.jp/main/html/rd/p/000000039.000150655.html"
 		},
 		{
-			"url": "https://openai.com/ja-JP/index/pacing-model-development-cyber-capabilities/",
-			"description": "OpenAI は、フロンティア AI モデルのモニタリング、アラインメント、セキュリティを強化しています。新たな安全策がモデル開発のペースをどう導いているかをご覧ください。",
-			"image": "https://images.ctfassets.net/kftzwdyauwt9/55UVJLAaFr5hqOom9Il3Ou/2a7c6a08571daf98a0643d76cc243add/index-pacing-model-development-cyber-capabilities-dark-seo.png",
-			"title": "サイバー重大能力時代のモデル開発ペース"
+			"url": "https://openai.com/index/gpt-6-astra/",
+			"description": "Introducing GPT-6 Astra, our most intelligent and aligned model yet, with state-of-the-art capabilities across computer use, coding, cybersecurity, and science.",
+			"image": "https://images.ctfassets.net/kftzwdyauwt9/6ibCaqsoO7F6XCNCIO8zaZ/9475cdebc1f0af100414f1c85860fc4c/Hero_16x9.png",
+			"title": "GPT-6 Astra: A new generation of intelligence"
 		},
 		{
-			"url": "https://www.anthropic.com/research/automated-researchers-mitigate-alignment-failures"
+			"url": "https://www.anthropic.com/research/formalizing-fermats-last-theorem"
 		},
 		{
 			"url": "https://www.dekaigi.org/"
