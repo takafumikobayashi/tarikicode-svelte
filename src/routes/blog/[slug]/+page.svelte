@@ -407,4 +407,63 @@
 	/* モバイル対応 */
 	@media (max-width: 768px) {
 	}
+	/* ===== quadrantChart（情報の四象限）の見た目調整 =====
+	   他の種類の図に影響させないよう aria-roledescription で対象を限定する。 */
+
+	/* 既定は max-width:500px 固定で本文カラムより小さく、左寄せになる。
+	   これはSVGのインラインstyle属性なので、上書きには!importantが要る。 */
+	article :global(svg[aria-roledescription='quadrantChart']) {
+		max-width: 680px !important;
+		display: block;
+		margin: 0 auto;
+	}
+
+	/* データ点の●は、どの象限にも項目が1つずつしかなくラベルと役割が重複するため隠す。
+	   Mermaidにはconfig quadrantChart.pointRadius があるが、内部が
+	   `pointRadius || 5` というフォールバックのため0を指定しても消せない。
+	   textは別要素で座標を持つので、circleを隠してもラベル位置は動かない。 */
+	article :global(svg[aria-roledescription='quadrantChart'] .data-points circle) {
+		display: none;
+	}
+
+	/* ライトテーマの4象限は既定が #ECECFF〜#fbfbff とほぼ同色で、区画の境目が読み取れない。
+	   rectのfillはpresentation attributeでCSSより優先度が低いため!importantは不要。
+	   子の並び順は quadrant-1(右上) → 2(左上) → 3(左下) → 4(右下)。
+
+	   ダークテーマではMermaidがdarkテーマで再描画し、文字色が白系・塗りが暗色になる。
+	   そこへ淡色を上書きすると文字が読めなくなるため、ダーク時は既定の暗色に任せる。
+	   body[data-theme]はThemeButtonがマウント後に設定するため、未設定の初期状態でも
+	   ライト配色が当たるよう :not([data-theme='dark']) で「ダーク以外」を対象にする。 */
+
+	:global(body:not([data-theme='dark']))
+		article
+		:global(
+			svg[aria-roledescription='quadrantChart'] .quadrants > .quadrant:nth-child(1) rect
+		) {
+		fill: #efe9f8; /* 右上: 書籍・資格・体系化された知識 */
+	}
+
+	:global(body:not([data-theme='dark']))
+		article
+		:global(
+			svg[aria-roledescription='quadrantChart'] .quadrants > .quadrant:nth-child(2) rect
+		) {
+		fill: #e8f1fb; /* 左上: ネット記事・技術論文 */
+	}
+
+	:global(body:not([data-theme='dark']))
+		article
+		:global(
+			svg[aria-roledescription='quadrantChart'] .quadrants > .quadrant:nth-child(3) rect
+		) {
+		fill: #e6f4ec; /* 左下: 口コミ・営業経由・コミュニティ */
+	}
+
+	:global(body:not([data-theme='dark']))
+		article
+		:global(
+			svg[aria-roledescription='quadrantChart'] .quadrants > .quadrant:nth-child(4) rect
+		) {
+		fill: #fbeef0; /* 右下: 経験談・価値観・暗黙知 */
+	}
 </style>
