@@ -26,6 +26,15 @@
 			"image": "https://d1mt09hgbl7gpz.cloudfront.net/machi-metrics/hiroshima-dashboard-ogp.jpg",
 			"url": "https://machi-metrics.tariki-code.tokyo/",
 			"label": "MVP"
+		},
+		{
+			"slug": "jev-snap-lab",
+			"name": "Jev Snap Lab",
+			"subtitle": "Tiny inputs. Instant decisions.",
+			"description": "TypeSafe AIのJevを使い、短い入力から恋愛・SNS・自治体問い合わせの複数の判断を返す実験的なWebアプリ。",
+			"image": "https://d1mt09hgbl7gpz.cloudfront.net/jev-snap-lab/og-image.jpg",
+			"url": "https://jev-snap-lab.tariki-code.tokyo",
+			"label": "EXPERIMENT"
 		}
 	]
 }
