@@ -98,7 +98,7 @@ Haiku 5.5には、effort（どれだけ考えるかの設定）が5段階ある�
 
 ※ Eloは、出力同士を比べて勝ち負けから算出するレーティング。チェスの強さの指標と同じ考え方。
 
-System Cardには「特に断りのない限り、Haiku 5.5の結果はmax effort・5回平均」と明記されている。Haiku 4.5はeffort設定がない世代なので、固定の思考量で測られている。
+System Cardには「特に断りのない限り、Haiku 5.5の結果はmax effort・5回平均」と明記されている。Haiku 4.5にはeffort設定がないが、思考量はExtended Thinkingの `budget_tokens`（思考に使うトークンの上限）で調整できる。System Cardでは、評価ごとにこの上限を決めて測っている（たとえばTerminal-Bench 4.0は63,999トークン）。
 
 数字の出どころも項目ごとに違う。
 
