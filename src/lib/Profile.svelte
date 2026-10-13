@@ -9,9 +9,9 @@
 		{
 			year: '2026',
 			period: '2026 - Present',
-			company: '広島県庁',
-			department: '安芸高田市',
-			role: '次長（兼・CIO補佐官） / Deputy General Manager',
+			company: '某県庁',
+			department: '県内の某市幹部職（CIO補佐官）',
+			role: 'Deputy General Manager / IT Strategist',
 			highlights: [
 				'DXにおける専門的知見からの計画立案・意思決定または助言',
 				'デジタル人材育成に関する計画立案・実行など'
@@ -20,8 +20,8 @@
 		{
 			year: '2023',
 			period: '2023 - 2026',
-			company: '経済産業省',
-			department: '大臣官房デジタルトランスフォーメーション室',
+			company: '某政府機関',
+			department: 'デジタル・トランスフォーメーションの推進を主務とする室',
 			role: 'Product Manager / Community Manager / IT Strategist',
 			highlights: [
 				'PowerPlatformを使った行政手続オンライン化システムのプロダクトマネジメント',
