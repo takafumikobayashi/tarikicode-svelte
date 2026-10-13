@@ -24,13 +24,11 @@
 				<p>{AppConfig.author}</p>
 			</div>
 			<div class="mdc-typography--body1">
-				最新AI Newsと解説記事を発信しています<br />
-				ClaudeCodeとCodexが相棒・Gemini Notebookと散歩が趣味<br />
-				民間企業での経験を活かし、2023年より行政DXに従事<br />
-				TypeScript・ITストラテジスト・AIアプリ開発<br />
-				ex.某政府機関・携帯キャリア・暗号資産・NPO伴走支援<br />
-				保護ネコの親・辛活が好き・最近はスーツを着ている<br />
-				2026年4月から広島県と東京の二拠点生活<br />
+				東京でNode.jsエンジニア→いつの間にか地方で行政に携わる<br />
+				仕事と組織をデータとAI前提に組み直す「AX」に取り組む<br />
+				ClaudeCode・Codex・Jev・TypeScript<br />
+				ITストラテジスト・プロジェクトマネージャー<br />
+				ex.大手携帯キャリア・暗号資産スタートアップ・NPO伴走支援<br />
 			</div>
 			{#if linkon}
 				<div class="demo-cell-left">
