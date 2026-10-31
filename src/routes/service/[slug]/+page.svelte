@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onMount, onDestroy, afterUpdate } from 'svelte';
-	import mermaid from 'mermaid';
 	import Header from '$lib/Header.svelte';
 	import Footer from '$lib/Footer.svelte';
 	import { AppConfig } from '$lib/AppConfig';
 	import { lightThemeStore } from '$lib/themeStore';
+	import { setMermaidTheme } from '$lib/Mermaid';
 	import { page } from '$app/stores';
 	import OgpCard from '$lib/OgpCard.svelte';
 	import type { SvelteComponent } from 'svelte';
@@ -15,22 +15,6 @@
 	$: isLightTheme = $lightThemeStore;
 
 	let lastProcessedSlug = '';
-
-	async function processMermaid() {
-		const mermaidElements = document.querySelectorAll('.language-mermaid');
-		for (const element of mermaidElements) {
-			const code = element.textContent || '';
-			const parent = element.parentElement;
-			if (parent) {
-				try {
-					const { svg } = await mermaid.render(`mermaid-${Math.random()}`, code);
-					parent.innerHTML = svg;
-				} catch (e) {
-					console.error('Mermaid rendering error:', e);
-				}
-			}
-		}
-	}
 
 	let ogpCardInstances: SvelteComponent[] = [];
 
@@ -69,18 +53,19 @@
 		});
 	}
 
-	onMount(async () => {
-		mermaid.initialize({ startOnLoad: false, theme: 'default' });
+	// 初回のMermaid描画はHeader内のThemeButtonが$lib/Mermaidを通して行う
+	// （記事ページと同じ方式。ここでも描画すると二重描画になる）
+	onMount(() => {
 		lastProcessedSlug = $page.params.slug ?? '';
-		await processMermaid();
 		processOgpCards();
 	});
 
-	afterUpdate(async () => {
+	afterUpdate(() => {
 		const currentSlug = $page.params.slug;
 		if (currentSlug && currentSlug !== lastProcessedSlug) {
 			lastProcessedSlug = currentSlug;
-			await processMermaid();
+			// 同一ルート内の遷移ではThemeButtonが再マウントされないため、ここで描画する
+			setMermaidTheme(!isLightTheme);
 			processOgpCards();
 		}
 	});

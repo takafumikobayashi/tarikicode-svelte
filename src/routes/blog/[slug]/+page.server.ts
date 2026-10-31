@@ -3,6 +3,7 @@ import matter from 'gray-matter';
 import { error } from '@sveltejs/kit';
 import { AppConfig } from '$lib/AppConfig';
 import { createHeadingIdGenerator } from '$lib/utils/headingIds';
+import { renderCodeBlock } from '$lib/utils/highlightCode';
 import { Window } from 'happy-dom';
 import DOMPurify from 'dompurify';
 
@@ -121,6 +122,8 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 				const id = getHeadingId(raw);
 				return `<h${level} id="${id}">${text}</h${level}>\n`;
 			};
+			// コードハイライトはSSRで済ませる（クライアントにhighlight.jsを送らない）
+			renderer.code = (code, infostring) => renderCodeBlock(code, infostring);
 
 			const markedInstance = new Marked({ renderer });
 			let htmlContent = markedInstance.parse(processedContent) as string;

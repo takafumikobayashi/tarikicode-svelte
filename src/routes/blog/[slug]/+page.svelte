@@ -6,9 +6,6 @@
 	import { AppConfig } from '$lib/AppConfig';
 	import PostFooter from '$lib/PostFooter.svelte';
 
-	// ハイライトのスタイルを読み込む
-	import hljs from 'highlight.js';
-	import ChatGptGoMap from '$lib/ChatGptGoMap.svelte';
 	import OgpCard from '$lib/OgpCard.svelte';
 	import type { SvelteComponent } from 'svelte';
 	import { lightThemeStore } from '$lib/themeStore';
@@ -102,12 +99,16 @@
 		await tick();
 
 		const mapElements = document.querySelectorAll('chatgpt-go-map');
-		mapElements.forEach((mapEl) => {
-			const mapInstance = new ChatGptGoMap({
-				target: mapEl as HTMLElement
+		if (mapElements.length > 0) {
+			// Leafletを含む地図コンポーネントは、地図がある記事でだけ読み込む
+			const { default: ChatGptGoMap } = await import('$lib/ChatGptGoMap.svelte');
+			mapElements.forEach((mapEl) => {
+				const mapInstance = new ChatGptGoMap({
+					target: mapEl as HTMLElement
+				});
+				mapComponentInstances.push(mapInstance);
 			});
-			mapComponentInstances.push(mapInstance);
-		});
+		}
 
 		lastHydratedSlug = post_string ?? null;
 	}
@@ -123,6 +124,12 @@
 	}
 
 	async function renderChartsForCurrentPost() {
+		// グラフのない記事ではChart.jsを読み込まない
+		if (!chartModule && !document.querySelector('code.language-chartjs')) {
+			lastRenderedChartSlug = post_string ?? null;
+			return;
+		}
+
 		// Chart.jsモジュールをロード（初回のみ）
 		if (!chartModule) {
 			chartModule = await import('$lib/ChartRenderer');
@@ -162,13 +169,7 @@
 		// Chart.jsグラフの描画（dynamic import for SSR compatibility）
 		scheduleChartRendering();
 
-		// コンテンツがDOMにレンダリングされた後にハイライトを適用
-		document
-			.querySelectorAll('pre code:not(.language-mermaid):not(.language-chartjs)')
-			.forEach((block) => {
-				// @ts-expect-error highlight.js v11 exposes highlightBlock at runtime
-				hljs.highlightBlock(block);
-			});
+		// コードハイライトは+page.server.tsでSSR済み（クライアントにhighlight.jsは不要）
 
 		// OGPカードの処理
 		hydrateOgpCards();
