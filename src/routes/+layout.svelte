@@ -3,6 +3,7 @@
 	import { AppConfig } from '$lib/AppConfig';
 	import { page } from '$app/stores';
 	import { afterNavigate } from '$app/navigation';
+	import '$lib/styles/reveal.css';
 
 	// 初回ナビゲーションフラグ（二重送信を防ぐ）
 	let isFirstNavigation = true;

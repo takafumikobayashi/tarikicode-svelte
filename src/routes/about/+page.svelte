@@ -12,6 +12,7 @@
 	import Profile from '$lib/Profile.svelte';
 	import Projects from '$lib/Projects.svelte';
 	import { AppConfig } from '$lib/AppConfig';
+	import { reveal } from '$lib/actions/reveal';
 
 	let tabs = [
 		{
@@ -60,13 +61,13 @@
 		</div>
 		<LayoutGrid>
 			<Cell span={12}>
-				<div class="demo-cell">
+				<div class="demo-cell" use:reveal>
 					<AboutMe linkon={false} />
 				</div></Cell
 			>
 
 			<Cell span={12}>
-				<div class="demo-cell">
+				<div class="demo-cell" use:reveal>
 					<TabBar {tabs} bind:active>
 						{#snippet tab(tab)}
 							<Tab {tab}>

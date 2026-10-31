@@ -9,6 +9,7 @@
 	import { goto } from '$app/navigation';
 	import { onMount, onDestroy } from 'svelte';
 	import type { PageData } from './$types';
+	import { reveal } from '$lib/actions/reveal';
 
 	export let data: PageData;
 
@@ -282,9 +283,10 @@
 			</Cell>
 
 			<!-- 記事一覧 -->
-			{#each displayedPosts as post}
+			{#each displayedPosts as post, i}
 				<Cell span={4}>
-					<div class="demo-cell">
+					<!-- 3列グリッドの列位置ごとに少しずつ遅らせて、横方向に流れるように表示する -->
+					<div class="demo-cell" use:reveal={{ delay: (i % 3) * 100 }}>
 						<Card variant="outlined" class="post-card">
 							{#if post.image}
 								<Media

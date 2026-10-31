@@ -14,6 +14,7 @@
 	import Contacts from '$lib/Contacts.svelte';
 	import NewRelease from '$lib/NewRelease.svelte';
 	import Service from '$lib/Service.svelte';
+	import { reveal } from '$lib/actions/reveal';
 </script>
 
 <svelte:head>
@@ -42,7 +43,7 @@
 		<HeroImage />
 		<LayoutGrid>
 			<Cell span={12}>
-				<div class="demo-cell">
+				<div class="demo-cell" use:reveal>
 					<div class="paper-container">
 						<Paper variant="unelevated">
 							<Title>AboutMe</Title>
@@ -56,7 +57,7 @@
 			</Cell>
 
 			<Cell span={12}>
-				<div class="demo-cell">
+				<div class="demo-cell" use:reveal>
 					<div class="paper-container">
 						<Paper variant="unelevated">
 							<Title>New Release</Title>
@@ -70,7 +71,7 @@
 			</Cell>
 
 			<Cell span={12}>
-				<div class="demo-cell">
+				<div class="demo-cell" use:reveal>
 					<div class="paper-container">
 						<Paper variant="unelevated">
 							<Title>Works</Title>
@@ -84,7 +85,7 @@
 			</Cell>
 
 			<Cell span={12}>
-				<div class="demo-cell">
+				<div class="demo-cell" use:reveal>
 					<div class="paper-container">
 						<Paper variant="unelevated">
 							<Title>Service</Title>
@@ -98,7 +99,7 @@
 			</Cell>
 
 			<Cell span={12}>
-				<div class="demo-cell">
+				<div class="demo-cell" use:reveal>
 					<div class="paper-container">
 						<Paper variant="unelevated">
 							<Title>Pickup Articles</Title>
@@ -112,7 +113,7 @@
 			</Cell>
 
 			<Cell span={12}>
-				<div class="demo-cell">
+				<div class="demo-cell" use:reveal>
 					<div class="paper-container">
 						<Paper variant="unelevated">
 							<Title>Blog</Title>
@@ -126,7 +127,7 @@
 			</Cell>
 
 			<Cell span={12}>
-				<div class="demo-cell">
+				<div class="demo-cell" use:reveal>
 					<div class="paper-container">
 						<Paper variant="unelevated">
 							<Title>RecentPost</Title>
@@ -139,7 +140,7 @@
 				</div>
 			</Cell>
 			<Cell span={6}>
-				<div class="demo-cell">
+				<div class="demo-cell" use:reveal>
 					<div class="paper-container">
 						<Paper variant="unelevated">
 							<Title>Contacts</Title>
@@ -154,7 +155,7 @@
 				</div>
 			</Cell>
 			<Cell span={6}>
-				<div class="demo-cell">
+				<div class="demo-cell" use:reveal>
 					<div class="paper-container">
 						<Paper variant="unelevated">
 							<Content>
