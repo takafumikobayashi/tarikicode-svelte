@@ -1,5 +1,4 @@
 <script>
-	import Header from '#lib/Header.svelte';
 	import Footer from '#lib/Footer.svelte';
 	import Card from '#lib/Card.svelte';
 	import HeroImage from '#lib/HeroImage.svelte';
@@ -39,7 +38,6 @@
 
 <div class="mdc-typography--body1">
 	<div class="content fade-in">
-		<Header />
 		<HeroImage />
 		<LayoutGrid>
 			<Cell span={12}>

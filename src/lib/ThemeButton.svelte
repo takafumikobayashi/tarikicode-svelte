@@ -56,8 +56,8 @@
 		// @ts-ignore
 		themeLink.href = `/smui${lightTheme ? '' : '-dark'}.css`;
 
-		// Mermaidテーマを即座に反映させる
-		setMermaidTheme(!lightTheme); // 初回ロード時にもMermaidテーマを設定
+		// 初回のMermaid描画は各ページ（記事・Service）が行う。
+		// ヘッダーはレイアウトに常駐しページ遷移で再マウントされないため、ここでは描画しない
 		lightThemeStore.set(lightTheme);
 		applyThemeSideEffects(lightTheme);
 	}

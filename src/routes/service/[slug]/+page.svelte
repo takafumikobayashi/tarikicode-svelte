@@ -1,16 +1,14 @@
 <script lang="ts">
 	import { onMount, onDestroy, afterUpdate, mount, unmount } from 'svelte';
-	import Header from '#lib/Header.svelte';
 	import Footer from '#lib/Footer.svelte';
 	import { AppConfig } from '#lib/AppConfig.js';
 	import { lightThemeStore } from '#lib/themeStore.js';
-	import { setMermaidTheme } from '#lib/Mermaid.js';
+	import { renderMermaidForCurrentTheme } from '#lib/Mermaid.js';
 	import { page } from '$app/state';
 	import OgpCard from '#lib/OgpCard.svelte';
 
 	export let data;
 
-	let isLightTheme = true;
 	$: isLightTheme = $lightThemeStore;
 
 	let lastProcessedSlug = '';
@@ -52,10 +50,9 @@
 		});
 	}
 
-	// 初回のMermaid描画はHeader内のThemeButtonが$lib/Mermaidを通して行う
-	// （記事ページと同じ方式。ここでも描画すると二重描画になる）
 	onMount(() => {
 		lastProcessedSlug = page.params.slug ?? '';
+		renderMermaidForCurrentTheme();
 		processOgpCards();
 	});
 
@@ -63,8 +60,7 @@
 		const currentSlug = page.params.slug;
 		if (currentSlug && currentSlug !== lastProcessedSlug) {
 			lastProcessedSlug = currentSlug;
-			// 同一ルート内の遷移ではThemeButtonが再マウントされないため、ここで描画する
-			setMermaidTheme(!isLightTheme);
+			renderMermaidForCurrentTheme();
 			processOgpCards();
 		}
 	});
@@ -102,7 +98,6 @@
 
 <div class="mdc-typography--body1">
 	<div class="content fade-in">
-		<Header />
 		<article class="service-detail">
 			<div class="article-header">
 				<a href="/" class="back-link"><span class="back-arrow">←</span>トップに戻る</a>

@@ -9,6 +9,15 @@ export function hasMermaidDiagrams(root: ParentNode = document): boolean {
 	return root.querySelector('code.language-mermaid, div.mermaid') !== null;
 }
 
+/**
+ * 現在表示中のテーマでMermaid図を描画する（記事ページの初回表示・記事切り替え時用）。
+ * テーマはapp.htmlのインラインスクリプトが描画前にbody[data-theme]へ設定している
+ */
+export function renderMermaidForCurrentTheme() {
+	if (typeof document === 'undefined') return;
+	setMermaidTheme(document.body.dataset.theme === 'dark');
+}
+
 // Mermaidテーマを設定する関数
 export function setMermaidTheme(isDarkMode: boolean) {
 	if (typeof document === 'undefined' || !hasMermaidDiagrams()) {

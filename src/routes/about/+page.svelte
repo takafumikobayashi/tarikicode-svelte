@@ -1,5 +1,4 @@
 <script>
-	import Header from '../../lib/Header.svelte';
 	import ContentImage from '#lib/ContentImage.svelte';
 	import Footer from '../../lib/Footer.svelte';
 	import Tab, { Icon, Label } from '@smui/tab';
@@ -54,7 +53,6 @@
 
 <div class="mdc-typography--body1">
 	<div class="content fade-in">
-		<Header />
 		<ContentImage post_string="about" />
 		<div class="mdc-typography--body1">
 			<p>このサイトにお越しいただき、ありがとうございます。</p>

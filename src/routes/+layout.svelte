@@ -4,6 +4,7 @@
 	import { page } from '$app/state';
 	import { afterNavigate } from '$app/navigation';
 	import '#lib/styles/reveal.css';
+	import Header from '#lib/Header.svelte';
 
 	// 初回ナビゲーションフラグ（二重送信を防ぐ）
 	let isFirstNavigation = true;
@@ -32,7 +33,12 @@
 	<meta name="description" content={AppConfig.description} />
 </svelte:head>
 
-<main><slot></slot></main>
+<main>
+	<!-- ヘッダーはページ遷移で破棄しない。各ページに置くと遷移のたびに再作成され、
+	     SMUI 8のMenuが破棄処理中に要素のない状態でイベントを送って例外になり、遷移が500になっていた -->
+	<Header />
+	<slot></slot>
+</main>
 
 <style>
 	main {

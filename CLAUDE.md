@@ -133,6 +133,7 @@ Theme CSS is compiled to `static/` via `smui-theme` CLI. The theme switcher (`sr
 
 ### Performance Notes
 
+- `Header` lives in `src/routes/+layout.svelte` and persists across navigations. Do not put it back into individual pages: SMUI 8's `Menu` throws during teardown ("Tried to dispatch event without element"), which turns client-side navigation into a 500. Because the header is not re-mounted, pages that contain Mermaid diagrams call `renderMermaidForCurrentTheme()` themselves on mount and on slug change; `ThemeButton` only re-renders diagrams when the theme is toggled.
 - Keep heavy libraries out of components that render on every page (`Header`, `ThemeButton`, layouts). Use `import()` gated on the presence of the relevant element, as `Mermaid.ts` does.
 - The service worker (`src/service-worker.js`) precaches only `static/` files; `_app/` chunks are cached on first use.
 

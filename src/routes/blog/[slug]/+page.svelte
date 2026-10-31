@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { onMount, onDestroy, afterUpdate, tick, mount, unmount } from 'svelte';
-	import Header from '#lib/Header.svelte';
 	import Footer from '#lib/Footer.svelte';
 	import { AppConfig } from '#lib/AppConfig.js';
 	import PostFooter from '#lib/PostFooter.svelte';
 
 	import OgpCard from '#lib/OgpCard.svelte';
 	import { lightThemeStore } from '#lib/themeStore.js';
+	import { renderMermaidForCurrentTheme } from '#lib/Mermaid.js';
 
 	export let data;
 
@@ -18,6 +18,7 @@
 	// imperativeに作成したコンポーネントインスタンスを保存（メモリリーク防止）
 	let mapComponentInstances: Record<string, unknown>[] = [];
 	let lastOgpHydratedSlug: string | null = null;
+	let lastMermaidSlug: string | null = null;
 	let lastHydratedSlug: string | null = null;
 	let mapHydrationPromise: Promise<void> | null = null;
 
@@ -160,9 +161,11 @@
 			isLightTheme = value;
 		});
 
-		// Mermaid図の描画はHeader内のThemeButtonが$lib/Mermaidを通して行う。
-		// ここで初期化すると、描画途中でMermaidのグローバル設定が上書きされ、
-		// 親要素の実測幅を必要とするガント図が既定の300pxで描かれてしまう。
+		// Mermaid図の描画（テーマ切り替え時の再描画はヘッダーのThemeButtonが行う）。
+		// 描画の呼び出し元を1か所にしておくこと。二重に呼ぶと描画途中でMermaidの
+		// グローバル設定が上書きされ、親要素の実測幅を使うガント図が既定の300pxで描かれる
+		lastMermaidSlug = post_string;
+		renderMermaidForCurrentTheme();
 
 		// Chart.jsグラフの描画（dynamic import for SSR compatibility）
 		scheduleChartRendering();
@@ -198,6 +201,12 @@
 		// OGPカードの再ハイドレーション（記事変更時）
 		if (lastOgpHydratedSlug !== post_string) {
 			hydrateOgpCards();
+		}
+
+		// Mermaid図の描画（記事変更時。同一ルート内の遷移ではonMountが再実行されない）
+		if (lastMermaidSlug !== post_string) {
+			lastMermaidSlug = post_string;
+			renderMermaidForCurrentTheme();
 		}
 	});
 
@@ -298,7 +307,6 @@
 
 <div class="mdc-typography--body1">
 	<div class="content fade-in">
-		<Header />
 		{#if data.metadata?.image}
 			<div class="hero-image-container">
 				<div class="hero-image" style="background-image: url({data.metadata.image});"></div>

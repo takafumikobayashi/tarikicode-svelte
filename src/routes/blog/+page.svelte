@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Header from '#lib/Header.svelte';
 	import Footer from '#lib/Footer.svelte';
 	import Paper, { Title, Subtitle, Content } from '@smui/paper';
 	import LayoutGrid, { Cell } from '@smui/layout-grid';
@@ -207,8 +206,6 @@
 
 <div class="mdc-typography--body1">
 	<div class="content fade-in">
-		<Header />
-
 		<LayoutGrid>
 			<Cell span={12}>
 				<div class="demo-cell">
