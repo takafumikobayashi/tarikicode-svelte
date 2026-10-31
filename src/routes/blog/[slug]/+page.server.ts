@@ -4,8 +4,7 @@ import { error } from '@sveltejs/kit';
 import { AppConfig } from '#lib/AppConfig.js';
 import { createHeadingIdGenerator } from '#lib/utils/headingIds.js';
 import { renderCodeBlock } from '#lib/utils/highlightCode.js';
-import { Window } from 'happy-dom';
-import DOMPurify from 'dompurify';
+import { createPurifier } from '#lib/server/purify.js';
 
 // HTML属性値をエスケープするヘルパー（ogp-card属性の二重引用符破壊を防ぐ）
 function escapeAttr(value: string): string {
@@ -154,9 +153,7 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 
 			// サニタイズ処理 (DOMPurify)
 			// 既存の埋め込み(iframe, script)を維持しつつ、XSSを防ぐための設定
-			const window = new Window();
-			// @ts-expect-error happy-dom WindowとDOMPurify WindowLike型の互換性問題を回避
-			const purify = DOMPurify(window);
+			const purify = createPurifier();
 
 			// 許可するタグと属性の設定
 			const sanitizeOptions = {
