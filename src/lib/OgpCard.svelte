@@ -110,7 +110,13 @@
 			{#if image && !imageFailed}
 				<div class="ogp-card-image">
 					<!-- 配信元がCORP等で外部埋め込みを拒否する画像があるため、失敗したら枠ごと隠す -->
-					<img src={image} alt={title} on:error={() => (imageFailed = true)} />
+					<img
+						loading="lazy"
+						decoding="async"
+						src={image}
+						alt={title}
+						on:error={() => (imageFailed = true)}
+					/>
 				</div>
 			{/if}
 			<div class="ogp-card-text">

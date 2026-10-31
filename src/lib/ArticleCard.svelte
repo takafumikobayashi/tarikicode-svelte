@@ -21,7 +21,7 @@
 	<div class="card-content">
 		{#if image}
 			<div class="card-image">
-				<img src={image} alt={title} />
+				<img loading="lazy" decoding="async" src={image} alt={title} />
 			</div>
 		{/if}
 		<div class="card-info">

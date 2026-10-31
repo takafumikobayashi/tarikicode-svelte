@@ -32,9 +32,9 @@
 </script>
 
 <svelte:head>
-	{#each AppConfig.heroimage as hero}
-		<link rel="preload" as="image" href={hero.image} />
-	{/each}
+	<!-- 1枚目はCSS背景画像のためブラウザの発見が遅い。LCP要素なので最優先で先読みする。
+	     2枚目以降はスライド表示まで不要なので先読みしない（1枚目と帯域を奪い合うため） -->
+	<link rel="preload" as="image" href={AppConfig.heroimage[0].image} fetchpriority="high" />
 </svelte:head>
 
 <div class="fade-in">

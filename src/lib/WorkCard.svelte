@@ -15,7 +15,7 @@
 	<div class="card-content">
 		<div class="card-image">
 			{#if image}
-				<img src={image} alt={name} />
+				<img loading="lazy" decoding="async" src={image} alt={name} />
 			{:else}
 				<div class="card-placeholder" class:dark={!isLightTheme}>
 					<span class="placeholder-icon">&lt;/&gt;</span>

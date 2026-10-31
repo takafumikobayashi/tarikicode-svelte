@@ -12,6 +12,8 @@
 		<div class="demo-cell">
 			<div class="profile-image">
 				<img
+					loading="lazy"
+					decoding="async"
 					src="https://d1mt09hgbl7gpz.cloudfront.net/icon/GUiKceWbQAAO05i.png"
 					alt="プロフィール画像"
 				/>

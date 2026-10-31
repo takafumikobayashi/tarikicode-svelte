@@ -20,6 +20,8 @@
 		<div class="demo-cell">
 			<div class="profile-image">
 				<img
+					loading="lazy"
+					decoding="async"
 					src="https://d1mt09hgbl7gpz.cloudfront.net/icon/icon-256x256.png"
 					alt="プロフィール画像"
 				/>
