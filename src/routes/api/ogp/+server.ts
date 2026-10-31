@@ -3,6 +3,7 @@ import iconv from 'iconv-lite';
 import dns from 'dns';
 import net from 'net';
 import { Agent, fetch as undiciFetch } from 'undici';
+import { extractOgpTag, extractMetaTag, extractTag } from '#lib/server/ogpExtract.js';
 
 const MAX_REDIRECTS = 3;
 const REQUEST_TIMEOUT_MS = 5000;
@@ -342,68 +343,6 @@ function isForbiddenIp(address: string): boolean {
 	}
 
 	return false;
-}
-
-// OGPタグを抽出するヘルパー関数（property="og:xxx" と name="og:xxx"両方に対応）
-
-function escapeRegex(value: string): string {
-	return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-function extractOgpTag(html: string, property: string): string {
-	const safeProp = escapeRegex(property);
-	const patterns = [
-		new RegExp(
-			`<meta[^>]*property\\s*=\\s*["']${safeProp}["'][^>]*content\\s*=\\s*["']([^"']+)["'][^>]*>`,
-			'i'
-		),
-		new RegExp(
-			`<meta[^>]*content\\s*=\\s*["']([^"']+)["'][^>]*property\\s*=\\s*["']${safeProp}["'][^>]*>`,
-			'i'
-		),
-		new RegExp(
-			`<meta[^>]*name\\s*=\\s*["']${safeProp}["'][^>]*content\\s*=\\s*["']([^"']+)["'][^>]*>`,
-			'i'
-		),
-		new RegExp(
-			`<meta[^>]*content\\s*=\\s*["']([^"']+)["'][^>]*name\\s*=\\s*["']${safeProp}["'][^>]*>`,
-			'i'
-		)
-	];
-
-	for (const regex of patterns) {
-		const match = html.match(regex);
-		if (match) return match[1];
-	}
-
-	return '';
-}
-
-function extractMetaTag(html: string, name: string): string {
-	const safeName = escapeRegex(name);
-	const patterns = [
-		new RegExp(
-			`<meta[^>]*name\\s*=\\s*["']${safeName}["'][^>]*content\\s*=\\s*["']([^"']+)["'][^>]*>`,
-			'i'
-		),
-		new RegExp(
-			`<meta[^>]*content\\s*=\\s*["']([^"']+)["'][^>]*name\\s*=\\s*["']${safeName}["'][^>]*>`,
-			'i'
-		)
-	];
-
-	for (const regex of patterns) {
-		const match = html.match(regex);
-		if (match) return match[1];
-	}
-
-	return '';
-}
-
-function extractTag(html: string, tag: string): string {
-	const regex = new RegExp(`<${tag}[^>]*>([^<]+)</${tag}>`, 'i');
-	const match = html.match(regex);
-	return match ? match[1].trim() : '';
 }
 
 // HTMLから文字エンコーディングを検出するヘルパー関数
