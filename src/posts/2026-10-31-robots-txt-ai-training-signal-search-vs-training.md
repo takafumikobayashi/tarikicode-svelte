@@ -263,20 +263,20 @@ Microsoftは公式ブログで、学習を許可すると将来の生成AIモデ
 
 [[ogp:https://datatracker.ietf.org/doc/draft-kelley-aipref-training-preference-signal/]]
 
-[[ogp:https://www.rfc-editor.org/rfc/rfc9309.html]]
+[[ogp:https://www.rfc-editor.org/rfc/rfc9309.html||||RFC Editor]]
 
-[[ogp:https://developers.google.com/search/blog/2026/10/ai-training-control]]
+[[ogp:https://developers.google.com/search/blog/2026/10/ai-training-control|||Today, we're announcing our plans to support a shared AI training control in robots.txt.|]]
 
 [[ogp:https://blogs.bing.com/search/2026/10/your-content-your-choice-clearer-preferences-for-training-and-grounding/]]
 
-[[ogp:https://openai.com/index/helping-websites-express-ai-training-preferences/]]
+[[ogp:https://openai.com/index/helping-websites-express-ai-training-preferences/|https://images.ctfassets.net/kftzwdyauwt9/4fvNR0KxKmPYu4fRXtEgKp/4a522ef61a6f983b0b65ad39c2a71e4c/websites-toeexpress-ai-training-preferences-social.png?w=1600&h=900&fit=fill|Making it easier for websites to express AI training preferences|OpenAI will honor a shared robots.txt signal to help website operators communicate their AI training preferences to participating providers.|OpenAI]]
 
-[[ogp:https://developers.openai.com/api/docs/bots]]
+[[ogp:https://developers.openai.com/api/docs/bots|||OpenAI uses web crawlers (“robots”) and user agents to perform actions for its products, either automatically or triggered by user request.|]]
 
-[[ogp:https://support.claude.com/en/articles/8896518]]
+[[ogp:https://support.claude.com/en/articles/8896518|||ClaudeBot helps enhance the utility and safety of our generative AI models by collecting web content that could potentially contribute to their training.|Claude Help Center]]
 
 [[ogp:https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers]]
 
-[[ogp:https://support.google.com/webmasters/answer/16908024]]
+[[ogp:https://support.google.com/webmasters/answer/16908024||||Google Search Console Help]]
 
 [[ogp:https://www.theverge.com/tech/1023763/openai-google-microsoft-ai-scraping-standard-opt-out]]
