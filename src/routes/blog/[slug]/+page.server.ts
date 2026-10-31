@@ -26,9 +26,14 @@ const posts = import.meta.glob('/src/posts/**/*.md', {
 // 外部URLからOGP画像を取得するヘルパー関数
 const MAX_REDIRECTS = 3;
 
+// 外部サイトが応答しないと、ページ生成が止まりNetlifyの実行時間上限でエラーになるため期限を設ける。
+// リダイレクトの追跡とボディの読み込みを含めた取得全体で1つの期限を共有する
+const OGP_FETCH_TIMEOUT_MS = 3000;
+
 async function fetchOgpImage(url: string): Promise<string> {
 	try {
 		let currentUrl = url;
+		const signal = AbortSignal.timeout(OGP_FETCH_TIMEOUT_MS);
 
 		// リダイレクトを手動で追跡（最大3回）
 		for (let i = 0; i <= MAX_REDIRECTS; i++) {
@@ -37,7 +42,8 @@ async function fetchOgpImage(url: string): Promise<string> {
 					'User-Agent': 'tariki-code-bot/1.0 (+https://tariki-code.tokyo)',
 					Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
 				},
-				redirect: 'manual'
+				redirect: 'manual',
+				signal
 			});
 
 			// リダイレクトの場合は追跡

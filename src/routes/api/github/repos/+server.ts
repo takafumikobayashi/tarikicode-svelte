@@ -46,7 +46,8 @@ export const GET: RequestHandler = async () => {
 
 		const reposResponse = await fetch(
 			`${GITHUB_API_URL}/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=6`,
-			{ headers }
+			// GitHubが応答しない場合にページ生成が止まらないよう期限を設ける
+			{ headers, signal: AbortSignal.timeout(5000) }
 		);
 
 		if (!reposResponse.ok) {
