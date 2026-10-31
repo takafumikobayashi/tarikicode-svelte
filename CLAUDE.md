@@ -101,6 +101,8 @@ When the `image` field contains an external URL:
 Blog posts are Markdown files in `src/posts/` with YAML frontmatter. The system supports:
 
 - **Server-side rendering**: `src/routes/blog/[slug]/+page.server.ts` loads posts via `fs` and `gray-matter`
+- **Dev reload**: posts are SSR-only modules, so Vite 6+ does not notify the browser when they change. The `reloadOnPostChange` plugin in `vite.config.ts` sends a full reload when a file under `src/posts/` is saved.
+- **Sanitization**: `src/lib/server/purify.ts` runs DOMPurify on jsdom. Do not use happy-dom here: with DOMPurify 3.4+ it drops the first element and stops sanitizing the rest.
 - **Metadata extraction**: `src/lib/utils/posts.ts` provides `getAllPostsMetadata()` (reads frontmatter only, skips body for performance)
 - **Markdown processing**: `marked` converts Markdown to HTML
 - **Syntax highlighting**: highlight.js, applied **server-side** in the marked renderer (`src/lib/utils/highlightCode.ts`). Do not import highlight.js on the client.

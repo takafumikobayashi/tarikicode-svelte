@@ -1,8 +1,7 @@
 import { Marked } from 'marked';
 import matter from 'gray-matter';
 import { error } from '@sveltejs/kit';
-import { Window } from 'happy-dom';
-import DOMPurify from 'dompurify';
+import { createPurifier } from '#lib/server/purify.js';
 
 // HTML属性値をエスケープするヘルパー（ogp-card属性の二重引用符破壊を防ぐ）
 function escapeAttr(value: string): string {
@@ -74,9 +73,7 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 		});
 
 		// DOMPurifyでサニタイズ（サービスページはiframe/script不要のため厳格設定）
-		const window = new Window();
-		// @ts-expect-error happy-dom WindowとDOMPurify WindowLike型の互換性問題を回避
-		const purify = DOMPurify(window);
+		const purify = createPurifier();
 
 		let htmlContent = purify.sanitize(htmlForSanitize, {
 			ALLOWED_TAGS: [

@@ -1,0 +1,17 @@
+import DOMPurify from 'dompurify';
+import { JSDOM } from 'jsdom';
+
+/**
+ * サーバー側で使うDOMPurifyインスタンスを作る。
+ *
+ * DOM実装はjsdomを使う（DOMPurifyが公式にサポートしているサーバー環境）。
+ * happy-domは使わないこと: DOMPurify 3.4以降はタグ名を Node.prototype の nodeName getter
+ * で読むが、happy-domではこれが常に空文字を返す。その結果、最初の要素が「不明なタグ」として
+ * 除去され（記事冒頭の見出しタグが消える）、走査もそこで止まって残りのHTMLが
+ * サニタイズされずに通ってしまう。
+ */
+export function createPurifier() {
+	const { window } = new JSDOM('');
+	// jsdomのDOMWindowとDOMPurifyのWindowLike型は細部が一致しないため変換する
+	return DOMPurify(window as unknown as Parameters<typeof DOMPurify>[0]);
+}
