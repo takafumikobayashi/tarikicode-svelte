@@ -1,14 +1,26 @@
 import mermaid from 'mermaid';
 
+import { inlineIconSetUses } from './utils/inlineSvgUse';
+
 // アイコンパックは数MB規模になるため、図の中で該当プレフィックスの
-// アイコンが使われたときに初めて読み込む（loaderはMermaidが必要時に呼ぶ）
+// アイコンが使われたときに初めて読み込む（loaderはMermaidが必要時に呼ぶ）。
+// Mermaidのサニタイズで<use>が消えて見えなくなるアイコンがあるため、参照を展開して渡す
 mermaid.registerIconPacks([
-	{ name: 'logos', loader: () => import('@iconify-json/logos').then((m) => m.icons) },
-	{ name: 'cib', loader: () => import('@iconify-json/cib').then((m) => m.icons) },
-	{ name: 'ic', loader: () => import('@iconify-json/ic').then((m) => m.icons) },
+	{
+		name: 'logos',
+		loader: () => import('@iconify-json/logos').then((m) => inlineIconSetUses(m.icons))
+	},
+	{
+		name: 'cib',
+		loader: () => import('@iconify-json/cib').then((m) => inlineIconSetUses(m.icons))
+	},
+	{
+		name: 'ic',
+		loader: () => import('@iconify-json/ic').then((m) => inlineIconSetUses(m.icons))
+	},
 	{
 		name: 'vscode-icons',
-		loader: () => import('@iconify-json/vscode-icons').then((m) => m.icons)
+		loader: () => import('@iconify-json/vscode-icons').then((m) => inlineIconSetUses(m.icons))
 	}
 ]);
 
@@ -41,11 +53,27 @@ function initializeMermaid(theme: MermaidTheme, containers: HTMLElement[]) {
 	mermaid.initialize({
 		startOnLoad: false,
 		theme,
+		// mermaid 12でフローチャート等の既定がELKレイアウト・neoルックに変わったため、
+		// 既存記事の図の見た目を保つよう従来のdagre・classicを明示する
+		layout: 'dagre',
+		look: 'classic',
 		securityLevel: 'loose', // foreignObject内のHTMLを許可
 		fontFamily: 'system-ui, -apple-system, sans-serif',
 		flowchart: {
 			htmlLabels: true, // HTMLラベルを有効化
-			useMaxWidth: true
+			useMaxWidth: true,
+			// mermaid 12でラベル折り返し幅の既定が120pxになり、短い日本語ラベルも
+			// 2行に折れるようになった。mermaid 11のHTMLラベル上限(200px)に合わせる
+			wrappingWidth: 200,
+			// mermaid 12で追加されたノード最小幅（既定120px）を無効化する。
+			// 「入力」等の短いラベルまで横長になり、図全体が縮小されて文字が小さくなるため
+			minNodeWidth: 0
+		},
+		architecture: {
+			// mermaid 12で初期配置が決定的（randomize: false）になり、エッジのない
+			// architecture図ではアイコンが斜め一列に並んで重なってしまう。
+			// mermaid 11と同じくランダムな初期配置から計算させて格子状に広げる
+			randomize: true
 		},
 		gantt: {
 			useMaxWidth: true,
