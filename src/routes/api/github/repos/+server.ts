@@ -1,4 +1,3 @@
-import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 // オプショナルな環境変数（ビルド時に存在しない場合はundefinedになる）
@@ -31,7 +30,7 @@ export const GET: RequestHandler = async () => {
 		// キャッシュが有効かチェック
 		const now = Date.now();
 		if (cachedData && now - cacheTimestamp < CACHE_DURATION) {
-			return json(cachedData);
+			return Response.json(cachedData);
 		}
 
 		// GitHubリポジトリ情報を取得
@@ -51,7 +50,7 @@ export const GET: RequestHandler = async () => {
 		);
 
 		if (!reposResponse.ok) {
-			return json(
+			return Response.json(
 				{ error: 'Failed to fetch repositories' },
 				{ status: reposResponse.status }
 			);
@@ -93,9 +92,9 @@ export const GET: RequestHandler = async () => {
 		cachedData = responseData;
 		cacheTimestamp = now;
 
-		return json(responseData);
+		return Response.json(responseData);
 	} catch (error) {
 		console.error('GitHub API error:', error);
-		return json({ error: 'Failed to fetch GitHub data' }, { status: 500 });
+		return Response.json({ error: 'Failed to fetch GitHub data' }, { status: 500 });
 	}
 };

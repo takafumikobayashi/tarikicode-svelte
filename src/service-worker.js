@@ -1,4 +1,7 @@
-import { version, files, build } from '$service-worker';
+// SvelteKit 3で$service-workerは廃止され、$app/env・$app/manifest・$app/pathsに分割された
+import { version } from '$app/env';
+import { assets } from '$app/manifest';
+import { asset } from '$app/paths';
 
 // 開発環境かどうかを判定 (Viteによって置換される)
 const isDev = import.meta.env.DEV;
@@ -10,7 +13,16 @@ if (isDev) {
 	// fetchイベントリスナーを登録しないことで、すべてのリクエストをネットワークに流す
 } else {
 	const CACHE = `cache-${version}`;
-	const ASSETS = [...build, ...files];
+	// 事前キャッシュはstaticディレクトリのファイルだけにする。
+	// Viteの出力（$app/manifestのimmutable）には遅延ロード前提のmermaidやアイコンパック等も
+	// 含まれ合計20MB超になるため、初回訪問時にまとめて取得すると通信量が大きすぎる。
+	// _app/配下はfetchハンドラーでキャッシュ優先＋取得時に保存しているので、
+	// 実際に閲覧したページのチャンクは自然にキャッシュされる
+	// ドットファイル（macOSの.DS_Store等）は配信されず404になることが多い。
+	// cache.addAll は1件でも失敗すると全体が失敗し、Service Workerがインストールされないため除外する
+	const ASSETS = assets
+		.filter((file) => !file.path.split('/').some((segment) => segment.startsWith('.')))
+		.map((file) => asset(file.path));
 
 	self.addEventListener('install', (event) => {
 		async function addFilesToCache() {

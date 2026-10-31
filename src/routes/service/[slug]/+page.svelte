@@ -1,38 +1,19 @@
 <script lang="ts">
-	import { onMount, onDestroy, afterUpdate } from 'svelte';
-	import mermaid from 'mermaid';
-	import Header from '$lib/Header.svelte';
-	import Footer from '$lib/Footer.svelte';
-	import { AppConfig } from '$lib/AppConfig';
-	import { lightThemeStore } from '$lib/themeStore';
-	import { page } from '$app/stores';
-	import OgpCard from '$lib/OgpCard.svelte';
-	import type { SvelteComponent } from 'svelte';
+	import { onMount, onDestroy, afterUpdate, mount, unmount } from 'svelte';
+	import Footer from '#lib/Footer.svelte';
+	import { AppConfig } from '#lib/AppConfig.js';
+	import { lightThemeStore } from '#lib/themeStore.js';
+	import { renderMermaidForCurrentTheme } from '#lib/Mermaid.js';
+	import { page } from '$app/state';
+	import OgpCard from '#lib/OgpCard.svelte';
 
 	export let data;
 
-	let isLightTheme = true;
 	$: isLightTheme = $lightThemeStore;
 
 	let lastProcessedSlug = '';
 
-	async function processMermaid() {
-		const mermaidElements = document.querySelectorAll('.language-mermaid');
-		for (const element of mermaidElements) {
-			const code = element.textContent || '';
-			const parent = element.parentElement;
-			if (parent) {
-				try {
-					const { svg } = await mermaid.render(`mermaid-${Math.random()}`, code);
-					parent.innerHTML = svg;
-				} catch (e) {
-					console.error('Mermaid rendering error:', e);
-				}
-			}
-		}
-	}
-
-	let ogpCardInstances: SvelteComponent[] = [];
+	let ogpCardInstances: Record<string, unknown>[] = [];
 
 	function destroyOgpCards() {
 		if (!ogpCardInstances.length) {
@@ -40,7 +21,7 @@
 		}
 
 		ogpCardInstances.forEach((instance) => {
-			instance.$destroy();
+			void unmount(instance);
 		});
 		ogpCardInstances = [];
 	}
@@ -55,7 +36,7 @@
 			if (!url) return;
 
 			card.innerHTML = '';
-			const instance = new OgpCard({
+			const instance = mount(OgpCard, {
 				target: card as HTMLElement,
 				props: {
 					url,
@@ -69,18 +50,17 @@
 		});
 	}
 
-	onMount(async () => {
-		mermaid.initialize({ startOnLoad: false, theme: 'default' });
-		lastProcessedSlug = $page.params.slug ?? '';
-		await processMermaid();
+	onMount(() => {
+		lastProcessedSlug = page.params.slug ?? '';
+		renderMermaidForCurrentTheme();
 		processOgpCards();
 	});
 
-	afterUpdate(async () => {
-		const currentSlug = $page.params.slug;
+	afterUpdate(() => {
+		const currentSlug = page.params.slug;
 		if (currentSlug && currentSlug !== lastProcessedSlug) {
 			lastProcessedSlug = currentSlug;
-			await processMermaid();
+			renderMermaidForCurrentTheme();
 			processOgpCards();
 		}
 	});
@@ -93,18 +73,22 @@
 
 <svelte:head>
 	<title>{data.metadata?.title || 'Service'} - {AppConfig.title}</title>
+
 	<meta name="description" content={data.metadata?.description || AppConfig.description} />
 
 	<meta property="og:title" content={data.metadata?.title || AppConfig.title} />
+
 	<meta property="og:type" content="website" />
-	<meta property="og:url" content={`${AppConfig.url}/service/${$page.params.slug}`} />
+	<meta property="og:url" content={`${AppConfig.url}/service/${page.params.slug}`} />
 	<meta property="og:image" content={data.metadata?.image || AppConfig.post_string.about} />
 	<meta property="og:description" content={data.metadata?.description || AppConfig.description} />
 	<meta property="og:site_name" content={AppConfig.title} />
 
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:site" content={AppConfig.xaccuont} />
+
 	<meta name="twitter:title" content={data.metadata?.title || AppConfig.title} />
+
 	<meta
 		name="twitter:description"
 		content={data.metadata?.description || AppConfig.description}
@@ -114,13 +98,11 @@
 
 <div class="mdc-typography--body1">
 	<div class="content fade-in">
-		<Header />
 		<article class="service-detail">
 			<div class="article-header">
-				<a href="/" class="back-link">
-					<span class="back-arrow">&larr;</span> トップに戻る
-				</a>
+				<a href="/" class="back-link"><span class="back-arrow">←</span>トップに戻る</a>
 			</div>
+
 			{#if data.metadata?.label}
 				<span class="service-label" class:dark={!isLightTheme}>{data.metadata.label}</span>
 			{/if}
@@ -134,10 +116,8 @@
 						target="_blank"
 						rel="noopener noreferrer"
 						class="cta-button"
-						class:dark={!isLightTheme}
+						class:dark={!isLightTheme}>サービスを利用する →</a
 					>
-						サービスを利用する &rarr;
-					</a>
 				</div>
 			{/if}
 		</article>

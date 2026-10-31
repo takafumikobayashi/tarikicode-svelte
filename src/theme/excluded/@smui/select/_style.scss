@@ -1,0 +1,5 @@
+// smui-theme はインストール済みの @smui/* をすべてテーマCSSに含める。
+// @smui/select は @smui/data-table の依存として入るだけで、サイトでは使っていない
+// （data-table のページネーションも未使用）ため、空のスタイルで上書きして除外する。
+// include パスは先頭から探索されるので、package.json の smui-theme スクリプトで
+// このディレクトリを node_modules より前に渡している。

@@ -6,6 +6,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This repository contains **tarikicode-svelte**, a personal portfolio site built with SvelteKit. The site showcases projects, hosts a Markdown-based blog, and implements a theme-switching system with SMUI (Svelte Material UI).
 
+**Stack (as of 2026-10-31)**: SvelteKit 3 / Svelte 5 / Vite 8 (Rolldown) / TypeScript 6 / SMUI 8 / Vitest 5 / ESLint 10. Requires Node.js 22.17+.
+
+- Most components still use Svelte 4 syntax (`export let`, `$:`, `on:`) in legacy mode; this is supported by Svelte 5. Convert to runes only when touching a component for other reasons.
+- SMUI 8 component events are props: `onclick`, `oninput`, `onSMUIAction` (not `on:click` / `on:SMUI:action`). Slots are snippets (`{#snippet helper()}`).
+- Mount components imperatively with `mount()` / `unmount()` from `svelte` (not `new Component()` / `$destroy()`).
+- `$app/stores` no longer exists; use `$app/state`. In legacy components, `$:` statements do not track `$app/state`, so derive values from `data` instead (see `src/routes/blog/[slug]/+page.svelte`).
+
 **Important**: All project guidelines, coding standards, and workflows are documented in `AGENTS.md`. Always reference `AGENTS.md` for:
 
 - Repository structure and module organization
@@ -61,7 +68,7 @@ npm run test:ui            # Open Vitest UI
 When editing SMUI theme tokens in `src/theme/`:
 
 ```bash
-npm run prepare            # Rebuild both light & dark themes
+npm run prepare            # svelte-kit sync + rebuild both light & dark themes (also runs on npm install)
 npm run smui-theme-light   # Rebuild light theme only
 npm run smui-theme-dark    # Rebuild dark theme only
 ```
@@ -96,8 +103,9 @@ Blog posts are Markdown files in `src/posts/` with YAML frontmatter. The system 
 - **Server-side rendering**: `src/routes/blog/[slug]/+page.server.ts` loads posts via `fs` and `gray-matter`
 - **Metadata extraction**: `src/lib/utils/posts.ts` provides `getAllPostsMetadata()` (reads frontmatter only, skips body for performance)
 - **Markdown processing**: `marked` converts Markdown to HTML
-- **Syntax highlighting**: highlight.js (applied client-side)
-- **Mermaid diagrams**: Rendered client-side via `src/lib/Mermaid.ts`
+- **Syntax highlighting**: highlight.js, applied **server-side** in the marked renderer (`src/lib/utils/highlightCode.ts`). Do not import highlight.js on the client.
+- **Mermaid diagrams**: Rendered client-side. `src/lib/Mermaid.ts` is a lightweight entry that dynamically imports `src/lib/mermaidRenderer.ts` only when a diagram exists on the page. `mermaidRenderer.ts` pins mermaid 11-compatible settings (`layout: 'dagre'`, `look: 'classic'`, `wrappingWidth`, `minNodeWidth`, `architecture.randomize`) so existing diagrams keep their appearance on mermaid 12. Icon packs are lazy-loaded and passed through `inlineSvgUse` (Mermaid's sanitizer strips `<use>`).
+- **Charts / maps**: `ChartRenderer.ts` (Chart.js) and `ChatGptGoMap.svelte` (Leaflet) are dynamically imported only on posts that contain them.
 - **OGP card notation**: `[[ogp:URL]]` syntax auto-replaced with `<ogp-card>` component
 
 **Multiple post locations supported** (for backwards compatibility):
@@ -115,7 +123,19 @@ SMUI theme tokens live in:
 - `src/theme/` — Light theme
 - `src/theme/dark/` — Dark theme
 
-Theme CSS is compiled to `static/` via `smui-theme` CLI. The theme switcher (`src/lib/ThemeButton.svelte`) toggles a Svelte store (`src/lib/themeStore.ts`), which dynamically swaps the `<link>` tag in the document head.
+Theme CSS is compiled to `static/` via `smui-theme` CLI. The theme switcher (`src/lib/ThemeButton.svelte`) toggles a Svelte store (`src/lib/themeStore.ts`), which dynamically swaps the `<link>` tag in the document head. An inline script in `src/app.html` applies a saved theme before first paint.
+
+`smui-theme` bundles the styles of **every installed `@smui/*` package**. Unused packages that come in as dependencies (e.g. `@smui/select` via `@smui/data-table`) are excluded by empty `_style.scss` files in `src/theme/excluded/`, which is passed as an include path ahead of `node_modules`.
+
+### Scroll Reveal
+
+`src/lib/actions/reveal.ts` provides `use:reveal` (styles in `src/lib/styles/reveal.css`). It hides only elements that are outside the viewport when JS runs, so SSR content and the first view are never hidden. Do not nest it (a section and the cards inside it), or both will animate.
+
+### Performance Notes
+
+- `Header` lives in `src/routes/+layout.svelte` and persists across navigations. Do not put it back into individual pages: SMUI 8's `Menu` throws during teardown ("Tried to dispatch event without element"), which turns client-side navigation into a 500. Because the header is not re-mounted, pages that contain Mermaid diagrams call `renderMermaidForCurrentTheme()` themselves on mount and on slug change; `ThemeButton` only re-renders diagrams when the theme is toggled.
+- Keep heavy libraries out of components that render on every page (`Header`, `ThemeButton`, layouts). Use `import()` gated on the presence of the relevant element, as `Mermaid.ts` does.
+- The service worker (`src/service-worker.js`) precaches only `static/` files; `_app/` chunks are cached on first use.
 
 ### API Routes
 
@@ -214,7 +234,8 @@ See `AGENTS.md` for comprehensive jj documentation.
 - **Integration tests**: In `src/tests/`
 - **Test setup**: `src/tests/setup.ts` initializes Testing Library with happy-dom
 - **Coverage threshold**: Review HTML report in `coverage/` before merging PRs
-- **Current status**: 71 passing tests across 5 test files (as of 2025-12-06)
+- **Current status**: 103 passing tests across 12 test files (as of 2026-10-31)
+- **Smoke test after dependency updates**: unit tests and builds can pass while SSR fails at runtime. Run `npm run build && npm run preview` and request the main routes (`/`, `/blog`, `/about`, a blog post, a service page) before committing.
 
 ### Known Testing Limitations
 
@@ -244,7 +265,8 @@ For comprehensive coverage, consider implementing Playwright E2E tests for:
 ## Deployment
 
 - **Platform**: Netlify (auto-deploy from `main` branch)
-- **Adapter**: `@sveltejs/adapter-auto` (configured in `svelte.config.js`)
+- **Adapter**: `@sveltejs/adapter-auto` (configured in `vite.config.ts` via `sveltekit({ adapter })`; SvelteKit 3 has no `svelte.config.js`)
+- **Import alias**: `#lib/...` (package.json `imports`) with explicit extensions, e.g. `#lib/AppConfig.js`. The `$lib` alias was removed in SvelteKit 3.
 - **Environment variables**: Optional `GITHUB_TOKEN` for GitHub API (increases rate limit from 60 to 5000/hour)
 
 ### GitHub Actions
@@ -276,7 +298,7 @@ Before committing:
 
 - Unused variables trigger warnings (prefix `_` to ignore)
 - `console.log` is disallowed (use `console.warn` or `console.error`)
-- Prettier enforces 2-space indentation, single quotes, trailing semicolons
+- Prettier enforces tab indentation, single quotes, semicolons, no trailing commas, print width 100
 
 ## Critical Files Reference
 

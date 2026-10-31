@@ -1,28 +1,24 @@
 <script lang="ts">
-	import { onMount, onDestroy, afterUpdate, tick } from 'svelte';
-	import Header from '$lib/Header.svelte';
-	import Footer from '$lib/Footer.svelte';
-	import { page } from '$app/stores';
-	import { AppConfig } from '$lib/AppConfig';
-	import PostFooter from '$lib/PostFooter.svelte';
+	import { onMount, onDestroy, afterUpdate, tick, mount, unmount } from 'svelte';
+	import Footer from '#lib/Footer.svelte';
+	import { AppConfig } from '#lib/AppConfig.js';
+	import PostFooter from '#lib/PostFooter.svelte';
 
-	// ハイライトのスタイルを読み込む
-	import hljs from 'highlight.js';
-	import ChatGptGoMap from '$lib/ChatGptGoMap.svelte';
-	import OgpCard from '$lib/OgpCard.svelte';
-	import type { SvelteComponent } from 'svelte';
-	import { lightThemeStore } from '$lib/themeStore';
+	import OgpCard from '#lib/OgpCard.svelte';
+	import { lightThemeStore } from '#lib/themeStore.js';
+	import { renderMermaidForCurrentTheme } from '#lib/Mermaid.js';
 
 	export let data;
 
 	// Chart.jsモジュール（dynamic import for SSR compatibility）
-	let chartModule: typeof import('$lib/ChartRenderer') | null = null;
+	let chartModule: typeof import('#lib/ChartRenderer.js') | null = null;
 	let lastRenderedChartSlug: string | null = null;
 	let chartRenderingPromise: Promise<void> | null = null;
 
 	// imperativeに作成したコンポーネントインスタンスを保存（メモリリーク防止）
-	let mapComponentInstances: SvelteComponent[] = [];
+	let mapComponentInstances: Record<string, unknown>[] = [];
 	let lastOgpHydratedSlug: string | null = null;
+	let lastMermaidSlug: string | null = null;
 	let lastHydratedSlug: string | null = null;
 	let mapHydrationPromise: Promise<void> | null = null;
 
@@ -30,7 +26,7 @@
 	let isLightTheme = true;
 	let unsubscribeTheme: (() => void) | null = null;
 
-	let ogpCardInstances: SvelteComponent[] = [];
+	let ogpCardInstances: Record<string, unknown>[] = [];
 	// ハイドレーション中の再入を防ぐフラグ（詳細は hydrateOgpCards のコメント参照）
 	let hydratingOgpCards = false;
 
@@ -40,7 +36,7 @@
 		}
 
 		ogpCardInstances.forEach((instance) => {
-			instance.$destroy();
+			void unmount(instance);
 		});
 		ogpCardInstances = [];
 	}
@@ -72,7 +68,7 @@
 			if (!url) return;
 
 			card.innerHTML = '';
-			const instance = new OgpCard({
+			const instance = mount(OgpCard, {
 				target: card as HTMLElement,
 				props: {
 					url,
@@ -92,7 +88,7 @@
 		}
 
 		mapComponentInstances.forEach((instance) => {
-			instance.$destroy();
+			void unmount(instance);
 		});
 		mapComponentInstances = [];
 	}
@@ -102,12 +98,16 @@
 		await tick();
 
 		const mapElements = document.querySelectorAll('chatgpt-go-map');
-		mapElements.forEach((mapEl) => {
-			const mapInstance = new ChatGptGoMap({
-				target: mapEl as HTMLElement
+		if (mapElements.length > 0) {
+			// Leafletを含む地図コンポーネントは、地図がある記事でだけ読み込む
+			const { default: ChatGptGoMap } = await import('#lib/ChatGptGoMap.svelte');
+			mapElements.forEach((mapEl) => {
+				const mapInstance = mount(ChatGptGoMap, {
+					target: mapEl as HTMLElement
+				});
+				mapComponentInstances.push(mapInstance);
 			});
-			mapComponentInstances.push(mapInstance);
-		});
+		}
 
 		lastHydratedSlug = post_string ?? null;
 	}
@@ -123,9 +123,15 @@
 	}
 
 	async function renderChartsForCurrentPost() {
+		// グラフのない記事ではChart.jsを読み込まない
+		if (!chartModule && !document.querySelector('code.language-chartjs')) {
+			lastRenderedChartSlug = post_string ?? null;
+			return;
+		}
+
 		// Chart.jsモジュールをロード（初回のみ）
 		if (!chartModule) {
-			chartModule = await import('$lib/ChartRenderer');
+			chartModule = await import('#lib/ChartRenderer.js');
 		}
 
 		// 古いチャートインスタンスをクリーンアップ
@@ -155,20 +161,16 @@
 			isLightTheme = value;
 		});
 
-		// Mermaid図の描画はHeader内のThemeButtonが$lib/Mermaidを通して行う。
-		// ここで初期化すると、描画途中でMermaidのグローバル設定が上書きされ、
-		// 親要素の実測幅を必要とするガント図が既定の300pxで描かれてしまう。
+		// Mermaid図の描画（テーマ切り替え時の再描画はヘッダーのThemeButtonが行う）。
+		// 描画の呼び出し元を1か所にしておくこと。二重に呼ぶと描画途中でMermaidの
+		// グローバル設定が上書きされ、親要素の実測幅を使うガント図が既定の300pxで描かれる
+		lastMermaidSlug = post_string;
+		renderMermaidForCurrentTheme();
 
 		// Chart.jsグラフの描画（dynamic import for SSR compatibility）
 		scheduleChartRendering();
 
-		// コンテンツがDOMにレンダリングされた後にハイライトを適用
-		document
-			.querySelectorAll('pre code:not(.language-mermaid):not(.language-chartjs)')
-			.forEach((block) => {
-				// @ts-expect-error highlight.js v11 exposes highlightBlock at runtime
-				hljs.highlightBlock(block);
-			});
+		// コードハイライトは+page.server.tsでSSR済み（クライアントにhighlight.jsは不要）
 
 		// OGPカードの処理
 		hydrateOgpCards();
@@ -177,12 +179,9 @@
 		scheduleMapHydration();
 	});
 
-	// slugを取得
-	let post_string: string = '';
-	// page ストアを購読して slug パラメータを取得
-	const unsubscribe = page.subscribe(($page) => {
-		post_string = $page.params.slug || '';
-	});
+	// slugを取得（$app/stores廃止に伴い、loadが返すslugから導出する。
+	// $:は描画前に実行されるため、afterUpdateの時点で遷移先のslugが入っている）
+	$: post_string = data.slug ?? '';
 
 	afterUpdate(() => {
 		if (!post_string) {
@@ -203,6 +202,12 @@
 		if (lastOgpHydratedSlug !== post_string) {
 			hydrateOgpCards();
 		}
+
+		// Mermaid図の描画（記事変更時。同一ルート内の遷移ではonMountが再実行されない）
+		if (lastMermaidSlug !== post_string) {
+			lastMermaidSlug = post_string;
+			renderMermaidForCurrentTheme();
+		}
 	});
 
 	// テーマ変更時にチャートを再描画
@@ -215,9 +220,6 @@
 
 	// コンポーネントが破棄されたときにクリーンアップ
 	onDestroy(() => {
-		// page ストアの購読を解除
-		unsubscribe();
-
 		// テーマストアの購読を解除
 		unsubscribeTheme?.();
 
@@ -265,7 +267,9 @@
 		content={data.metadata?.title || `${post_string} - ${AppConfig.title}`}
 	/>
 	<meta property="og:type" content="article" />
+
 	<meta property="og:url" content={`${AppConfig.url}/blog/${post_string}`} />
+
 	<meta
 		property="og:image"
 		content={data.metadata?.image ||
@@ -280,7 +284,9 @@
 	<!-- Twitter Card -->
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:site" content={AppConfig.xaccuont} />
+
 	<meta name="twitter:title" content={data.metadata?.title || AppConfig.title} />
+
 	<meta
 		name="twitter:description"
 		content={data.metadata?.description || AppConfig.description}
@@ -301,10 +307,9 @@
 
 <div class="mdc-typography--body1">
 	<div class="content fade-in">
-		<Header />
 		{#if data.metadata?.image}
 			<div class="hero-image-container">
-				<div class="hero-image" style="background-image: url({data.metadata.image});" />
+				<div class="hero-image" style="background-image: url({data.metadata.image});"></div>
 			</div>
 		{/if}
 		<article>
@@ -440,7 +445,8 @@
 		:global(
 			svg[aria-roledescription='quadrantChart'] .quadrants > .quadrant:nth-child(1) rect
 		) {
-		fill: #efe9f8; /* 右上: 書籍・資格・体系化された知識 */
+		fill: #efe9f8;
+		/* 右上: 書籍・資格・体系化された知識 */
 	}
 
 	:global(body:not([data-theme='dark']))
@@ -448,7 +454,8 @@
 		:global(
 			svg[aria-roledescription='quadrantChart'] .quadrants > .quadrant:nth-child(2) rect
 		) {
-		fill: #e8f1fb; /* 左上: ネット記事・技術論文 */
+		fill: #e8f1fb;
+		/* 左上: ネット記事・技術論文 */
 	}
 
 	:global(body:not([data-theme='dark']))
@@ -456,7 +463,8 @@
 		:global(
 			svg[aria-roledescription='quadrantChart'] .quadrants > .quadrant:nth-child(3) rect
 		) {
-		fill: #e6f4ec; /* 左下: 口コミ・営業経由・コミュニティ */
+		fill: #e6f4ec;
+		/* 左下: 口コミ・営業経由・コミュニティ */
 	}
 
 	:global(body:not([data-theme='dark']))
@@ -464,6 +472,7 @@
 		:global(
 			svg[aria-roledescription='quadrantChart'] .quadrants > .quadrant:nth-child(4) rect
 		) {
-		fill: #fbeef0; /* 右下: 経験談・価値観・暗黙知 */
+		fill: #fbeef0;
+		/* 右下: 経験談・価値観・暗黙知 */
 	}
 </style>

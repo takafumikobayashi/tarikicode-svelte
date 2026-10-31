@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { lightThemeStore } from '$lib/themeStore';
+	import { lightThemeStore } from '#lib/themeStore.js';
 
 	export let name: string;
 	export let subtitle: string;
@@ -8,7 +8,6 @@
 	export let image: string;
 	export let label: string = '';
 
-	let isLightTheme = true;
 	$: isLightTheme = $lightThemeStore;
 </script>
 
@@ -19,7 +18,7 @@
 				<span class="card-label">{label}</span>
 			{/if}
 			{#if image}
-				<img src={image} alt={name} />
+				<img loading="lazy" decoding="async" src={image} alt={name} />
 			{:else}
 				<div class="card-placeholder" class:dark={!isLightTheme}>
 					<span class="placeholder-icon">&lt;/&gt;</span>

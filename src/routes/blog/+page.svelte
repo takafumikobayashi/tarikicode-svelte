@@ -1,14 +1,14 @@
 <script lang="ts">
-	import Header from '$lib/Header.svelte';
-	import Footer from '$lib/Footer.svelte';
+	import Footer from '#lib/Footer.svelte';
 	import Paper, { Title, Subtitle, Content } from '@smui/paper';
 	import LayoutGrid, { Cell } from '@smui/layout-grid';
 	import Card, { Content as CardContent, Media } from '@smui/card';
 	import Button, { Label } from '@smui/button';
-	import { AppConfig } from '$lib/AppConfig';
+	import { AppConfig } from '#lib/AppConfig.js';
 	import { goto } from '$app/navigation';
 	import { onMount, onDestroy } from 'svelte';
 	import type { PageData } from './$types';
+	import { reveal } from '#lib/actions/reveal.js';
 
 	export let data: PageData;
 
@@ -163,6 +163,8 @@
 		const newFilterKey = `${data.selectedCategory || ''}-${data.selectedTag || ''}-${data.selectedType || ''}-${data.currentPage}`;
 		if (newFilterKey !== currentFilterKey) {
 			// フィルター/ページ変更を検出
+			// 次回この$:ブロックが再実行されたときの比較に使う（ESLintは$:の再実行を追えず誤検知する）
+			// eslint-disable-next-line no-useless-assignment
 			currentFilterKey = newFilterKey;
 			// 進行中のリクエストをキャンセル
 			if (abortController) {
@@ -204,8 +206,6 @@
 
 <div class="mdc-typography--body1">
 	<div class="content fade-in">
-		<Header />
-
 		<LayoutGrid>
 			<Cell span={12}>
 				<div class="demo-cell">
@@ -236,7 +236,7 @@
 											<div class="filter-item filter-item-button">
 												<Button
 													variant="outlined"
-													on:click={() => goto('/blog')}
+													onclick={() => goto('/blog')}
 												>
 													<Label>フィルタをクリア</Label>
 												</Button>
@@ -282,9 +282,10 @@
 			</Cell>
 
 			<!-- 記事一覧 -->
-			{#each displayedPosts as post}
+			{#each displayedPosts as post, i}
 				<Cell span={4}>
-					<div class="demo-cell">
+					<!-- 3列グリッドの列位置ごとに少しずつ遅らせて、横方向に流れるように表示する -->
+					<div class="demo-cell" use:reveal={{ delay: (i % 3) * 100 }}>
 						<Card variant="outlined" class="post-card">
 							{#if post.image}
 								<Media
@@ -336,7 +337,7 @@
 							<Button
 								variant="outlined"
 								disabled={data.currentPage === 1}
-								on:click={() => goToPage(data.currentPage - 1)}
+								onclick={() => goToPage(data.currentPage - 1)}
 							>
 								<Label>前へ</Label>
 							</Button>
@@ -348,7 +349,7 @@
 							<Button
 								variant="outlined"
 								disabled={data.currentPage === data.totalPages}
-								on:click={() => goToPage(data.currentPage + 1)}
+								onclick={() => goToPage(data.currentPage + 1)}
 							>
 								<Label>次へ</Label>
 							</Button>

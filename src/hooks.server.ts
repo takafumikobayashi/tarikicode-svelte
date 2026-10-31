@@ -1,4 +1,4 @@
-import type { Handle } from '@sveltejs/kit';
+import type { Handle } from '@sveltejs/kit/hooks';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	// Chrome DevToolsや他のツールが自動的にリクエストする .well-known パスを静かに404で返す

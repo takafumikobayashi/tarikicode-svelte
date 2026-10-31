@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { lightThemeStore } from '$lib/themeStore';
+	import { lightThemeStore } from '#lib/themeStore.js';
 	import Skills from './Skills.svelte';
 
-	let isLightTheme = true;
 	$: isLightTheme = $lightThemeStore;
 
 	const careerHistory = [

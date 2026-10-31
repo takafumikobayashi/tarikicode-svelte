@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { lightThemeStore } from '$lib/themeStore';
+	import { lightThemeStore } from '#lib/themeStore.js';
 
 	export let name: string;
 	export let description: string;
@@ -9,7 +9,6 @@
 	export let forks_count: number;
 	export let updated_at: string;
 
-	let isLightTheme = true;
 	$: isLightTheme = $lightThemeStore;
 
 	// 最終更新日をフォーマット

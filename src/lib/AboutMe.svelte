@@ -12,6 +12,8 @@
 		<div class="demo-cell">
 			<div class="profile-image">
 				<img
+					loading="lazy"
+					decoding="async"
 					src="https://d1mt09hgbl7gpz.cloudfront.net/icon/GUiKceWbQAAO05i.png"
 					alt="プロフィール画像"
 				/>
@@ -32,7 +34,7 @@
 			</div>
 			{#if linkon}
 				<div class="demo-cell-left">
-					<Button on:click={() => aboutLink()} variant="raised">
+					<Button onclick={() => aboutLink()} variant="raised">
 						<Label>プロフィールをもっと見る</Label>
 					</Button>
 				</div>

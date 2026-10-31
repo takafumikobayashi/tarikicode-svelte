@@ -1,5 +1,4 @@
-import { json } from '@sveltejs/kit';
-import { getAllPostsMetadata } from '$lib/utils/posts';
+import { getAllPostsMetadata } from '#lib/utils/posts.js';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ url }) => {
@@ -36,7 +35,7 @@ export const GET: RequestHandler = async ({ url }) => {
 	const paginatedPosts = filteredPosts.slice(offset, offset + limit);
 	const hasMore = offset + limit < filteredPosts.length;
 
-	return json({
+	return Response.json({
 		posts: paginatedPosts,
 		hasMore,
 		total: filteredPosts.length

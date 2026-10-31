@@ -1,10 +1,9 @@
 <script lang="ts">
 	import LayoutGrid, { Cell } from '@smui/layout-grid';
 	import { onMount, tick } from 'svelte';
-	import { lightThemeStore } from '$lib/themeStore';
+	import { lightThemeStore } from '#lib/themeStore.js';
 
 	const TWITTER_WIDGET_URL = 'https://platform.twitter.com/widgets.js';
-	let theme = 'light';
 	let tweetUrls: string[] = [];
 
 	$: theme = $lightThemeStore ? 'light' : 'dark';
