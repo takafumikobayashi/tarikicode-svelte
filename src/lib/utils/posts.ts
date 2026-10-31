@@ -101,7 +101,7 @@ export async function getAllPostsMetadata(
 			const baseSlug = path.basename(file, '.md');
 
 			// 画像URLの取得ロジック
-			let imageUrl = '';
+			let imageUrl: string;
 
 			if (data.image) {
 				// imageフィールドが外部URL（http/https）の場合

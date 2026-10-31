@@ -2,7 +2,6 @@
 	import { lightThemeStore } from '$lib/themeStore';
 	import Skills from './Skills.svelte';
 
-	let isLightTheme = true;
 	$: isLightTheme = $lightThemeStore;
 
 	const careerHistory = [

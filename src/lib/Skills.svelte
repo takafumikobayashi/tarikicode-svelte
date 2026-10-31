@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { lightThemeStore } from '$lib/themeStore';
 
-	let isLightTheme = true;
 	$: isLightTheme = $lightThemeStore;
 
 	interface Skill {

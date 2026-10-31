@@ -9,7 +9,6 @@
 	export let forks_count: number;
 	export let updated_at: string;
 
-	let isLightTheme = true;
 	$: isLightTheme = $lightThemeStore;
 
 	// 最終更新日をフォーマット

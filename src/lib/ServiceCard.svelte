@@ -8,7 +8,6 @@
 	export let image: string;
 	export let label: string = '';
 
-	let isLightTheme = true;
 	$: isLightTheme = $lightThemeStore;
 </script>
 

@@ -7,7 +7,6 @@
 	export let image: string;
 	export let site: string;
 
-	let isLightTheme = true;
 	$: isLightTheme = $lightThemeStore;
 </script>
 

@@ -4,7 +4,6 @@
 	import { lightThemeStore } from '$lib/themeStore';
 
 	const TWITTER_WIDGET_URL = 'https://platform.twitter.com/widgets.js';
-	let theme = 'light';
 	let tweetUrls: string[] = [];
 
 	$: theme = $lightThemeStore ? 'light' : 'dark';

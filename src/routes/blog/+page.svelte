@@ -164,6 +164,8 @@
 		const newFilterKey = `${data.selectedCategory || ''}-${data.selectedTag || ''}-${data.selectedType || ''}-${data.currentPage}`;
 		if (newFilterKey !== currentFilterKey) {
 			// フィルター/ページ変更を検出
+			// 次回この$:ブロックが再実行されたときの比較に使う（ESLintは$:の再実行を追えず誤検知する）
+			// eslint-disable-next-line no-useless-assignment
 			currentFilterKey = newFilterKey;
 			// 進行中のリクエストをキャンセル
 			if (abortController) {
