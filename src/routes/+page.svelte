@@ -1,20 +1,20 @@
 <script>
-	import Header from '$lib/Header.svelte';
-	import Footer from '$lib/Footer.svelte';
-	import Card from '$lib/Card.svelte';
-	import HeroImage from '$lib/HeroImage.svelte';
+	import Header from '#lib/Header.svelte';
+	import Footer from '#lib/Footer.svelte';
+	import Card from '#lib/Card.svelte';
+	import HeroImage from '#lib/HeroImage.svelte';
 	import Paper, { Title, Subtitle, Content } from '@smui/paper';
 	import LayoutGrid, { Cell } from '@smui/layout-grid';
-	import Sns from '$lib/Sns.svelte';
-	import AboutMe from '$lib/AboutMe.svelte';
-	import Articles from '$lib/Articles.svelte';
-	import RecentPost from '$lib/RecentPost.svelte';
-	import BlogPosts from '$lib/BlogPosts.svelte';
-	import { AppConfig } from '$lib/AppConfig';
-	import Contacts from '$lib/Contacts.svelte';
-	import NewRelease from '$lib/NewRelease.svelte';
-	import Service from '$lib/Service.svelte';
-	import { reveal } from '$lib/actions/reveal';
+	import Sns from '#lib/Sns.svelte';
+	import AboutMe from '#lib/AboutMe.svelte';
+	import Articles from '#lib/Articles.svelte';
+	import RecentPost from '#lib/RecentPost.svelte';
+	import BlogPosts from '#lib/BlogPosts.svelte';
+	import { AppConfig } from '#lib/AppConfig.js';
+	import Contacts from '#lib/Contacts.svelte';
+	import NewRelease from '#lib/NewRelease.svelte';
+	import Service from '#lib/Service.svelte';
+	import { reveal } from '#lib/actions/reveal.js';
 </script>
 
 <svelte:head>

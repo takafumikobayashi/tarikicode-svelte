@@ -1,15 +1,17 @@
 <script>
 	// appConfig.jsなどからサイト全体の設定情報をインポート
-	import { AppConfig } from '$lib/AppConfig';
-	import { page } from '$app/stores';
+	import { AppConfig } from '#lib/AppConfig.js';
+	import { page } from '$app/state';
 	import { afterNavigate } from '$app/navigation';
-	import '$lib/styles/reveal.css';
+	import '#lib/styles/reveal.css';
 
 	// 初回ナビゲーションフラグ（二重送信を防ぐ）
 	let isFirstNavigation = true;
 
 	// ページ遷移時にGoogle Analyticsにページビューを送信
-	afterNavigate(() => {
+	afterNavigate(({ shallow, type }) => {
+		if (shallow && type === 'goto') return;
+
 		// 初回ナビゲーションはスキップ（app.htmlで既に送信済み）
 		if (isFirstNavigation) {
 			isFirstNavigation = false;
@@ -18,7 +20,7 @@
 
 		if (typeof window !== 'undefined' && window.gtag) {
 			window.gtag('config', 'G-ZYB8P4GTXY', {
-				page_path: $page.url.pathname,
+				page_path: page.url.pathname,
 				page_title: document.title
 			});
 		}
@@ -30,9 +32,7 @@
 	<meta name="description" content={AppConfig.description} />
 </svelte:head>
 
-<main>
-	<slot />
-</main>
+<main><slot></slot></main>
 
 <style>
 	main {

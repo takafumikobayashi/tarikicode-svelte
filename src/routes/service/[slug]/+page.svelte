@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { onMount, onDestroy, afterUpdate, mount, unmount } from 'svelte';
-	import Header from '$lib/Header.svelte';
-	import Footer from '$lib/Footer.svelte';
-	import { AppConfig } from '$lib/AppConfig';
-	import { lightThemeStore } from '$lib/themeStore';
-	import { setMermaidTheme } from '$lib/Mermaid';
-	import { page } from '$app/stores';
-	import OgpCard from '$lib/OgpCard.svelte';
+	import Header from '#lib/Header.svelte';
+	import Footer from '#lib/Footer.svelte';
+	import { AppConfig } from '#lib/AppConfig.js';
+	import { lightThemeStore } from '#lib/themeStore.js';
+	import { setMermaidTheme } from '#lib/Mermaid.js';
+	import { page } from '$app/state';
+	import OgpCard from '#lib/OgpCard.svelte';
 
 	export let data;
 
@@ -55,12 +55,12 @@
 	// 初回のMermaid描画はHeader内のThemeButtonが$lib/Mermaidを通して行う
 	// （記事ページと同じ方式。ここでも描画すると二重描画になる）
 	onMount(() => {
-		lastProcessedSlug = $page.params.slug ?? '';
+		lastProcessedSlug = page.params.slug ?? '';
 		processOgpCards();
 	});
 
 	afterUpdate(() => {
-		const currentSlug = $page.params.slug;
+		const currentSlug = page.params.slug;
 		if (currentSlug && currentSlug !== lastProcessedSlug) {
 			lastProcessedSlug = currentSlug;
 			// 同一ルート内の遷移ではThemeButtonが再マウントされないため、ここで描画する
@@ -77,18 +77,22 @@
 
 <svelte:head>
 	<title>{data.metadata?.title || 'Service'} - {AppConfig.title}</title>
+
 	<meta name="description" content={data.metadata?.description || AppConfig.description} />
 
 	<meta property="og:title" content={data.metadata?.title || AppConfig.title} />
+
 	<meta property="og:type" content="website" />
-	<meta property="og:url" content={`${AppConfig.url}/service/${$page.params.slug}`} />
+	<meta property="og:url" content={`${AppConfig.url}/service/${page.params.slug}`} />
 	<meta property="og:image" content={data.metadata?.image || AppConfig.post_string.about} />
 	<meta property="og:description" content={data.metadata?.description || AppConfig.description} />
 	<meta property="og:site_name" content={AppConfig.title} />
 
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:site" content={AppConfig.xaccuont} />
+
 	<meta name="twitter:title" content={data.metadata?.title || AppConfig.title} />
+
 	<meta
 		name="twitter:description"
 		content={data.metadata?.description || AppConfig.description}
@@ -101,10 +105,9 @@
 		<Header />
 		<article class="service-detail">
 			<div class="article-header">
-				<a href="/" class="back-link">
-					<span class="back-arrow">&larr;</span> トップに戻る
-				</a>
+				<a href="/" class="back-link"><span class="back-arrow">←</span>トップに戻る</a>
 			</div>
+
 			{#if data.metadata?.label}
 				<span class="service-label" class:dark={!isLightTheme}>{data.metadata.label}</span>
 			{/if}
@@ -118,10 +121,8 @@
 						target="_blank"
 						rel="noopener noreferrer"
 						class="cta-button"
-						class:dark={!isLightTheme}
+						class:dark={!isLightTheme}>サービスを利用する →</a
 					>
-						サービスを利用する &rarr;
-					</a>
 				</div>
 			{/if}
 		</article>

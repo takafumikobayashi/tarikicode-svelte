@@ -1,9 +1,9 @@
 import { Marked, Renderer } from 'marked';
 import matter from 'gray-matter';
 import { error } from '@sveltejs/kit';
-import { AppConfig } from '$lib/AppConfig';
-import { createHeadingIdGenerator } from '$lib/utils/headingIds';
-import { renderCodeBlock } from '$lib/utils/highlightCode';
+import { AppConfig } from '#lib/AppConfig.js';
+import { createHeadingIdGenerator } from '#lib/utils/headingIds.js';
+import { renderCodeBlock } from '#lib/utils/highlightCode.js';
 import { Window } from 'happy-dom';
 import DOMPurify from 'dompurify';
 
@@ -369,6 +369,7 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 			// メタデータと本文を返す
 			return {
 				status: 200,
+				slug,
 				body: htmlContent,
 				metadata: {
 					title: data.title || slug,

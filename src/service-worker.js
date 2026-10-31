@@ -1,4 +1,7 @@
-import { version, files, build } from '$service-worker';
+// SvelteKit 3で$service-workerは廃止され、$app/env・$app/manifest・$app/pathsに分割された
+import { version } from '$app/env';
+import { immutable, assets } from '$app/manifest';
+import { asset } from '$app/paths';
 
 // 開発環境かどうかを判定 (Viteによって置換される)
 const isDev = import.meta.env.DEV;
@@ -10,7 +13,11 @@ if (isDev) {
 	// fetchイベントリスナーを登録しないことで、すべてのリクエストをネットワークに流す
 } else {
 	const CACHE = `cache-${version}`;
-	const ASSETS = [...build, ...files];
+	// immutable: Viteの出力（旧build）、assets: staticディレクトリのファイル（旧files）
+	const ASSETS = [
+		...immutable.map((file) => file.path),
+		...assets.map((file) => asset(file.path))
+	];
 
 	self.addEventListener('install', (event) => {
 		async function addFilesToCache() {

@@ -1,5 +1,4 @@
-import { json } from '@sveltejs/kit';
-import { getAllPostsMetadata } from '$lib/utils/posts';
+import { getAllPostsMetadata } from '#lib/utils/posts.js';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async () => {
@@ -9,7 +8,7 @@ export const GET: RequestHandler = async () => {
 	// blogタイプのみフィルタし、最新6件を取得
 	const recentBlogPosts = allPosts.filter((post) => post.type === 'blog').slice(0, 6);
 
-	return json({
+	return Response.json({
 		posts: recentBlogPosts
 	});
 };

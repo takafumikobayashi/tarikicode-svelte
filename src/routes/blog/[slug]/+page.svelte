@@ -1,18 +1,17 @@
 <script lang="ts">
 	import { onMount, onDestroy, afterUpdate, tick, mount, unmount } from 'svelte';
-	import Header from '$lib/Header.svelte';
-	import Footer from '$lib/Footer.svelte';
-	import { page } from '$app/stores';
-	import { AppConfig } from '$lib/AppConfig';
-	import PostFooter from '$lib/PostFooter.svelte';
+	import Header from '#lib/Header.svelte';
+	import Footer from '#lib/Footer.svelte';
+	import { AppConfig } from '#lib/AppConfig.js';
+	import PostFooter from '#lib/PostFooter.svelte';
 
-	import OgpCard from '$lib/OgpCard.svelte';
-	import { lightThemeStore } from '$lib/themeStore';
+	import OgpCard from '#lib/OgpCard.svelte';
+	import { lightThemeStore } from '#lib/themeStore.js';
 
 	export let data;
 
 	// Chart.jsモジュール（dynamic import for SSR compatibility）
-	let chartModule: typeof import('$lib/ChartRenderer') | null = null;
+	let chartModule: typeof import('#lib/ChartRenderer.js') | null = null;
 	let lastRenderedChartSlug: string | null = null;
 	let chartRenderingPromise: Promise<void> | null = null;
 
@@ -100,7 +99,7 @@
 		const mapElements = document.querySelectorAll('chatgpt-go-map');
 		if (mapElements.length > 0) {
 			// Leafletを含む地図コンポーネントは、地図がある記事でだけ読み込む
-			const { default: ChatGptGoMap } = await import('$lib/ChatGptGoMap.svelte');
+			const { default: ChatGptGoMap } = await import('#lib/ChatGptGoMap.svelte');
 			mapElements.forEach((mapEl) => {
 				const mapInstance = mount(ChatGptGoMap, {
 					target: mapEl as HTMLElement
@@ -131,7 +130,7 @@
 
 		// Chart.jsモジュールをロード（初回のみ）
 		if (!chartModule) {
-			chartModule = await import('$lib/ChartRenderer');
+			chartModule = await import('#lib/ChartRenderer.js');
 		}
 
 		// 古いチャートインスタンスをクリーンアップ
@@ -177,12 +176,9 @@
 		scheduleMapHydration();
 	});
 
-	// slugを取得
-	let post_string: string = '';
-	// page ストアを購読して slug パラメータを取得
-	const unsubscribe = page.subscribe(($page) => {
-		post_string = $page.params.slug || '';
-	});
+	// slugを取得（$app/stores廃止に伴い、loadが返すslugから導出する。
+	// $:は描画前に実行されるため、afterUpdateの時点で遷移先のslugが入っている）
+	$: post_string = data.slug ?? '';
 
 	afterUpdate(() => {
 		if (!post_string) {
@@ -215,9 +211,6 @@
 
 	// コンポーネントが破棄されたときにクリーンアップ
 	onDestroy(() => {
-		// page ストアの購読を解除
-		unsubscribe();
-
 		// テーマストアの購読を解除
 		unsubscribeTheme?.();
 
@@ -265,7 +258,9 @@
 		content={data.metadata?.title || `${post_string} - ${AppConfig.title}`}
 	/>
 	<meta property="og:type" content="article" />
+
 	<meta property="og:url" content={`${AppConfig.url}/blog/${post_string}`} />
+
 	<meta
 		property="og:image"
 		content={data.metadata?.image ||
@@ -280,7 +275,9 @@
 	<!-- Twitter Card -->
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:site" content={AppConfig.xaccuont} />
+
 	<meta name="twitter:title" content={data.metadata?.title || AppConfig.title} />
+
 	<meta
 		name="twitter:description"
 		content={data.metadata?.description || AppConfig.description}
@@ -440,7 +437,8 @@
 		:global(
 			svg[aria-roledescription='quadrantChart'] .quadrants > .quadrant:nth-child(1) rect
 		) {
-		fill: #efe9f8; /* 右上: 書籍・資格・体系化された知識 */
+		fill: #efe9f8;
+		/* 右上: 書籍・資格・体系化された知識 */
 	}
 
 	:global(body:not([data-theme='dark']))
@@ -448,7 +446,8 @@
 		:global(
 			svg[aria-roledescription='quadrantChart'] .quadrants > .quadrant:nth-child(2) rect
 		) {
-		fill: #e8f1fb; /* 左上: ネット記事・技術論文 */
+		fill: #e8f1fb;
+		/* 左上: ネット記事・技術論文 */
 	}
 
 	:global(body:not([data-theme='dark']))
@@ -456,7 +455,8 @@
 		:global(
 			svg[aria-roledescription='quadrantChart'] .quadrants > .quadrant:nth-child(3) rect
 		) {
-		fill: #e6f4ec; /* 左下: 口コミ・営業経由・コミュニティ */
+		fill: #e6f4ec;
+		/* 左下: 口コミ・営業経由・コミュニティ */
 	}
 
 	:global(body:not([data-theme='dark']))
@@ -464,6 +464,7 @@
 		:global(
 			svg[aria-roledescription='quadrantChart'] .quadrants > .quadrant:nth-child(4) rect
 		) {
-		fill: #fbeef0; /* 右下: 経験談・価値観・暗黙知 */
+		fill: #fbeef0;
+		/* 右下: 経験談・価値観・暗黙知 */
 	}
 </style>

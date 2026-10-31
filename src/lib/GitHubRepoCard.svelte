@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { lightThemeStore } from '$lib/themeStore';
+	import { lightThemeStore } from '#lib/themeStore.js';
 
 	export let name: string;
 	export let description: string;

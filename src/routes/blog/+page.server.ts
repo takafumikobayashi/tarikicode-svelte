@@ -1,4 +1,4 @@
-import { getAllPostsMetadata } from '$lib/utils/posts';
+import { getAllPostsMetadata } from '#lib/utils/posts.js';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ url }) => {

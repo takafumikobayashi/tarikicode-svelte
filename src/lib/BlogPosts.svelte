@@ -3,7 +3,7 @@
 	import LayoutGrid, { Cell } from '@smui/layout-grid';
 	import Card, { Content, Media } from '@smui/card';
 	import Button, { Label } from '@smui/button';
-	import type { PostMetadata } from '$lib/utils/posts';
+	import type { PostMetadata } from '#lib/utils/posts.js';
 
 	let posts: PostMetadata[] = [];
 	let loading = true;

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { AppConfig } from '$lib/AppConfig';
+	import { AppConfig } from '#lib/AppConfig.js';
 	import IconButton, { Icon } from '@smui/icon-button';
 
 	export let url: string;

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Button, { Label } from '@smui/button';
-	import ThemeButton from '$lib/ThemeButton.svelte';
+	import ThemeButton from '#lib/ThemeButton.svelte';
 	import Menu from '@smui/menu';
 	import List, { Item, Text } from '@smui/list';
 	import {

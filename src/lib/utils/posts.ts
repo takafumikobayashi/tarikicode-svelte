@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { AppConfig } from '$lib/AppConfig';
+import { AppConfig } from '#lib/AppConfig.js';
 
 export interface PostMetadata {
 	slug: string;

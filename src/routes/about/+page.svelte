@@ -1,18 +1,18 @@
 <script>
 	import Header from '../../lib/Header.svelte';
-	import ContentImage from '$lib/ContentImage.svelte';
+	import ContentImage from '#lib/ContentImage.svelte';
 	import Footer from '../../lib/Footer.svelte';
 	import Tab, { Icon, Label } from '@smui/tab';
 	import TabBar from '@smui/tab-bar';
 	import LayoutGrid, { Cell } from '@smui/layout-grid';
 	import Paper, { Content } from '@smui/paper';
 	import AboutMe from '../../lib/AboutMe.svelte';
-	import Works from '$lib/Works.svelte';
-	import Favorites from '$lib/Favorites.svelte';
-	import Profile from '$lib/Profile.svelte';
-	import Projects from '$lib/Projects.svelte';
-	import { AppConfig } from '$lib/AppConfig';
-	import { reveal } from '$lib/actions/reveal';
+	import Works from '#lib/Works.svelte';
+	import Favorites from '#lib/Favorites.svelte';
+	import Profile from '#lib/Profile.svelte';
+	import Projects from '#lib/Projects.svelte';
+	import { AppConfig } from '#lib/AppConfig.js';
+	import { reveal } from '#lib/actions/reveal.js';
 
 	let tabs = [
 		{

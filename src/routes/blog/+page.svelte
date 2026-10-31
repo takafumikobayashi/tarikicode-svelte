@@ -1,15 +1,15 @@
 <script lang="ts">
-	import Header from '$lib/Header.svelte';
-	import Footer from '$lib/Footer.svelte';
+	import Header from '#lib/Header.svelte';
+	import Footer from '#lib/Footer.svelte';
 	import Paper, { Title, Subtitle, Content } from '@smui/paper';
 	import LayoutGrid, { Cell } from '@smui/layout-grid';
 	import Card, { Content as CardContent, Media } from '@smui/card';
 	import Button, { Label } from '@smui/button';
-	import { AppConfig } from '$lib/AppConfig';
+	import { AppConfig } from '#lib/AppConfig.js';
 	import { goto } from '$app/navigation';
 	import { onMount, onDestroy } from 'svelte';
 	import type { PageData } from './$types';
-	import { reveal } from '$lib/actions/reveal';
+	import { reveal } from '#lib/actions/reveal.js';
 
 	export let data: PageData;
 
