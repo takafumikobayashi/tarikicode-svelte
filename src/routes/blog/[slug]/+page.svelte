@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, onDestroy, afterUpdate, tick } from 'svelte';
+	import { onMount, onDestroy, afterUpdate, tick, mount, unmount } from 'svelte';
 	import Header from '$lib/Header.svelte';
 	import Footer from '$lib/Footer.svelte';
 	import { page } from '$app/stores';
@@ -7,7 +7,6 @@
 	import PostFooter from '$lib/PostFooter.svelte';
 
 	import OgpCard from '$lib/OgpCard.svelte';
-	import type { SvelteComponent } from 'svelte';
 	import { lightThemeStore } from '$lib/themeStore';
 
 	export let data;
@@ -18,7 +17,7 @@
 	let chartRenderingPromise: Promise<void> | null = null;
 
 	// imperativeに作成したコンポーネントインスタンスを保存（メモリリーク防止）
-	let mapComponentInstances: SvelteComponent[] = [];
+	let mapComponentInstances: Record<string, unknown>[] = [];
 	let lastOgpHydratedSlug: string | null = null;
 	let lastHydratedSlug: string | null = null;
 	let mapHydrationPromise: Promise<void> | null = null;
@@ -27,7 +26,7 @@
 	let isLightTheme = true;
 	let unsubscribeTheme: (() => void) | null = null;
 
-	let ogpCardInstances: SvelteComponent[] = [];
+	let ogpCardInstances: Record<string, unknown>[] = [];
 	// ハイドレーション中の再入を防ぐフラグ（詳細は hydrateOgpCards のコメント参照）
 	let hydratingOgpCards = false;
 
@@ -37,7 +36,7 @@
 		}
 
 		ogpCardInstances.forEach((instance) => {
-			instance.$destroy();
+			void unmount(instance);
 		});
 		ogpCardInstances = [];
 	}
@@ -69,7 +68,7 @@
 			if (!url) return;
 
 			card.innerHTML = '';
-			const instance = new OgpCard({
+			const instance = mount(OgpCard, {
 				target: card as HTMLElement,
 				props: {
 					url,
@@ -89,7 +88,7 @@
 		}
 
 		mapComponentInstances.forEach((instance) => {
-			instance.$destroy();
+			void unmount(instance);
 		});
 		mapComponentInstances = [];
 	}
@@ -103,7 +102,7 @@
 			// Leafletを含む地図コンポーネントは、地図がある記事でだけ読み込む
 			const { default: ChatGptGoMap } = await import('$lib/ChatGptGoMap.svelte');
 			mapElements.forEach((mapEl) => {
-				const mapInstance = new ChatGptGoMap({
+				const mapInstance = mount(ChatGptGoMap, {
 					target: mapEl as HTMLElement
 				});
 				mapComponentInstances.push(mapInstance);
@@ -305,7 +304,7 @@
 		<Header />
 		{#if data.metadata?.image}
 			<div class="hero-image-container">
-				<div class="hero-image" style="background-image: url({data.metadata.image});" />
+				<div class="hero-image" style="background-image: url({data.metadata.image});"></div>
 			</div>
 		{/if}
 		<article>

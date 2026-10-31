@@ -67,11 +67,13 @@
 
 			<Cell span={12}>
 				<div class="demo-cell">
-					<TabBar {tabs} let:tab bind:active>
-						<Tab {tab}>
-							<Icon class="material-icons">{tab.icon}</Icon>
-							<Label>{tab.label}</Label>
-						</Tab>
+					<TabBar {tabs} bind:active>
+						{#snippet tab(tab)}
+							<Tab {tab}>
+								<Icon class="material-icons">{tab.icon}</Icon>
+								<Label>{tab.label}</Label>
+							</Tab>
+						{/snippet}
 					</TabBar>
 
 					{#if active.label === 'Profile'}

@@ -31,7 +31,7 @@
 			<div class="mdc-typography--caption">https://tariki-code.tokyo/</div>
 		</div>
 		<div class="demo-cell">
-			<IconButton ripple={false} on:click={() => twitterLink()}>
+			<IconButton ripple={false} onclick={() => twitterLink()}>
 				<Icon tag="svg" viewBox="0 0 24 24">
 					<path
 						fill="currentColor"
@@ -39,7 +39,7 @@
 					/>
 				</Icon>
 			</IconButton>
-			<IconButton ripple={false} on:click={() => githubLink()}>
+			<IconButton ripple={false} onclick={() => githubLink()}>
 				<Icon tag="svg" viewBox="0 0 24 24">
 					<path
 						fill="currentColor"
@@ -47,7 +47,7 @@
 					/>
 				</Icon>
 			</IconButton>
-			<IconButton ripple={false} on:click={() => linkedinLink()}>
+			<IconButton ripple={false} onclick={() => linkedinLink()}>
 				<Icon tag="svg" viewBox="0 0 16 16">
 					<path
 						fill="currentColor"
@@ -55,7 +55,7 @@
 					/>
 				</Icon>
 			</IconButton>
-			<IconButton ripple={false} on:click={() => facebookLink()}>
+			<IconButton ripple={false} onclick={() => facebookLink()}>
 				<Icon tag="svg" viewBox="0 0 16 16">
 					<path
 						fill="currentColor"
@@ -63,7 +63,7 @@
 					/>
 				</Icon>
 			</IconButton>
-			<IconButton ripple={false} on:click={() => instagramLink()}>
+			<IconButton ripple={false} onclick={() => instagramLink()}>
 				<Icon tag="svg" viewBox="0 0 24 24">
 					<path
 						fill="currentColor"
@@ -73,7 +73,7 @@
 			</IconButton>
 		</div>
 		<div class="demo-cell">
-			<Button color="secondary" on:click={() => (open = true)}>
+			<Button color="secondary" onclick={() => (open = true)}>
 				<Label><div class="mdc-typography--caption">プライバシーポリシー</div></Label>
 			</Button>
 		</div>

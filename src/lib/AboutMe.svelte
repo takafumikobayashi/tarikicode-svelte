@@ -32,7 +32,7 @@
 			</div>
 			{#if linkon}
 				<div class="demo-cell-left">
-					<Button on:click={() => aboutLink()} variant="raised">
+					<Button onclick={() => aboutLink()} variant="raised">
 						<Label>プロフィールをもっと見る</Label>
 					</Button>
 				</div>

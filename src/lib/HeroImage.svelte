@@ -55,7 +55,7 @@
 						<div
 							class="hero"
 							style="background-image: url({AppConfig.heroimage[0].image});"
-						/>
+						></div>
 					</Cell>
 				</LayoutGrid>
 			</div>
@@ -73,7 +73,7 @@
 						<div
 							class="hero"
 							style="background-image: url({AppConfig.heroimage[1].image});"
-						/>
+						></div>
 					</Cell>
 				</LayoutGrid>
 			</div>
@@ -91,7 +91,7 @@
 						<div
 							class="hero"
 							style="background-image: url({AppConfig.heroimage[2].image});"
-						/>
+						></div>
 					</Cell>
 				</LayoutGrid>
 			</div>

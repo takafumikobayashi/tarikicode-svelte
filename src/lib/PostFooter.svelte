@@ -154,7 +154,7 @@
 				<div class="margins">
 					<Fab
 						color={$isLiked ? 'primary' : 'secondary'}
-						on:click={incrementLikes}
+						onclick={incrementLikes}
 						extended
 						class="centered-fab"
 						disabled={$isLiked}

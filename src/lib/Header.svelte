@@ -20,31 +20,31 @@
 	<div class="mdc-typography--headline5"><strong>他力code</strong></div>
 	<div class="nav-container">
 		<div class="nav-item">
-			<Button color="primary" on:click={homeLink}>
+			<Button color="primary" onclick={homeLink}>
 				<Label>Home</Label>
 			</Button>
-			<Button color="secondary" on:click={aboutLink}>
+			<Button color="secondary" onclick={aboutLink}>
 				<Label>About</Label>
 			</Button>
 			<div style="min-width: 100px;">
-				<Button color="secondary" on:click={() => menu.setOpen(true)}>
+				<Button color="secondary" onclick={() => menu.setOpen(true)}>
 					<Label>Contact</Label>
 				</Button>
 				<Menu bind:this={menu}>
 					<List>
-						<Item on:SMUI:action={() => mailLink()}>
+						<Item onSMUIAction={() => mailLink()}>
 							<Text>Mail</Text>
 						</Item>
-						<Item on:SMUI:action={() => twitterLink()}>
+						<Item onSMUIAction={() => twitterLink()}>
 							<Text>X</Text>
 						</Item>
-						<Item on:SMUI:action={() => githubLink()}>
+						<Item onSMUIAction={() => githubLink()}>
 							<Text>Github</Text>
 						</Item>
-						<Item on:SMUI:action={() => linkedinLink()}>
+						<Item onSMUIAction={() => linkedinLink()}>
 							<Text>LinkedIn</Text>
 						</Item>
-						<Item on:SMUI:action={() => facebookLink()}>
+						<Item onSMUIAction={() => facebookLink()}>
 							<Text>Facebook</Text>
 						</Item>
 					</List>

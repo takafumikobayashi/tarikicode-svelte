@@ -1,10 +1,12 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
+import { mount, unmount } from 'svelte';
 import OgpCard from './OgpCard.svelte';
 
 /**
  * ブログ記事ページは <ogp-card> プレースホルダへ OgpCard を imperative にマウントする。
  * Svelte 4 の `new Component({ target })` は内部で flush() を走らせるため、
- * マウント中にページ側の afterUpdate が再入する。
+ * マウント中にページ側の afterUpdate が再入していた（Svelte 5 の mount() では
+ * エフェクトが遅延実行されるため起きにくいが、ガードは引き続き維持する）。
  * 「処理済みスラッグを更新する前にマウントする」実装だと再入が無限ループになるため、
  * ページ側と同じガード構造をここで固定しておく。
  */
@@ -48,11 +50,11 @@ describe('OGPカードのハイドレーション再入ガード', () => {
 		let slug = 'article-a';
 		let lastHydratedSlug: string | null = null;
 		let hydrating = false;
-		let instances: OgpCard[] = [];
+		let instances: Record<string, unknown>[] = [];
 		let hydrateCallCount = 0;
 
 		function destroy() {
-			instances.forEach((i) => i.$destroy());
+			instances.forEach((i) => unmount(i));
 			instances = [];
 		}
 
@@ -70,7 +72,10 @@ describe('OGPカードのハイドレーション再入ガード', () => {
 					if (!url) return;
 					card.innerHTML = '';
 					// mount 時の flush() で afterUpdate 相当が再入する状況を再現
-					const instance = new OgpCard({ target: card as HTMLElement, props: { url } });
+					const instance = mount(OgpCard, {
+						target: card as HTMLElement,
+						props: { url }
+					});
 					afterUpdateEquivalent();
 					instances.push(instance);
 				});

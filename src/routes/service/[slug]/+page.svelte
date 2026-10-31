@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, onDestroy, afterUpdate } from 'svelte';
+	import { onMount, onDestroy, afterUpdate, mount, unmount } from 'svelte';
 	import Header from '$lib/Header.svelte';
 	import Footer from '$lib/Footer.svelte';
 	import { AppConfig } from '$lib/AppConfig';
@@ -7,7 +7,6 @@
 	import { setMermaidTheme } from '$lib/Mermaid';
 	import { page } from '$app/stores';
 	import OgpCard from '$lib/OgpCard.svelte';
-	import type { SvelteComponent } from 'svelte';
 
 	export let data;
 
@@ -16,7 +15,7 @@
 
 	let lastProcessedSlug = '';
 
-	let ogpCardInstances: SvelteComponent[] = [];
+	let ogpCardInstances: Record<string, unknown>[] = [];
 
 	function destroyOgpCards() {
 		if (!ogpCardInstances.length) {
@@ -24,7 +23,7 @@
 		}
 
 		ogpCardInstances.forEach((instance) => {
-			instance.$destroy();
+			void unmount(instance);
 		});
 		ogpCardInstances = [];
 	}
@@ -39,7 +38,7 @@
 			if (!url) return;
 
 			card.innerHTML = '';
-			const instance = new OgpCard({
+			const instance = mount(OgpCard, {
 				target: card as HTMLElement,
 				props: {
 					url,

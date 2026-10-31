@@ -79,7 +79,7 @@
 </script>
 
 <div class="map-wrapper">
-	<div bind:this={mapContainer} class="map-container" />
+	<div bind:this={mapContainer} class="map-container"></div>
 	<div class="legend">
 		<h4>展開時期</h4>
 		<div class="legend-item">

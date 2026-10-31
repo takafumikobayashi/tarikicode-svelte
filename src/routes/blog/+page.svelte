@@ -236,7 +236,7 @@
 											<div class="filter-item filter-item-button">
 												<Button
 													variant="outlined"
-													on:click={() => goto('/blog')}
+													onclick={() => goto('/blog')}
 												>
 													<Label>フィルタをクリア</Label>
 												</Button>
@@ -336,7 +336,7 @@
 							<Button
 								variant="outlined"
 								disabled={data.currentPage === 1}
-								on:click={() => goToPage(data.currentPage - 1)}
+								onclick={() => goToPage(data.currentPage - 1)}
 							>
 								<Label>前へ</Label>
 							</Button>
@@ -348,7 +348,7 @@
 							<Button
 								variant="outlined"
 								disabled={data.currentPage === data.totalPages}
-								on:click={() => goToPage(data.currentPage + 1)}
+								onclick={() => goToPage(data.currentPage + 1)}
 							>
 								<Label>次へ</Label>
 							</Button>

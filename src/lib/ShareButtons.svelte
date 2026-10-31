@@ -41,7 +41,7 @@
 <div class="share-section">
 	<div class="mdc-typography--headline6">この記事をシェアする</div>
 	<div class="share-buttons">
-		<IconButton ripple={false} on:click={() => openLink(twitterUrl)}>
+		<IconButton ripple={false} onclick={() => openLink(twitterUrl)}>
 			<Icon tag="svg" viewBox="0 0 24 24">
 				<path
 					fill="currentColor"
@@ -50,7 +50,7 @@
 			</Icon>
 		</IconButton>
 
-		<IconButton ripple={false} on:click={() => openLink(facebookUrl)}>
+		<IconButton ripple={false} onclick={() => openLink(facebookUrl)}>
 			<Icon tag="svg" viewBox="0 0 16 16">
 				<path
 					fill="currentColor"
@@ -59,7 +59,7 @@
 			</Icon>
 		</IconButton>
 
-		<IconButton ripple={false} on:click={() => openLink(linkedinUrl)}>
+		<IconButton ripple={false} onclick={() => openLink(linkedinUrl)}>
 			<Icon tag="svg" viewBox="0 0 16 16">
 				<path
 					fill="currentColor"
@@ -68,7 +68,7 @@
 			</Icon>
 		</IconButton>
 
-		<IconButton ripple={false} on:click={() => openLink(hatenaUrl)}>
+		<IconButton ripple={false} onclick={() => openLink(hatenaUrl)}>
 			<Icon tag="svg" viewBox="0 0 300 300">
 				<text
 					x="50%"
@@ -82,7 +82,7 @@
 			</Icon>
 		</IconButton>
 
-		<IconButton ripple={false} on:click={() => openLink(pocketUrl)}>
+		<IconButton ripple={false} onclick={() => openLink(pocketUrl)}>
 			<Icon tag="svg" viewBox="0 0 24 24">
 				<path
 					fill="currentColor"
@@ -91,7 +91,7 @@
 			</Icon>
 		</IconButton>
 
-		<IconButton ripple={false} on:click={copyToClipboard}>
+		<IconButton ripple={false} onclick={copyToClipboard}>
 			<Icon tag="svg" viewBox="0 0 24 24">
 				<path
 					fill="currentColor"

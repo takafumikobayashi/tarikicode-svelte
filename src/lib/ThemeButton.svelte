@@ -76,6 +76,6 @@
 	}
 </script>
 
-<IconButton class="material-icons" on:click={() => switchTheme()}>
+<IconButton class="material-icons" onclick={() => switchTheme()}>
 	{lightTheme ? 'dark_mode' : 'light_mode'}
 </IconButton>

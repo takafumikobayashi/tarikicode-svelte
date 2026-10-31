@@ -13,7 +13,7 @@
 <div class="fade-in">
 	<LayoutGrid>
 		<Cell align="middle" span={12}>
-			<div class="content-hero" style="background-image: url({backgroundImageUrl});" />
+			<div class="content-hero" style="background-image: url({backgroundImageUrl});"></div>
 		</Cell>
 	</LayoutGrid>
 </div>
