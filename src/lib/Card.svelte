@@ -55,14 +55,6 @@
 	];
 </script>
 
-<svelte:head>
-	{#each works as work}
-		{#if work.image}
-			<link rel="preload" as="image" href={work.image} />
-		{/if}
-	{/each}
-</svelte:head>
-
 <LayoutGrid>
 	{#each works as work}
 		<Cell span={4}>

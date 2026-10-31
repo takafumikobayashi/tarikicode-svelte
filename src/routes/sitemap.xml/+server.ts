@@ -1,6 +1,6 @@
-import { AppConfig } from '$lib/AppConfig';
-import { getAllPostsMetadata } from '$lib/utils/posts';
-import { buildSitemapXml, type SitemapUrlEntry } from '$lib/utils/sitemap';
+import { AppConfig } from '#lib/AppConfig.js';
+import { getAllPostsMetadata } from '#lib/utils/posts.js';
+import { buildSitemapXml, type SitemapUrlEntry } from '#lib/utils/sitemap.js';
 import type { RequestHandler } from './$types';
 
 function ensureNoTrailingSlash(url: string): string {

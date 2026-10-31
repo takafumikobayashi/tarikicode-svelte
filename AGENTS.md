@@ -16,11 +16,11 @@ Code lives in `src/`: routes under `src/routes/` and shared utilities in `src/li
 - `npm run lint:md` / `fix:md`: markdown-only checks and fixes for article quality.
 - `npm run format`: apply Prettier formatting.
 - `npm run test`, `test:run`, `test:coverage`: run Vitest in watch, single-pass, or coverage mode.
-- `npm run prepare`: rebuild SMUI themes after editing `src/theme/`.
+- `npm run prepare`: run `svelte-kit sync` and rebuild SMUI themes after editing `src/theme/` (also runs on `npm install`).
 
 ## Coding Style & Naming Conventions
 
-Prettier handles formatting: two-space indentation, trailing semicolons, single quotes. ESLint flags unused vars (prefix `_` to ignore) and limits `console` to `warn`/`error`. Components use PascalCase filenames, helpers use camelCase, and route files follow `+page.svelte`, `+layout.ts`, etc. Tests mirror their subjects with `.test.ts`.
+Prettier handles formatting: tab indentation, semicolons, single quotes, no trailing commas. ESLint flags unused vars (prefix `_` to ignore) and limits `console` to `warn`/`error`. Components use PascalCase filenames, helpers use camelCase, and route files follow `+page.svelte`, `+layout.ts`, etc. Tests mirror their subjects with `.test.ts`.
 
 ## Testing Guidelines
 
@@ -28,13 +28,17 @@ Vitest runs in happy-dom via `src/tests/setup.ts`, which wires Testing Library c
 
 ### Current Test Suite
 
-As of 2025-12-06, the test suite contains **71 passing tests** across 5 test files:
+As of 2026-10-31, the test suite contains **103 passing tests** across 12 test files:
 
+- `src/lib/AppConfig.test.ts`: Site configuration (30 tests)
+- `src/lib/CommonFunction.test.ts`: Utility functions (15 tests)
+- `src/lib/ArticleCard.test.ts` / `src/lib/Articles.test.ts`: Pickup article cards (12 / 4 tests)
 - `src/lib/ShareButtons.test.ts`: Social sharing buttons (10 tests)
-- `src/lib/CommonFunction.test.ts`: Utility functions
-- `src/lib/utils/posts.test.ts`: Blog post metadata extraction
-- `src/lib/AppConfig.test.ts`: Site configuration
-- `src/tests/integration/`: Integration tests
+- `src/lib/OgpCard.test.ts` / `src/lib/ogpHydration.test.ts`: OGP cards and imperative mounting (9 / 1 tests)
+- `src/lib/actions/reveal.test.ts`: Scroll reveal action (6 tests)
+- `src/lib/utils/inlineSvgUse.test.ts`: Mermaid icon `<use>` inlining (6 tests)
+- `src/lib/utils/highlightCode.test.ts`: Server-side code highlighting (5 tests)
+- `src/lib/utils/headingIds.test.ts` / `src/lib/utils/sitemap.test.ts`: Heading anchors and sitemap (3 / 2 tests)
 
 ### Unit Testing Best Practices
 
@@ -159,7 +163,7 @@ For full reference, consult the [jj documentation](https://martinvonz.github.io/
 
 ## Theming & Configuration Notes
 
-Regenerate theme CSS with `npm run smui-theme-light` or `npm run smui-theme-dark`; outputs live in `static/`. Keep `vite.config.ts`, `vitest.config.ts`, `svelte.config.js`, and `tsconfig.json` aligned when changing aliases or environments.
+Regenerate theme CSS with `npm run smui-theme-light` or `npm run smui-theme-dark`; outputs live in `static/`. Keep `vite.config.ts` (SvelteKit options such as the adapter live here; SvelteKit 3 has no `svelte.config.js`), `vitest.config.ts`, `package.json` `imports` (the `#lib` alias), and `tsconfig.json` (extends the generated `$app/tsconfig`) aligned when changing aliases or environments. Unused SMUI styles are excluded via `src/theme/excluded/`.
 
 ## Collaboration Norms
 

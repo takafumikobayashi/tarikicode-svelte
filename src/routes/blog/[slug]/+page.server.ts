@@ -1,8 +1,9 @@
 import { Marked, Renderer } from 'marked';
 import matter from 'gray-matter';
 import { error } from '@sveltejs/kit';
-import { AppConfig } from '$lib/AppConfig';
-import { createHeadingIdGenerator } from '$lib/utils/headingIds';
+import { AppConfig } from '#lib/AppConfig.js';
+import { createHeadingIdGenerator } from '#lib/utils/headingIds.js';
+import { renderCodeBlock } from '#lib/utils/highlightCode.js';
 import { Window } from 'happy-dom';
 import DOMPurify from 'dompurify';
 
@@ -121,6 +122,8 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 				const id = getHeadingId(raw);
 				return `<h${level} id="${id}">${text}</h${level}>\n`;
 			};
+			// コードハイライトはSSRで済ませる（クライアントにhighlight.jsを送らない）
+			renderer.code = (code, infostring) => renderCodeBlock(code, infostring);
 
 			const markedInstance = new Marked({ renderer });
 			let htmlContent = markedInstance.parse(processedContent) as string;
@@ -366,6 +369,7 @@ export const load = async ({ params }: { params: { slug: string } }) => {
 			// メタデータと本文を返す
 			return {
 				status: 200,
+				slug,
 				body: htmlContent,
 				metadata: {
 					title: data.title || slug,

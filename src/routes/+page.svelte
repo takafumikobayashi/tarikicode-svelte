@@ -1,19 +1,19 @@
 <script>
-	import Header from '$lib/Header.svelte';
-	import Footer from '$lib/Footer.svelte';
-	import Card from '$lib/Card.svelte';
-	import HeroImage from '$lib/HeroImage.svelte';
+	import Footer from '#lib/Footer.svelte';
+	import Card from '#lib/Card.svelte';
+	import HeroImage from '#lib/HeroImage.svelte';
 	import Paper, { Title, Subtitle, Content } from '@smui/paper';
 	import LayoutGrid, { Cell } from '@smui/layout-grid';
-	import Sns from '$lib/Sns.svelte';
-	import AboutMe from '$lib/AboutMe.svelte';
-	import Articles from '$lib/Articles.svelte';
-	import RecentPost from '$lib/RecentPost.svelte';
-	import BlogPosts from '$lib/BlogPosts.svelte';
-	import { AppConfig } from '$lib/AppConfig';
-	import Contacts from '$lib/Contacts.svelte';
-	import NewRelease from '$lib/NewRelease.svelte';
-	import Service from '$lib/Service.svelte';
+	import Sns from '#lib/Sns.svelte';
+	import AboutMe from '#lib/AboutMe.svelte';
+	import Articles from '#lib/Articles.svelte';
+	import RecentPost from '#lib/RecentPost.svelte';
+	import BlogPosts from '#lib/BlogPosts.svelte';
+	import { AppConfig } from '#lib/AppConfig.js';
+	import Contacts from '#lib/Contacts.svelte';
+	import NewRelease from '#lib/NewRelease.svelte';
+	import Service from '#lib/Service.svelte';
+	import { reveal } from '#lib/actions/reveal.js';
 </script>
 
 <svelte:head>
@@ -38,11 +38,10 @@
 
 <div class="mdc-typography--body1">
 	<div class="content fade-in">
-		<Header />
 		<HeroImage />
 		<LayoutGrid>
 			<Cell span={12}>
-				<div class="demo-cell">
+				<div class="demo-cell" use:reveal>
 					<div class="paper-container">
 						<Paper variant="unelevated">
 							<Title>AboutMe</Title>
@@ -56,7 +55,7 @@
 			</Cell>
 
 			<Cell span={12}>
-				<div class="demo-cell">
+				<div class="demo-cell" use:reveal>
 					<div class="paper-container">
 						<Paper variant="unelevated">
 							<Title>New Release</Title>
@@ -70,7 +69,7 @@
 			</Cell>
 
 			<Cell span={12}>
-				<div class="demo-cell">
+				<div class="demo-cell" use:reveal>
 					<div class="paper-container">
 						<Paper variant="unelevated">
 							<Title>Works</Title>
@@ -84,7 +83,7 @@
 			</Cell>
 
 			<Cell span={12}>
-				<div class="demo-cell">
+				<div class="demo-cell" use:reveal>
 					<div class="paper-container">
 						<Paper variant="unelevated">
 							<Title>Service</Title>
@@ -98,7 +97,7 @@
 			</Cell>
 
 			<Cell span={12}>
-				<div class="demo-cell">
+				<div class="demo-cell" use:reveal>
 					<div class="paper-container">
 						<Paper variant="unelevated">
 							<Title>Pickup Articles</Title>
@@ -112,7 +111,7 @@
 			</Cell>
 
 			<Cell span={12}>
-				<div class="demo-cell">
+				<div class="demo-cell" use:reveal>
 					<div class="paper-container">
 						<Paper variant="unelevated">
 							<Title>Blog</Title>
@@ -126,7 +125,7 @@
 			</Cell>
 
 			<Cell span={12}>
-				<div class="demo-cell">
+				<div class="demo-cell" use:reveal>
 					<div class="paper-container">
 						<Paper variant="unelevated">
 							<Title>RecentPost</Title>
@@ -139,7 +138,7 @@
 				</div>
 			</Cell>
 			<Cell span={6}>
-				<div class="demo-cell">
+				<div class="demo-cell" use:reveal>
 					<div class="paper-container">
 						<Paper variant="unelevated">
 							<Title>Contacts</Title>
@@ -154,7 +153,7 @@
 				</div>
 			</Cell>
 			<Cell span={6}>
-				<div class="demo-cell">
+				<div class="demo-cell" use:reveal>
 					<div class="paper-container">
 						<Paper variant="unelevated">
 							<Content>

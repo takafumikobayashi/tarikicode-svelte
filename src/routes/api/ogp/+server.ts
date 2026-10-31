@@ -1,4 +1,3 @@
-import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import iconv from 'iconv-lite';
 import dns from 'dns';
@@ -13,14 +12,14 @@ export const GET: RequestHandler = async ({ url }) => {
 	const targetUrl = url.searchParams.get('url');
 
 	if (!targetUrl) {
-		return json({ error: 'URL parameter is required' }, { status: 400 });
+		return Response.json({ error: 'URL parameter is required' }, { status: 400 });
 	}
 
 	let parsedUrl: URL;
 	try {
 		parsedUrl = new URL(targetUrl);
 	} catch {
-		return json({ error: 'Invalid URL' }, { status: 400 });
+		return Response.json({ error: 'Invalid URL' }, { status: 400 });
 	}
 
 	try {
@@ -65,7 +64,7 @@ export const GET: RequestHandler = async ({ url }) => {
 
 			// キャッシュヘッダーを設定（開発中はキャッシュ無効、本番は24時間）
 			const isProduction = process.env.NODE_ENV === 'production';
-			return json(ogpData, {
+			return Response.json(ogpData, {
 				headers: {
 					'Cache-Control': isProduction
 						? 'public, max-age=86400'
@@ -78,7 +77,7 @@ export const GET: RequestHandler = async ({ url }) => {
 	} catch (error) {
 		console.error('Error fetching OGP data:', error);
 		const status = resolveStatusCode(error);
-		return json(
+		return Response.json(
 			{
 				error: 'Failed to fetch OGP data',
 				title: targetUrl,

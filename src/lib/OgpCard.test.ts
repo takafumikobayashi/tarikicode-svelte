@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/svelte';
+import { mount, unmount, flushSync } from 'svelte';
 import OgpCard from './OgpCard.svelte';
 
 const TARGET_URL = 'https://example.com/article';
@@ -147,15 +148,16 @@ describe('OgpCard', () => {
 		const card = document.querySelector('ogp-card') as HTMLElement;
 
 		card.innerHTML = '';
-		const instance = new OgpCard({
+		const instance = mount(OgpCard, {
 			target: card,
 			props: { url: card.getAttribute('data-url') ?? '' }
 		});
+		flushSync();
 
 		expect(card.textContent).toContain('読み込み中');
 		await waitFor(() => expect(card.textContent).toContain('マウント確認'));
 
-		instance.$destroy();
+		unmount(instance);
 		expect(card.textContent).not.toContain('マウント確認');
 		document.body.innerHTML = '';
 	});
@@ -179,11 +181,13 @@ describe('OgpCard', () => {
 
 		document.body.innerHTML = `<div><ogp-card data-url="${TARGET_URL}"></ogp-card></div>`;
 		const card = document.querySelector('ogp-card') as HTMLElement;
-		const instance = new OgpCard({ target: card, props: { url: TARGET_URL } });
+		const instance = mount(OgpCard, { target: card, props: { url: TARGET_URL } });
+		// Svelte 5のmount()はエフェクト(onMount)を遅延実行するため、明示的に流す
+		flushSync();
 
 		expect(capturedSignal?.aborted).toBe(false);
 
-		instance.$destroy();
+		unmount(instance);
 
 		expect(capturedSignal?.aborted).toBe(true);
 		// 離脱に伴う中断は異常ではないので警告を出さない

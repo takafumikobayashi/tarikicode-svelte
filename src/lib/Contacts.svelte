@@ -7,7 +7,7 @@
 	import FormField from '@smui/form-field';
 	import Dialog, { Title, Content, Actions } from '@smui/dialog';
 	import { onMount } from 'svelte';
-	import { writable, get } from 'svelte/store';
+	import { writable } from 'svelte/store';
 
 	function getGrecaptcha(): any {
 		if (typeof window === 'undefined') {
@@ -29,12 +29,13 @@
 	let honeyfield = ''; // Honeypotフィールド用の変数
 	let formLoadTime: number; // フォームが表示された時刻（ミリ秒）
 
-	// フォームの入力を監視し、ボタンの活性/非活性を切り替える関数
-	function validateForm() {
-		// Honeypotフィールドが空で、他の必須フィールドが入力されているかをチェック
-		const ready = get(recaptchaReady);
-		isButtonDisabled.set(!(valueA && valueB && valueC && checked && !honeyfield && ready));
-	}
+	// 入力値から送信ボタンの活性/非活性を導出する。
+	// イベント（oninput/onchange）で判定すると、SMUI 8のCheckboxはchangeイベント時点で
+	// bind:checkedがまだ反映されておらず、最後に同意チェックを入れると送信できなかった。
+	// 値そのものに反応させることで、イベントとバインディングの順序に依存しないようにする
+	$: isButtonDisabled.set(
+		!(valueA && valueB && valueC && checked && !honeyfield && $recaptchaReady)
+	);
 
 	// フォームの値をリセットする関数
 	function resetForm() {
@@ -42,7 +43,6 @@
 		valueB = '';
 		valueC = '';
 		checked = false;
-		validateForm(); // ボタンを再度無効化
 		formLoadTime = Date.now(); // フォームが表示されたタイミングでタイムスタンプを取得
 	}
 
@@ -142,14 +142,12 @@
 	// 初期化
 	onMount(() => {
 		formLoadTime = Date.now(); // フォームが表示されたタイミングでタイムスタンプを取得
-		validateForm(); // 初回ロード時にボタンを無効化
 
 		const waitForRecaptcha = setInterval(() => {
 			const grecaptchaInstance = getGrecaptcha();
 			if (grecaptchaInstance) {
 				grecaptchaInstance.ready(() => {
 					recaptchaReady.set(true);
-					validateForm();
 				});
 				clearInterval(waitForRecaptcha);
 			}
@@ -178,11 +176,10 @@
 				bind:value={valueA}
 				label="お名前／件名"
 				required
-				on:input={validateForm}
 			>
-				<HelperText slot="helper"
-					>お問合せされた方のお名前、もしくはお問合せの件名をご入力ください（必須）</HelperText
-				>
+				{#snippet helper()}<HelperText
+						>お問合せされた方のお名前、もしくはお問合せの件名をご入力ください（必須）</HelperText
+					>{/snippet}
 			</Textfield>
 		</div>
 	</Cell>
@@ -195,11 +192,10 @@
 				bind:value={valueB}
 				label="ご返信先メールアドレス"
 				required
-				on:input={validateForm}
 			>
-				<HelperText slot="helper"
-					>ご返信先となるメールアドレスをご入力ください（必須）</HelperText
-				>
+				{#snippet helper()}<HelperText
+						>ご返信先となるメールアドレスをご入力ください（必須）</HelperText
+					>{/snippet}
 			</Textfield>
 		</div>
 	</Cell>
@@ -212,33 +208,31 @@
 				bind:value={valueC}
 				label="お問合せ内容"
 				required
-				on:input={validateForm}
 			>
-				<HelperText slot="helper"
-					>お問合せ内容の詳細についてご入力ください（必須）</HelperText
-				>
+				{#snippet helper()}<HelperText
+						>お問合せ内容の詳細についてご入力ください（必須）</HelperText
+					>{/snippet}
 			</Textfield>
 			<!-- Honeypot field -->
 			<Textfield
 				style="width: 100%; display:none;"
 				bind:value={honeyfield}
 				label="Honeyfield"
-				on:input={validateForm}
 			/>
 		</div>
 	</Cell>
 	<Cell span={12}>
 		<div class="demo-cell">
 			<FormField>
-				<Checkbox bind:checked on:change={validateForm} />
-				<span slot="label">プライバシーポリシーに同意の上送信</span>
+				<Checkbox bind:checked />
+				{#snippet label()}<span>プライバシーポリシーに同意の上送信</span>{/snippet}
 			</FormField>
 		</div>
 	</Cell>
 	<Cell span={6}></Cell>
 	<Cell span={6}>
 		<div class="demo-cell-right">
-			<Button on:click={() => (open = true)} variant="raised" disabled={$isButtonDisabled}>
+			<Button onclick={() => (open = true)} variant="raised" disabled={$isButtonDisabled}>
 				<Label>この内容で送信する</Label>
 			</Button>
 		</div>
@@ -250,7 +244,7 @@
 	<Title id="simple-title">お問合せの送信</Title>
 	<Content id="simple-content">この内容でお問合せを送信します、よろしいでしょうか？</Content>
 	<Actions>
-		<Button on:click={sendEmail}>
+		<Button onclick={sendEmail}>
 			<Label>はい</Label>
 		</Button>
 		<Button>
@@ -264,7 +258,7 @@
 	<Title id="simple-title">{$dialogTitle}</Title>
 	<Content id="simple-content">{$dialogMessage}</Content>
 	<Actions>
-		<Button on:click={() => openDialog.set(false)}>
+		<Button onclick={() => openDialog.set(false)}>
 			<Label>閉じる</Label>
 		</Button>
 	</Actions>

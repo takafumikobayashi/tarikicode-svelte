@@ -1,17 +1,17 @@
 <script>
-	import Header from '../../lib/Header.svelte';
-	import ContentImage from '$lib/ContentImage.svelte';
+	import ContentImage from '#lib/ContentImage.svelte';
 	import Footer from '../../lib/Footer.svelte';
 	import Tab, { Icon, Label } from '@smui/tab';
 	import TabBar from '@smui/tab-bar';
 	import LayoutGrid, { Cell } from '@smui/layout-grid';
 	import Paper, { Content } from '@smui/paper';
 	import AboutMe from '../../lib/AboutMe.svelte';
-	import Works from '$lib/Works.svelte';
-	import Favorites from '$lib/Favorites.svelte';
-	import Profile from '$lib/Profile.svelte';
-	import Projects from '$lib/Projects.svelte';
-	import { AppConfig } from '$lib/AppConfig';
+	import Works from '#lib/Works.svelte';
+	import Favorites from '#lib/Favorites.svelte';
+	import Profile from '#lib/Profile.svelte';
+	import Projects from '#lib/Projects.svelte';
+	import { AppConfig } from '#lib/AppConfig.js';
+	import { reveal } from '#lib/actions/reveal.js';
 
 	let tabs = [
 		{
@@ -53,25 +53,26 @@
 
 <div class="mdc-typography--body1">
 	<div class="content fade-in">
-		<Header />
 		<ContentImage post_string="about" />
 		<div class="mdc-typography--body1">
 			<p>このサイトにお越しいただき、ありがとうございます。</p>
 		</div>
 		<LayoutGrid>
 			<Cell span={12}>
-				<div class="demo-cell">
+				<div class="demo-cell" use:reveal>
 					<AboutMe linkon={false} />
 				</div></Cell
 			>
 
 			<Cell span={12}>
-				<div class="demo-cell">
-					<TabBar {tabs} let:tab bind:active>
-						<Tab {tab}>
-							<Icon class="material-icons">{tab.icon}</Icon>
-							<Label>{tab.label}</Label>
-						</Tab>
+				<div class="demo-cell" use:reveal>
+					<TabBar {tabs} bind:active>
+						{#snippet tab(tab)}
+							<Tab {tab}>
+								<Icon class="material-icons">{tab.icon}</Icon>
+								<Label>{tab.label}</Label>
+							</Tab>
+						{/snippet}
 					</TabBar>
 
 					{#if active.label === 'Profile'}

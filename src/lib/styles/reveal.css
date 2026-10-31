@@ -1,0 +1,25 @@
+/* スクロールリビール（src/lib/actions/reveal.ts と対で使う） */
+
+.reveal {
+	opacity: 0;
+	transform: translateY(24px);
+	/* opacity/transformのみを動かすためレイアウトシフトは発生しない */
+	transition:
+		opacity 0.6s ease-out var(--reveal-delay, 0ms),
+		transform 0.6s ease-out var(--reveal-delay, 0ms);
+	will-change: opacity, transform;
+}
+
+.reveal.reveal--visible {
+	opacity: 1;
+	transform: none;
+	will-change: auto;
+}
+
+@media print {
+	.reveal {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
+}

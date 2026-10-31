@@ -1,6 +1,60 @@
 <!doctype html>
 <html lang="en">
 	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+		<meta name="theme-color" content="#333333" />
+
+		<!-- Google Fontsへの接続を先に確立しておく（CSSとフォント本体は別ドメイン） -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+		<link
+			id="smui-light"
+			rel="stylesheet"
+			href="/smui.css"
+			media="(prefers-color-scheme: light)"
+		/>
+		<link
+			id="smui-dark"
+			rel="stylesheet"
+			href="/smui-dark.css"
+			media="screen and (prefers-color-scheme: dark)"
+		/>
+		<script>
+			// 保存済みのテーマがOS設定と異なる場合、描画前にテーマCSSを切り替える。
+			// これがないとThemeButtonがマウントされるまで逆のテーマが一瞬表示される
+			(function () {
+				try {
+					var stored = localStorage.getItem('lightTheme');
+					if (stored === null) return;
+					var isLight = stored === 'true';
+					document.getElementById('smui-light').media = isLight ? 'all' : 'not all';
+					document.getElementById('smui-dark').media = isLight ? 'not all' : 'all';
+				} catch (e) {
+					// localStorageが使えない環境ではOS設定のまま表示する
+				}
+			})();
+		</script>
+
+		<!-- 本文用: フォント到着前もシステムフォントで文字を表示する（swap） -->
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
+		/>
+		<!-- アイコン用: リガチャ文字列（"dark_mode"等）が一瞬見えないようblockのまま -->
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/icon?family=Material+Icons&display=block"
+		/>
+
+		<link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />
+		<link
+			rel="icon"
+			type="image/x-icon"
+			href="https://d1mt09hgbl7gpz.cloudfront.net/favicon.ico"
+		/>
+
 		<!-- Google tag (gtag.js) -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZYB8P4GTXY"></script>
 		<script>
@@ -12,29 +66,6 @@
 
 			gtag('config', 'G-ZYB8P4GTXY');
 		</script>
-
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width,initial-scale=1.0" />
-		<meta name="theme-color" content="#333333" />
-
-		<link rel="stylesheet" href="/smui.css" media="(prefers-color-scheme: light)" />
-		<link
-			rel="stylesheet"
-			href="/smui-dark.css"
-			media="screen and (prefers-color-scheme: dark)"
-		/>
-		<link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />
-		<link
-			rel="icon"
-			type="image/x-icon"
-			href="https://d1mt09hgbl7gpz.cloudfront.net/favicon.ico"
-		/>
-		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-		<link
-			rel="stylesheet"
-			href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700"
-		/>
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono" />
 
 		%sveltekit.head%
 	</head>

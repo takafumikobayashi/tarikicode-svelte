@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { lightThemeStore } from '$lib/themeStore';
+	import { lightThemeStore } from '#lib/themeStore.js';
 
-	let isLightTheme = true;
 	$: isLightTheme = $lightThemeStore;
 
 	interface Skill {
@@ -249,10 +248,22 @@
 								rel="noopener noreferrer"
 								class="skill-link"
 							>
-								<img src={skill.badge} alt={skill.name} class="skill-badge-img" />
+								<img
+									loading="lazy"
+									decoding="async"
+									src={skill.badge}
+									alt={skill.name}
+									class="skill-badge-img"
+								/>
 							</a>
 						{:else}
-							<img src={skill.badge} alt={skill.name} class="skill-badge-img" />
+							<img
+								loading="lazy"
+								decoding="async"
+								src={skill.badge}
+								alt={skill.name}
+								class="skill-badge-img"
+							/>
 						{/if}
 					{/each}
 				</div>

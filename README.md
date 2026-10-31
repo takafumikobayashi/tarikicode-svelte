@@ -15,10 +15,10 @@ SvelteKit で構築した個人ポートフォリオサイト「他力code(tarik
 
 ## 技術スタック
 
-- **フレームワーク**: SvelteKit, Svelte 4, TypeScript
+- **フレームワーク**: SvelteKit 3, Svelte 5, TypeScript 6
 - **UI**: Svelte Material UI (SMUI), Swiper, Iconify
 - **Markdown/ハイライト**: marked, highlight.js, mermaid
-- **ビルド/ツール**: Vite, Vitest, ESLint, Prettier, svelte-check
+- **ビルド/ツール**: Vite 8, Vitest, ESLint, Prettier, svelte-check
 - **ホスティング**: Netlify
 - **CI/CD**: GitHub Actions
 
@@ -36,14 +36,13 @@ tarikicode-svelte/
 ├── AGENTS.md         # コントリビューションガイドライン
 ├── CLAUDE.md         # Claude 向け案内 (AGENTS.md 参照)
 ├── package.json
-├── svelte.config.js
-├── vite.config.ts
+├── vite.config.ts      # SvelteKit の設定（アダプタ等）もここに記述
 └── vitest.config.ts
 ```
 
 ## セットアップ
 
-1. Node.js 22 系と npm を準備します。
+1. Node.js 22.17 以上と npm を準備します。
 2. 依存をインストールします。
 
 ```bash
@@ -195,7 +194,7 @@ jj bookmark set develop
 
 ### テーマ
 
-- `npm run prepare` — SMUI テーマ CSS を再生成（Light + Dark）
+- `npm run prepare` — `svelte-kit sync` と SMUI テーマ CSS の再生成（Light + Dark）。`npm install` 時にも自動実行
 - `npm run smui-theme-light` — Light テーマのみ生成
 - `npm run smui-theme-dark` — Dark テーマのみ生成
 
@@ -277,7 +276,7 @@ Markdown記事のHTML変換時に `isomorphic-dompurify` によるサニタイ�
 
 ### SMUI テーマ
 
-SMUI トークンは `src/theme/` に配置され、`npm run prepare` で Light/Dark 両テーマの CSS を `static/` に出力します。
+SMUI トークンは `src/theme/` に配置され、`npm run prepare` で Light/Dark 両テーマの CSS を `static/` に出力します。smui-theme はインストール済みの `@smui/*` すべてのスタイルを含めるため、依存として入るだけの未使用パッケージ（`@smui/select` など）は `src/theme/excluded/` の空スタイルで除外しています。
 
 ### 静的アセット
 
@@ -512,7 +511,7 @@ SvelteKitの詳細：
 
 ## デプロイ
 
-Netlify でのホスティングを想定しています。main ブランチへのプッシュで自動的にデプロイが開始されます。環境ごとの設定は `vite.config.ts` と `svelte.config.js` のエイリアスやアダプタ設定を更新してください。独自ドメインや環境変数を追加する場合は Netlify ダッシュボードと `.env` 管理を合わせて調整します。
+Netlify でのホスティングを想定しています。main ブランチへのプッシュで自動的にデプロイが開始されます。環境ごとの設定は `vite.config.ts`（アダプタ等の SvelteKit 設定）と `package.json` の `imports`（`#lib` エイリアス）を更新してください。独自ドメインや環境変数を追加する場合は Netlify ダッシュボードと `.env` 管理を合わせて調整します。
 
 ### GitHub Secrets の設定
 
