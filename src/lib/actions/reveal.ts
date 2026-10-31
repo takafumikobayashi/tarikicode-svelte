@@ -6,7 +6,8 @@
  * 設計方針:
  * - SSRのHTMLはそのまま表示しておき、JSが動いた時点で「画面外の要素だけ」隠す。
  *   CSSで最初から隠すとJS実行前や無効時に内容が見えなくなるため。
- * - マウント時に画面内にある要素は隠さない（ファーストビューのちらつき・LCP悪化を防ぐ）。
+ * - 次の描画直前の時点で画面内にある要素は隠さない（ファーストビューのちらつき・LCP悪化を防ぐ。
+ *   ブラウザの「戻る」でスクロール位置が復元された場合も、復元後の位置で判定する）。
  * - prefers-reduced-motion が有効なら何もしない。
  * - IntersectionObserverは全要素で1つを共有する。
  */
@@ -51,22 +52,25 @@ function isInViewport(node: Element): boolean {
 }
 
 export function reveal(node: HTMLElement, options: RevealOptions = {}) {
-	if (
-		typeof IntersectionObserver === 'undefined' ||
-		prefersReducedMotion() ||
-		isInViewport(node)
-	) {
+	if (typeof IntersectionObserver === 'undefined' || prefersReducedMotion()) {
 		return {};
 	}
 
-	if (options.delay) {
-		node.style.setProperty('--reveal-delay', `${options.delay}ms`);
-	}
-	node.classList.add(HIDDEN_CLASS);
-	getObserver().observe(node);
+	// 画面内かどうかの判定は次の描画直前まで遅らせる。
+	// SvelteKitはDOM更新（=アクション実行）の後にスクロール位置を復元するため、
+	// その場で判定すると「戻る」で復元された位置に見えている要素まで隠してしまう
+	const frame = requestAnimationFrame(() => {
+		if (isInViewport(node)) return;
+		if (options.delay) {
+			node.style.setProperty('--reveal-delay', `${options.delay}ms`);
+		}
+		node.classList.add(HIDDEN_CLASS);
+		getObserver().observe(node);
+	});
 
 	return {
 		destroy() {
+			cancelAnimationFrame(frame);
 			observer?.unobserve(node);
 		}
 	};
