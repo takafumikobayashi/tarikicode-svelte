@@ -49,3 +49,6 @@ vite.config.ts.timestamp-*
 
 # Local papers for paper-to-blog (source PDFs and notes are not committed)
 /papers/
+
+# ローカルの作業用ファイル（参考資料など）
+/tmp/
