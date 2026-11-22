@@ -11,6 +11,7 @@
 	let likes = writable(0);
 	let pageUrl = '';
 	let isLiked = writable(false); // ユーザーが「いいね」したかどうかを管理
+	let isSending = false; // 送信中の連打を防ぐ
 	const cacheDuration = 3600000; // キャッシュの有効期間: 1時間（ミリ秒単位）
 
 	// ページのロード時に実行
@@ -40,87 +41,62 @@
 		}
 	});
 
-	// サーバーから「いいね」数を取得し、ローカルにキャッシュ
+	// 表示する「いいね」数を更新し、ローカルにキャッシュ
+	function setLikes(count: number) {
+		likes.set(count);
+		localStorage.setItem(`likes_${pageUrl}`, count.toString());
+		localStorage.setItem(`likes_timestamp_${pageUrl}`, Date.now().toString());
+	}
+
+	// サーバーから「いいね」数を取得する
+	// 記録のないページは likes: 0 が返るので、そのまま0を表示する
 	async function fetchLikesFromServer() {
 		try {
 			const response = await fetch(
 				`${import.meta.env.VITE_LAMBDA_SERVER_URL}?url=${encodeURIComponent(pageUrl)}`
 			);
-			const data = await response.json();
-			if (data && data.last_updated !== null) {
-				likes.set(data.likes);
-				// ローカルに「いいね」数とタイムスタンプを保存
-				localStorage.setItem(`likes_${pageUrl}`, data.likes);
-				localStorage.setItem(`likes_timestamp_${pageUrl}`, Date.now().toString());
-			} else {
-				await addNewPageLikes();
-				likes.set(0);
-				localStorage.setItem(`likes_${pageUrl}`, '0');
-				localStorage.setItem(`likes_timestamp_${pageUrl}`, Date.now().toString());
+			// fetch は 4xx/5xx でも例外を投げないため、ステータスを確認する
+			if (!response.ok) {
+				throw new Error(`HTTP ${response.status}`);
 			}
+			const data = await response.json();
+			setLikes(Number(data.likes) || 0);
 		} catch (error) {
 			console.error('Error fetching likes:', error);
 		}
 	}
 
-	// ページが新規の場合、サーバーに初期化リクエスト
-	async function addNewPageLikes() {
-		try {
-			await fetch(import.meta.env.VITE_LAMBDA_SERVER_URL, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-					type: 'initialize',
-					url: pageUrl
-				})
-			});
-		} catch (error) {
-			console.error('Error adding new page likes:', error);
-		}
-	}
-
 	// 「いいね」ボタンをクリック
 	async function incrementLikes() {
-		const liked = getCookie(`liked_${pageUrl}`);
-		if (liked) {
-			// 既に「いいね」している場合、ボタンを無効化
+		if (getCookie(`liked_${pageUrl}`) || isSending) {
 			return;
 		}
+		isSending = true;
 
-		// 現在の「いいね」数をインクリメント
-		const newLikes = $likes + 1;
-
-		// サーバーに更新をリクエスト
 		try {
-			await fetch(import.meta.env.VITE_LAMBDA_SERVER_URL, {
+			const response = await fetch(import.meta.env.VITE_LAMBDA_SERVER_URL, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify({
-					type: 'update',
-					url: pageUrl,
-					likes: newLikes
-				})
+				body: JSON.stringify({ type: 'update', url: pageUrl })
 			});
-			likes.set(newLikes); // クリック後に新しい値をセット
+			if (!response.ok) {
+				// サーバーが受け付けなかった場合は表示を変えない（ボタンも押せるまま）
+				throw new Error(`HTTP ${response.status}`);
+			}
+			// 表示はサーバーが返した数に合わせる。
+			// alreadyLiked（別のブラウザなどで既にいいね済み）のときも、数は増やさず「いいね済み」にする
+			const data = await response.json();
+			setLikes(Number(data.likes) || 0);
 
-			// クッキーに「いいね」済みの情報を保存
+			// クッキーに「いいね」済みの情報を保存（ボタンの色はこれで決まる）
 			setCookie(`liked_${pageUrl}`, 'true', 365); // クッキーの有効期限は365日
-
-			// ユーザーが「いいね」した状態にする
 			isLiked.set(true);
-
-			// ローカルに「いいね」数を更新
-			localStorage.setItem(`likes_${pageUrl}`, newLikes.toString());
-			localStorage.setItem(`likes_timestamp_${pageUrl}`, Date.now().toString());
 		} catch (error) {
 			console.error('Error incrementing likes:', error);
-			// エラー時はローカル更新を巻き戻す
-			likes.set(newLikes - 1);
-			isLiked.set(false);
+		} finally {
+			isSending = false;
 		}
 	}
 

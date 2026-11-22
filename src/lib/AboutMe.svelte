@@ -26,10 +26,10 @@
 				<p>{AppConfig.author}</p>
 			</div>
 			<div class="mdc-typography--body1">
-				東京でNode.jsエンジニア→いつの間にか地方で行政に携わる<br />
-				仕事と組織をデータとAI前提に組み直す「AX」に取り組む<br />
+				東京でWebエンジニア→いつの間にか地方で行政に携わる<br />
+				AX（AI Transformation）で行政改革・地域社会をつなぐ<br />
+				生涯チャレンジャー・雑草魂なESTP<br />
 				ClaudeCode・Codex・Jev・TypeScript<br />
-				ITストラテジスト・プロジェクトマネージャー<br />
 				ex.大手携帯キャリア・暗号資産スタートアップ・NPO伴走支援<br />
 			</div>
 			{#if linkon}
