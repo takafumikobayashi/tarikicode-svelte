@@ -3,7 +3,7 @@ title: 'ドキュメントはもうHTMLが基本でいい──高校生のタ�
 date: '2026-11-22'
 category: 'AI'
 tags: ['HTML', '生成AI', 'Cloudflare Pages', 'Claude Code', 'ドキュメント']
-description: '地域のAIコミュニティで、高校生がChatGPTとの会話だけで本格的なタロット占いのHTMLを作っていた。AIが「見せる形」を作る時代、ドキュメントの基本はHTMLでいい。世の中の動きや公開の手軽さ、弱点を整理し、手作業を前提にした資料づくりから抜け出す後押しをビッグテックに期待する。'
+description: 'とあるAIコミュニティで、高校生がChatGPTとの会話だけで本格的なタロット占いのHTMLを作っていた。AIが「見せる形」を作る時代、ドキュメントの基本はHTMLでいい。世の中の動きや公開の手軽さ、弱点を整理し、手作業を前提にした資料づくりから抜け出す後押しをビッグテックに期待する。'
 image: 'https://blog.google/innovation-and-ai/products/gemini-notebook/interactive-sites/'
 featured: false
 type: 'blog'
@@ -17,7 +17,7 @@ type: 'blog'
 
 #### 高校生が作っていたタロット占い
 
-先日始めた地域のAIコミュニティで、びっくりするくらいクオリティの高いアウトプットを作る高校生に出会った。
+先日、とあるAIコミュニティで、びっくりするくらいクオリティの高いアウトプットを作る高校生に出会った。
 
 見せてくれたのは、あくまでサンプルとして作ったタロット占いのWebページだ。HTML（Webページの骨組み）、CSS（見た目の指定）、JavaScript（動きの指定）だけでできた静的なHTMLファイルで、ビジュアルも本格的だった。
 
